@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>el:prettyurls</id>
+	<version>0.1</version>
+
+	<file name="$boarddir/index.php">
+		<operation>
+			<search position="replace"><![CDATA[
+// Clean the request variables, add slashes, etc.
+cleanRequest();
+$context = array();
+]]></search>
+			<add><![CDATA[
+$context = array();
+// Unserialize the array of pretty board URLs
+$context['pretty_board_urls'] = unserialize($modSettings['pretty_board_urls']);
+// Clean the request variables, add slashes, etc.
+cleanRequest();
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/QueryString.php">
+		<operation>
+			<search position="replace"><![CDATA[
+function cleanRequest()
+{
+	global $board, $topic, $boardurl, $scripturl, $modSettings;
+]]></search>
+			<add><![CDATA[
+function cleanRequest()
+{
+	global $board, $topic, $boardurl, $scripturl, $modSettings, $context;
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		// Now make absolutely sure it's a number.
+		$board = (int) $_REQUEST['board'];
+]]></search>
+			<add><![CDATA[
+		// Now make absolutely sure it's a number. Check for pretty board URLs too.
+		$board = (int) (is_numeric($_REQUEST['board']) ? $_REQUEST['board'] : array_search($_REQUEST['board'], $context['pretty_board_urls']));
+]]></add>
+		</operation>
+	</file>
+
+</modification>
