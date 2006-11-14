@@ -1,0 +1,6 @@
+php_flag register_globals off
+RewriteEngine on
+
+#	Pretty board urls
+RewriteRule ^([-+_a-zA-Z0-9]+)/?$ ./index.php?board=$1.0 [L,QSA]
+RewriteRule ^([-+_a-zA-Z0-9]+)/([0-9]*)/?$ ./index.php?board=$1.$2 [L,QSA]
