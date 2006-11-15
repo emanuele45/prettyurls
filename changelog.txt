@@ -1,0 +1,15 @@
+Changelog started November, 2006; Currently at version 0.1
+
+Legend:
+--------------------------------------------------------------------------------
+ ! Minor change or bugfix. (don't bother to log typos except between releases.)
+ * Change like above, but affects templates.
+ & Change that affects a language file. (make two if it affects templates too.)
+ + Feature addition or improvement.
+ - Feature or option removal.
+ % Development flag or note, such as branching.
+
+
+Pretty URLs 0.1                                          ??
+================================================================================
+ + Added the generatePrettyUrl function. (Subs.php)
