@@ -14,11 +14,16 @@
 	<name>Pretty URLs - Base</name>
 	<type>modification</type>
 
-	<install>
+	<install for="1.1, 1.1.0-1.1.99">
 		<modification format="xml" type="file">Sources.xml</modification>
+		<require-file name="Subs-PrettyUrls.php" destination="$sourcedir" />
+		<require-file name="example.htaccess" destination="$boarddir" />
+		<code type="file">install.php</code>
 	</install>
-	<uninstall>
+	<uninstall for="1.1, 1.1.0-1.1.99">
 		<modification format="xml" type="file" reverse="true">Sources.xml</modification>
+		<remove-file name="$sourcedir/Subs-PrettyUrls.php" />
+		<remove-file name="$boarddir/example.htaccess" />
 	</uninstall>
 
 </package-info>
