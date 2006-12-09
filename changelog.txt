@@ -16,3 +16,5 @@ Pretty URLs 0.1                                          ??
  + Base: Generate the pretty URLs of the forum's boards. (install.php)
  + Base: Included an example .htaccess file (example.htaccess)
  + Base: Added 'pretty_root_url' setting, defaulting to $boardurl.
+ + ext-none: Replace the board urls in the BoardIndex and MessageIndex templates.
+ ! Base: Fixed $characterHash so '+' would never be in a URL. (Subs-PrettyUrls.php)
