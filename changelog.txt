@@ -15,3 +15,4 @@ Pretty URLs 0.1                                          ??
  + Base: Added generatePrettyUrl function and $characterHash with almost all characters from latin-1. (Subs-PrettyUrls.php)
  + Base: Generate the pretty URLs of the forum's boards. (install.php)
  + Base: Included an example .htaccess file (example.htaccess)
+ + Base: Added 'pretty_root_url' setting, defaulting to $boardurl.

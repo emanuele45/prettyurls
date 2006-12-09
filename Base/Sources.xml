@@ -22,6 +22,20 @@ cleanRequest();
 		</operation>
 	</file>
 
+	<file name="$sourcedir/ModSettings.php">
+		<operation>
+			<search position="replace"><![CDATA[
+			array('int', 'max_image_height'),
+]]></search>
+			<add><![CDATA[
+			array('int', 'max_image_height'),
+		'',
+			//	Packages Directory
+			array('text', 'pretty_root_url', 36),
+]]></add>
+		</operation>
+	</file>
+
 	<file name="$sourcedir/QueryString.php">
 		<operation>
 			<search position="replace"><![CDATA[
