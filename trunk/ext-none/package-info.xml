@@ -14,10 +14,10 @@
 	<name>Pretty URLs - Extention: none</name>
 	<type>modification</type>
 
-	<install>
+	<install for="1.1, 1.1.0-1.1.99">
 		<modification format="xml" type="file">Major.xml</modification>
 	</install>
-	<uninstall>
+	<uninstall for="1.1, 1.1.0-1.1.99">
 		<modification format="xml" type="file" reverse="true">Major.xml</modification>
 	</uninstall>
 
