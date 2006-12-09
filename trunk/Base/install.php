@@ -17,6 +17,11 @@ elseif (!defined('SMF'))
 
 require_once($sourcedir . '/Subs-PrettyUrls.php');
 
+//	Add the pretty_root_url setting to the settings table:
+db_query("
+	INSERT IGNORE INTO {$db_prefix}settings (variable, value)
+	VALUES ('pretty_root_url', '" . $boardurl . "')", __FILE__, __LINE__);
+
 //	Get the current pretty board urls, or make a new array if there are none
 $pretty_board_urls = isset($modSettings['pretty_board_urls']) ? unserialize($modSettings['pretty_board_urls']) : array();
 
