@@ -4,6 +4,25 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
+//	mb_substr compatibility function
+//	From a comment in the PHP manual: http://au3.php.net/manual/en/function.substr.php#55107
+if (!function_exists('mb_substr'))
+{
+	function mb_substr($str, $start)
+	{
+		preg_match_all("/./su", $str, $ar);
+
+		if(func_num_args() >= 3)
+		{
+			$end = func_get_arg(2);
+			return join("", array_slice($ar[0], $start, $end));
+		} else {
+			return join("", array_slice($ar[0], $start));
+		}
+	};
+};
+
+//	Generate a pretty URL from a given text
 function generatePrettyUrl($text)
 {
 	static $characterHash = array (
@@ -46,6 +65,7 @@ function generatePrettyUrl($text)
 		'8'	=>	array ('8'),
 		'9'	=>	array ('9'),
 		'ae'	=>	array ('æ', 'Æ'),
+		'and'	=>	array ('&'),
 		'at'	=>	array ('@'),
 		'cent'	=>	array ('¢'),
 		'copyright'	=>	array ('©'),
@@ -63,12 +83,15 @@ function generatePrettyUrl($text)
 		'yen'	=>	array ('¥'),
 	);
 
+//	Change the entities back to normal characters
+	$text = preg_replace('~&amp;~', '&', $text);
 	$prettytext = '';
 
-	for ($i = 0; $i < mb_strlen($text, 'UTF-8'); $i++)
+	for ($i = 0; $i < strlen($text); $i++)
 	{
 		foreach ($characterHash as $replace => $search)
 		{
+//			Found a character? Replace it!
 			if (in_array(mb_substr($text, $i, 1, 'UTF-8'), $search))
 			{
 				$prettytext .= $replace;
@@ -76,6 +99,8 @@ function generatePrettyUrl($text)
 			}
 		}
 	}
+//	Remove unwanted '-'s
+	$prettytext = preg_replace(array('~^-+|-+$~', '~-+~'), array('', '-'), $prettytext);
 	return $prettytext;
 }
 
