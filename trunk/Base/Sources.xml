@@ -22,6 +22,25 @@ cleanRequest();
 		</operation>
 	</file>
 
+	<file name="$sourcedir/ManageBoards.php">
+		<operation>
+			<search position="replace"><![CDATA[
+			createBoard($boardOptions);
+]]></search>
+			<add><![CDATA[
+			$new_board_id = createBoard($boardOptions);
+
+//			Pretty Board URL
+			require_once($sourcedir . '/Subs-PrettyUrls.php');
+			$pretty_text = generatePrettyUrl($boardOptions['board_name']);
+//			Can't be empty, can't be a number and can't be the same as another
+			if ($pretty_text != '' && !is_numeric($pretty_text) && !array_search($pretty_text, $context['pretty']['board_urls']))
+				$context['pretty']['board_urls'][$new_board_id] = $pretty_text;
+			updateSettings(array('pretty_board_urls' => serialize($context['pretty']['board_urls'])));
+]]></add>
+		</operation>
+	</file>
+
 	<file name="$sourcedir/ModSettings.php">
 		<operation>
 			<search position="replace"><![CDATA[
@@ -58,7 +77,7 @@ function cleanRequest()
 			<add><![CDATA[
 		// Now make absolutely sure it's a number.
 		// Check for pretty board URLs too!
-		$board = (int) (is_numeric($_REQUEST['board']) ? $_REQUEST['board'] : array_search(mb_strtolower($_REQUEST['board'], 'UTF-8'), $context['pretty']['board_urls']));
+		$board = (int) (is_numeric($_REQUEST['board']) ? $_REQUEST['board'] : array_search(strtolower($_REQUEST['board']), $context['pretty']['board_urls']));
 ]]></add>
 		</operation>
 	</file>
