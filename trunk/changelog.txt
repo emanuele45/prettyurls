@@ -18,6 +18,8 @@ Pretty URLs 0.1                                          ??
  + Base: Added 'pretty_root_url' setting, defaulting to $boardurl.
  + ext-none: Replace the board urls in the BoardIndex and MessageIndex templates.
  ! Base: Fixed $characterHash so '+' would never be in a URL. (Subs-PrettyUrls.php)
- ! Base: Fixed some issues when the mbstrings extension wasn't installed. (QueryString.php, Subs-PrettyUrls.php)
  ! Base: Fixed issues with '&amp;' and removed unwanted '-'s. (Subs-PrettyUrls.php)
  + Base: A new board deserves a new URL! (ManageBoards.php)
+ + ext-none: Replaced the board URLs in SSI.php, News.php and Recent.php.
+ ! Base: generatePrettyUrl is now simpler and hopefully more efficient. (Subs-PrettyUrls.php)
+ + Base: If numbers were used in the query string, allow the possibility of redirecting to a pretty URL. (QueryString.php)

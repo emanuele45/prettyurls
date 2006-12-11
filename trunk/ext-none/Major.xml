@@ -5,6 +5,90 @@
 	<id>el:prettyurls-ext-none</id>
 	<version>0.1</version>
 
+	<file name="$boarddir/SSI.php">
+		<operation>
+			<search position="replace"><![CDATA[
+		censorText($row['body']);
+
+		// Build the array.
+		$posts[] = array(
+			'board' => array(
+				'id' => $row['ID_BOARD'],
+				'name' => $row['bName'],
+				'href' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0',
+				'link' => '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '.0">' . $row['bName'] . '</a>'
+]]></search>
+			<add><![CDATA[
+		censorText($row['body']);
+
+		// Build the array.
+		$pretty_board = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']) . '/0/';
+		$posts[] = array(
+			'board' => array(
+				'id' => $row['ID_BOARD'],
+				'name' => $row['bName'],
+				'href' => $pretty_board,
+				'link' => '<a href="' . $pretty_board . '">' . $row['bName'] . '</a>'
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+			$icon_sources[$row['icon']] = file_exists($settings['theme_dir'] . '/images/post/' . $row['icon'] . '.gif') ? 'images_url' : 'default_images_url';
+
+		// Build the array.
+		$posts[] = array(
+			'board' => array(
+				'id' => $row['ID_BOARD'],
+				'name' => $row['bName'],
+				'href' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0',
+				'link' => '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '.0">' . $row['bName'] . '</a>'
+]]></search>
+			<add><![CDATA[
+			$icon_sources[$row['icon']] = file_exists($settings['theme_dir'] . '/images/post/' . $row['icon'] . '.gif') ? 'images_url' : 'default_images_url';
+
+		// Build the array.
+		$pretty_board = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']) . '/0/';
+		$posts[] = array(
+			'board' => array(
+				'id' => $row['ID_BOARD'],
+				'name' => $row['bName'],
+				'href' => $pretty_board,
+				'link' => '<a href="' . $pretty_board . '">' . $row['bName'] . '</a>'
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+	while ($row = mysql_fetch_assoc($request))
+		$boards[] = array(
+			'id' => $row['ID_BOARD'],
+			'num_posts' => $row['numPosts'],
+			'num_topics' => $row['numTopics'],
+			'name' => $row['name'],
+			'new' => empty($row['isRead']),
+			'href' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0',
+			'link' => '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '.0">' . $row['name'] . '</a>'
+		);
+]]></search>
+			<add><![CDATA[
+	while ($row = mysql_fetch_assoc($request))
+	{
+		$pretty_board = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']) . '/0/';
+		$boards[] = array(
+			'id' => $row['ID_BOARD'],
+			'num_posts' => $row['numPosts'],
+			'num_topics' => $row['numTopics'],
+			'name' => $row['name'],
+			'new' => empty($row['isRead']),
+			'href' => $pretty_board,
+			'link' => '<a href="' . $pretty_board . '">' . $row['name'] . '</a>'
+		);
+	}
+]]></add>
+		</operation>
+	</file>
+
 	<file name="$sourcedir/BoardIndex.php">
 		<operation>
 			<search position="replace"><![CDATA[
@@ -148,6 +232,42 @@ function MessageIndex()
 		</operation>
 	</file>
 
+	<file name="$sourcedir/News.php">
+		<operation>
+			<search position="replace"><![CDATA[
+				'topic' => $row['ID_TOPIC'],
+				'board' => array(
+					'name' => cdata_parse($row['bname']),
+					'id' => $row['ID_BOARD'],
+					'link' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0'
+]]></search>
+			<add><![CDATA[
+				'topic' => $row['ID_TOPIC'],
+				'board' => array(
+					'name' => cdata_parse($row['bname']),
+					'id' => $row['ID_BOARD'],
+					'link' => $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']) . '/0/'
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+				),
+				'board' => array(
+					'name' => cdata_parse($row['bname']),
+					'id' => $row['ID_BOARD'],
+					'link' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0'
+]]></search>
+			<add><![CDATA[
+				),
+				'board' => array(
+					'name' => cdata_parse($row['bname']),
+					'id' => $row['ID_BOARD'],
+					'link' => $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']) . '/0/'
+]]></add>
+		</operation>
+	</file>
+
 	<file name="$sourcedir/Recent.php">
 		<operation>
 			<search position="replace"><![CDATA[
@@ -181,6 +301,66 @@ function getLastPosts($showlatestcount)
 				'name' => $row['bName'],
 				'href' => $pretty_board,
 				'link' => '<a href="' . $pretty_board . '">' . $row['bName'] . '</a>'
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		$context['page_index'] = constructPageIndex($scripturl . '?action=recent;board=' . $board . '.%d', $_REQUEST['start'], min(100, $total_posts), 10, true);
+]]></search>
+			<add><![CDATA[
+		$pretty_board = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$board]) ? $context['pretty']['board_urls'][$board] : $board);
+		$context['page_index'] = constructPageIndex($pretty_board . '/%d/' . '?action=recent', $_REQUEST['start'], min(100, $total_posts), 10, true);
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		// And build the array.
+		$context['posts'][$row['ID_MSG']] = array(
+]]></search>
+			<add><![CDATA[
+		// And build the array.
+		$pretty_board = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']) . '/0/';
+		$context['posts'][$row['ID_MSG']] = array(
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+				'href' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0',
+				'link' => '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '.0">' . $row['bname'] . '</a>'
+			),
+]]></search>
+			<add><![CDATA[
+				'href' => $pretty_board,
+				'link' => '<a href="' . $pretty_board . '">' . $row['bname'] . '</a>'
+			),
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		// And build the array.
+		$context['topics'][$row['ID_TOPIC']] = array(
+]]></search>
+			<add><![CDATA[
+		// And build the array.
+		$pretty_board = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']) . '/0/';
+		$context['topics'][$row['ID_TOPIC']] = array(
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+				'href' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0',
+				'link' => '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '.0">' . $row['bname'] . '</a>'
+			)
+]]></search>
+			<add><![CDATA[
+				'href' => $pretty_board,
+				'link' => '<a href="' . $pretty_board . '">' . $row['bname'] . '</a>'
+			)
 ]]></add>
 		</operation>
 	</file>
