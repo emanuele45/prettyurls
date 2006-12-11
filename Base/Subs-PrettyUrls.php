@@ -4,24 +4,6 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-//	mb_substr compatibility function
-//	From a comment in the PHP manual: http://au3.php.net/manual/en/function.substr.php#55107
-if (!function_exists('mb_substr'))
-{
-	function mb_substr($str, $start)
-	{
-		preg_match_all("/./su", $str, $ar);
-
-		if(func_num_args() >= 3)
-		{
-			$end = func_get_arg(2);
-			return join("", array_slice($ar[0], $start, $end));
-		} else {
-			return join("", array_slice($ar[0], $start));
-		}
-	};
-};
-
 //	Generate a pretty URL from a given text
 function generatePrettyUrl($text)
 {
@@ -84,15 +66,17 @@ function generatePrettyUrl($text)
 	);
 
 //	Change the entities back to normal characters
-	$text = preg_replace('~&amp;~', '&', $text);
+	$text = str_replace('&amp;', '&', $text);
 	$prettytext = '';
 
-	for ($i = 0; $i < strlen($text); $i++)
+//	Split up $text into UTF-8 letters
+	preg_match_all("~.~su", $text, $characters);
+	foreach ($characters as $aLetter)
 	{
 		foreach ($characterHash as $replace => $search)
 		{
 //			Found a character? Replace it!
-			if (in_array(mb_substr($text, $i, 1, 'UTF-8'), $search))
+			if (in_array($aLetter, $search))
 			{
 				$prettytext .= $replace;
 				break;
