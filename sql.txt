@@ -1,9 +1,0 @@
-CREATE TABLE `smf_topics_urls` (
-  `ID_TOPIC` mediumint(8) unsigned NOT NULL default '0',
-  `ID_BOARD` smallint(5) unsigned NOT NULL default '0',
-  `pretty_url` varchar(120) NOT NULL default '',
-  PRIMARY KEY  (`ID_TOPIC`),
-  UNIQUE KEY `pretty_url` (`pretty_url`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
- ALTER TABLE `smf_topics` ADD `pretty_url` VARCHAR( 120 ) NOT NULL ;

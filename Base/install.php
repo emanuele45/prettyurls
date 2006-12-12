@@ -17,11 +17,6 @@ elseif (!defined('SMF'))
 
 require_once($sourcedir . '/Subs-PrettyUrls.php');
 
-//	Add the pretty_root_url setting to the settings table:
-db_query("
-	INSERT IGNORE INTO {$db_prefix}settings (variable, value)
-	VALUES ('pretty_root_url', '" . $boardurl . "')", __FILE__, __LINE__);
-
 //	Get the current pretty board urls, or make a new array if there are none
 $pretty_board_urls = isset($modSettings['pretty_board_urls']) ? unserialize($modSettings['pretty_board_urls']) : array();
 
@@ -39,8 +34,41 @@ while ($row = mysql_fetch_assoc($query))
 //		Can't be empty, can't be a number and can't be the same as another
 		if ($pretty_text != '' && !is_numeric($pretty_text) && !array_search($pretty_text, $pretty_board_urls))
 			$pretty_board_urls[$row['ID_BOARD']] = $pretty_text;
+		else
+//			Add suffix '-bID_BOARD' to the pretty url
+			$pretty_board_urls[$row['ID_BOARD']] = $pretty_text . ($pretty_text != '' ? '-b' : 'b') . $row['ID_BOARD'];
 	}
 }
+mysql_free_result($query);
+
+//	Create the pretty_topic_urls table
+db_query("
+	CREATE TABLE IF NOT EXISTS {$db_prefix}pretty_topic_urls (
+	`ID_TOPIC` mediumint(8) NOT NULL default '0',
+	`ID_BOARD` smallint(5) NOT NULL default '0',
+	`pretty_url` varchar(80) NOT NULL,
+	PRIMARY KEY (`ID_TOPIC`),
+	UNIQUE (`pretty_url`))", __FILE__, __LINE__);
+
+//	Add a pretty_url column to the topics table
+$query = db_query("
+	SHOW COLUMNS
+	FROM {$db_prefix}topics
+	LIKE 'pretty_url'", __FILE__, __LINE__);
+$no_upgrade = mysql_num_rows($query) > 0;
+if (!$no_upgrade)
+	db_query("
+		ALTER TABLE {$db_prefix}topics
+		ADD `pretty_url` varchar(80) NOT NULL", __FILE__, __LINE__);
+mysql_free_result($query);
+
+//	Synchronise the topic URLs
+synchroniseTopicUrls();
+
+//	Add the pretty_root_url setting to the settings table:
+db_query("
+	INSERT IGNORE INTO {$db_prefix}settings (variable, value)
+	VALUES ('pretty_root_url', '" . $boardurl . "')", __FILE__, __LINE__);
 
 //	Update the settings table
 updateSettings(array('pretty_board_urls' => serialize($pretty_board_urls)));
