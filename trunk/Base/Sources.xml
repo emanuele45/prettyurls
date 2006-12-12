@@ -46,6 +46,9 @@ cleanRequest();
 //			Can't be empty, can't be a number and can't be the same as another
 			if ($pretty_text != '' && !is_numeric($pretty_text) && !array_search($pretty_text, $context['pretty']['board_urls']))
 				$context['pretty']['board_urls'][$new_board_id] = $pretty_text;
+			else
+//				Add suffix '-bID_BOARD' to the pretty url
+				$context['pretty']['board_urls'][$new_board_id] = $pretty_text . ($pretty_text != '' ? '-b' : 'b') . $new_board_id;
 			updateSettings(array('pretty_board_urls' => serialize($context['pretty']['board_urls'])));
 ]]></add>
 		</operation>
@@ -75,7 +78,7 @@ function cleanRequest()
 			<add><![CDATA[
 function cleanRequest()
 {
-	global $board, $topic, $boardurl, $scripturl, $modSettings, $context;
+	global $board, $topic, $boardurl, $scripturl, $modSettings, $context, $db_prefix;
 ]]></add>
 		</operation>
 
@@ -94,6 +97,38 @@ function cleanRequest()
 				$context['pretty']['oldschoolquery'] = true;
 		} else {
 			$board = (int) array_search(strtolower($_REQUEST['board']), $context['pretty']['board_urls']);
+		}
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		$topic = (int) $_REQUEST['topic'];
+]]></search>
+			<add><![CDATA[
+		// Check for pretty topic URLs, and possibly redirect if oldschool queries were used.
+		if (is_numeric($_REQUEST['topic']))
+		{
+			$topic = (int) $_REQUEST['topic'];
+			if (!isset($_REQUEST['action']))
+				$context['pretty']['oldschoolquery'] = true;
+		} else {
+			$_REQUEST['topic'] = strtolower($_REQUEST['topic']);
+//			Are we feeling lucky?
+			$query = db_query("
+				SELECT ID_TOPIC
+				FROM {$db_prefix}pretty_topic_urls
+				WHERE pretty_url = '$_REQUEST[topic]'
+				LIMIT 1", __FILE__, __LINE__);
+//			No? No topic?!
+			if (mysql_num_rows($query) == 0)
+			{
+				$topic = 0;
+			} else {
+				while ($row = mysql_fetch_assoc($query))
+					$topic = (int) $row['ID_TOPIC'];
+			}
+			mysql_free_result($query);
 		}
 ]]></add>
 		</operation>

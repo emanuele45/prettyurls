@@ -23,3 +23,5 @@ Pretty URLs 0.1                                          ??
  + ext-none: Replaced the board URLs in SSI.php, News.php and Recent.php.
  ! Base: generatePrettyUrl is now simpler and hopefully more efficient. (Subs-PrettyUrls.php)
  + Base: If numbers were used in the query string, allow the possibility of redirecting to a pretty URL. (QueryString.php)
+ + Base: Added the smf_pretty_topic_urls table and the processing to allow topic urls. (install.php, QueryString.php)
+ + Base: Created the synchroniseTopicUrls() function. (Subs-PrettyUrls.php)

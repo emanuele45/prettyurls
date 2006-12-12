@@ -6,3 +6,7 @@ RewriteEngine on
 #	Pretty board urls
 RewriteRule ^([-_a-zA-Z0-9]+)/?$ ./index.php?action=messageindex;board=$1.0 [L,QSA]
 RewriteRule ^([-_a-zA-Z0-9]+)/([0-9]*)/?$ ./index.php?action=messageindex;board=$1.$2 [L,QSA]
+
+#	Pretty topic urls
+RewriteRule ^([-_a-zA-Z0-9]+)/([-_a-zA-Z0-9]+)/?$ ./index.php?action=display;board=$1;topic=$2.0 [L,QSA]
+RewriteRule ^([-_a-zA-Z0-9]+)/([-_a-zA-Z0-9]+)/([0-9]*)/?$ ./index.php?action=display;board=$1;topic=$2.$3
