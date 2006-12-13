@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>el:prettyurls</id>
+	<version>0.1</version>
+
+	<file name="$boarddir/index.php">
+		<operation>
+			<search position="replace"><![CDATA[
+// Clean the request variables, add slashes, etc.
+cleanRequest();
+$context = array();
+]]></search>
+			<add><![CDATA[
+$context = array('pretty' => array());
+// Unserialize the array of pretty board URLs
+$context['pretty']['board_urls'] = unserialize($modSettings['pretty_board_urls']);
+// Clean the request variables, add slashes, etc.
+cleanRequest();
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		'mergetopics' => array('SplitTopics.php', 'MergeTopics'),
+]]></search>
+			<add><![CDATA[
+		'mergetopics' => array('SplitTopics.php', 'MergeTopics'),
+		'messageindex' => array('MessageIndex.php', 'MessageIndex'),
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/ManageBoards.php">
+		<operation>
+			<search position="replace"><![CDATA[
+			createBoard($boardOptions);
+]]></search>
+			<add><![CDATA[
+			$new_board_id = createBoard($boardOptions);
+
+//			Pretty Board URL
+			require_once($sourcedir . '/Subs-PrettyUrls.php');
+			$pretty_text = generatePrettyUrl($boardOptions['board_name']);
+//			Can't be empty, can't be a number and can't be the same as another
+			if ($pretty_text != '' && !is_numeric($pretty_text) && !array_search($pretty_text, $context['pretty']['board_urls']))
+				$context['pretty']['board_urls'][$new_board_id] = $pretty_text;
+			else
+//				Add suffix '-bID_BOARD' to the pretty url
+				$context['pretty']['board_urls'][$new_board_id] = $pretty_text . ($pretty_text != '' ? '-b' : 'b') . $new_board_id;
+			updateSettings(array('pretty_board_urls' => serialize($context['pretty']['board_urls'])));
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/ModSettings.php">
+		<operation>
+			<search position="replace"><![CDATA[
+			array('int', 'max_image_height'),
+]]></search>
+			<add><![CDATA[
+			array('int', 'max_image_height'),
+		'',
+			//	Packages Directory
+			array('text', 'pretty_root_url', 36),
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/QueryString.php">
+		<operation>
+			<search position="replace"><![CDATA[
+function cleanRequest()
+{
+	global $board, $topic, $boardurl, $scripturl, $modSettings;
+]]></search>
+			<add><![CDATA[
+function cleanRequest()
+{
+	global $board, $topic, $boardurl, $scripturl, $modSettings, $context, $db_prefix;
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		// Now make absolutely sure it's a number.
+		$board = (int) $_REQUEST['board'];
+]]></search>
+			<add><![CDATA[
+		// Now make absolutely sure it's a number.
+		// Check for pretty board URLs too, and possibly redirect if oldschool queries were used.
+		if (is_numeric($_REQUEST['board']))
+		{
+			$board = (int) $_REQUEST['board'];
+			if (!isset($_REQUEST['action']))
+				$context['pretty']['oldschoolquery'] = true;
+		} else {
+			$board = (int) array_search(strtolower($_REQUEST['board']), $context['pretty']['board_urls']);
+		}
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		$topic = (int) $_REQUEST['topic'];
+]]></search>
+			<add><![CDATA[
+		// Check for pretty topic URLs, and possibly redirect if oldschool queries were used.
+		if (is_numeric($_REQUEST['topic']))
+		{
+			$topic = (int) $_REQUEST['topic'];
+			if (!isset($_REQUEST['action']))
+				$context['pretty']['oldschoolquery'] = true;
+		} else {
+			$_REQUEST['topic'] = strtolower($_REQUEST['topic']);
+//			Are we feeling lucky?
+			$query = db_query("
+				SELECT ID_TOPIC
+				FROM {$db_prefix}pretty_topic_urls
+				WHERE pretty_url = '$_REQUEST[topic]'
+				LIMIT 1", __FILE__, __LINE__);
+//			No? No topic?!
+			if (mysql_num_rows($query) == 0)
+			{
+				$topic = 0;
+			} else {
+				while ($row = mysql_fetch_assoc($query))
+					$topic = (int) $row['ID_TOPIC'];
+			}
+			mysql_free_result($query);
+		}
+]]></add>
+		</operation>
+	</file>
+
+</modification>

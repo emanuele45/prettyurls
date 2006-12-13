@@ -1,0 +1,14 @@
+#	Example .htaccess file for the SMF Pretty Urls mod
+#	If you already have a .htaccess file you will have to manually edit this and that file together. If not, you should be able rename this file to .htaccess and have it work without any changes. The default options should work, but other possible options are also provided commented out (for example, if you want to change the base location to /forum/)
+
+RewriteEngine on
+
+#	Pretty board urls
+RewriteRule ^([-_a-zA-Z0-9]+)/?$ ./index.php?action=messageindex;board=$1.0 [L,QSA]
+RewriteRule ^([-_a-zA-Z0-9]+)/([0-9]*)/?$ ./index.php?action=messageindex;board=$1.$2 [L,QSA]
+
+#	Pretty topic urls
+RewriteRule ^([-_a-zA-Z0-9]+)/([-_a-zA-Z0-9]+)/?$ ./index.php?action=display;board=$1;topic=$2.0 [L,QSA]
+RewriteRule ^([-_a-zA-Z0-9]+)/([-_a-zA-Z0-9]+)/([0-9]*)/?$ ./index.php?action=display;board=$1;topic=$2.$3
+RewriteRule ^([-_a-zA-Z0-9]+)/([-_a-zA-Z0-9]+)/msg([0-9]*)/?$ ./index.php?action=display;board=$1;topic=$2.msg$3
+RewriteRule ^([-_a-zA-Z0-9]+)/([-_a-zA-Z0-9]+)/new/?$ ./index.php?action=display;board=$1;topic=$2.new
