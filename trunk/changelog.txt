@@ -10,7 +10,7 @@ Legend:
  % Development flag or note, such as branching.
 
 
-Pretty URLs 0.1                                          ??
+Pretty URLs 0.1                                                December 13, 2006
 ================================================================================
  + Base: Added generatePrettyUrl function and $characterHash with almost all characters from latin-1. (Subs-PrettyUrls.php)
  + Base: Generate the pretty URLs of the forum's boards. (install.php)
@@ -25,3 +25,5 @@ Pretty URLs 0.1                                          ??
  + Base: If numbers were used in the query string, allow the possibility of redirecting to a pretty URL. (QueryString.php)
  + Base: Added the smf_pretty_topic_urls table and the processing to allow topic urls. (install.php, QueryString.php)
  + Base: Created the synchroniseTopicUrls() function. (Subs-PrettyUrls.php)
+ + ext-none: Replace the topic urls in the BoardIndex, MessageIndex and Display templates.
+ ! Base: Altered the example.htaccess file so that the new topic urls would work.
