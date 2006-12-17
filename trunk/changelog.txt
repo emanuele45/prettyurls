@@ -1,4 +1,4 @@
-Changelog started November, 2006; Currently at version 0.1
+Changelog started November, 2006; Currently at version 0.2
 
 Legend:
 --------------------------------------------------------------------------------
@@ -9,6 +9,11 @@ Legend:
  - Feature or option removal.
  % Development flag or note, such as branching.
 
+
+Pretty URLs 0.2                                                ??
+================================================================================
+ ! Base: Don't give pretty URLs to recycled topics, and fixed '&quot;' issues. (Subs-PrettyUrls.php)
+ ! Base: Adding and changing board URLs is now done through modifyBoard(). (Subs-Boards.php)
 
 Pretty URLs 0.1                                                December 13, 2006
 ================================================================================

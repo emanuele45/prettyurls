@@ -1,5 +1,5 @@
 <?php
-//	Version: 0.1; Subs-PrettyUrls
+//	Version: 0.2; Subs-PrettyUrls
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -67,6 +67,7 @@ function generatePrettyUrl($text)
 
 //	Change the entities back to normal characters
 	$text = str_replace('&amp;', '&', $text);
+	$text = str_replace('&quot;', '"', $text);
 	$prettytext = '';
 
 //	Split up $text into UTF-8 letters
@@ -90,7 +91,7 @@ function generatePrettyUrl($text)
 
 function synchroniseTopicUrls()
 {
-	global $db_prefix;
+	global $db_prefix, $modSettings;
 
 //	Get the current database pretty URLs and other stuff
 	$query = db_query("
@@ -126,7 +127,8 @@ function synchroniseTopicUrls()
 //		Both empty? Then get a new pretty URL :)
 		if ($row['pretty_url'] == '' && $row['pretty_url2'] == '')
 		{
-			$pretty_text = substr(generatePrettyUrl($row['subject']), 0, 80);
+//			A topic in the recycle board deserves only a blank URL
+			$pretty_text = $modSettings['recycle_enable'] && $row['ID_BOARD'] == $modSettings['recycle_board'] ? '' : substr(generatePrettyUrl($row['subject']), 0, 80);
 //			Can't be empty, can't be a number and can't be the same as another
 			if ($pretty_text == '' || is_numeric($pretty_text) || array_search($pretty_text, $oldUrls) != 0)
 //				Add suffix '-tID_TOPIC' to the pretty url
@@ -138,7 +140,7 @@ function synchroniseTopicUrls()
 				'ID_BOARD' => $row['ID_BOARD'],
 				'pretty_url' => $pretty_text
 			);
-		$oldUrls[] = $pretty_text;
+			$oldUrls[] = $pretty_text;
 		}
 //		First is empty, so use the second
 		elseif ($row['pretty_url'] == '')
