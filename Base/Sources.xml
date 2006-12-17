@@ -32,28 +32,6 @@ cleanRequest();
 		</operation>
 	</file>
 
-	<file name="$sourcedir/ManageBoards.php">
-		<operation>
-			<search position="replace"><![CDATA[
-			createBoard($boardOptions);
-]]></search>
-			<add><![CDATA[
-			$new_board_id = createBoard($boardOptions);
-
-//			Pretty Board URL
-			require_once($sourcedir . '/Subs-PrettyUrls.php');
-			$pretty_text = generatePrettyUrl($boardOptions['board_name']);
-//			Can't be empty, can't be a number and can't be the same as another
-			if ($pretty_text != '' && !is_numeric($pretty_text) && !array_search($pretty_text, $context['pretty']['board_urls']))
-				$context['pretty']['board_urls'][$new_board_id] = $pretty_text;
-			else
-//				Add suffix '-bID_BOARD' to the pretty url
-				$context['pretty']['board_urls'][$new_board_id] = $pretty_text . ($pretty_text != '' ? '-b' : 'b') . $new_board_id;
-			updateSettings(array('pretty_board_urls' => serialize($context['pretty']['board_urls'])));
-]]></add>
-		</operation>
-	</file>
-
 	<file name="$sourcedir/ModSettings.php">
 		<operation>
 			<search position="replace"><![CDATA[
@@ -130,6 +108,62 @@ function cleanRequest()
 			}
 			mysql_free_result($query);
 		}
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Subs-Boards.php">
+		<operation>
+			<search position="replace"><![CDATA[
+function modifyBoard($board_id, &$boardOptions)
+{
+	global $sourcedir, $cat_tree, $boards, $boardList, $modSettings, $db_prefix;
+]]></search>
+			<add><![CDATA[
+function modifyBoard($board_id, &$boardOptions)
+{
+	global $sourcedir, $cat_tree, $boards, $boardList, $modSettings, $db_prefix, $context;
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+	if (isset($boardOptions['move_to']))
+		reorderBoards();
+]]></search>
+			<add><![CDATA[
+	if (isset($boardOptions['move_to']))
+		reorderBoards();
+
+//	Update the pretty board URLs
+	if (isset($boardOptions['pretty_url']))
+	{
+		$pretty_url = generatePrettyUrl($boardOptions['pretty_url']);
+
+//		Set the current URL blank so that the array_search will work
+		$context['pretty']['board_urls'][$board_id] = '';
+
+//		Can't be empty, can't be a number and can't be the same as another
+		if ($pretty_url == '' || is_numeric($pretty_url) || array_search($pretty_url, $context['pretty']['board_urls']) != 0)
+//			Add suffix '-bID_BOARD' to the pretty url
+			$pretty_url .= ($pretty_url != '' ? '-b' : 'b') . $ID_BOARD;
+
+//		Save to the database
+		$context['pretty']['board_urls'][$board_id] = $pretty_url;
+		updateSettings(array('pretty_board_urls' => serialize($context['pretty']['board_urls'])));
+	}
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+	// Change the board according to the given specifications.
+]]></search>
+			<add><![CDATA[
+	if (!isset($boardOptions['pretty_url']))
+		$boardOptions['pretty_url'] = $boardOptions['board_name'];
+
+	// Change the board according to the given specifications.
 ]]></add>
 		</operation>
 	</file>
