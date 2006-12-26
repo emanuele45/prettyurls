@@ -14,6 +14,9 @@ Pretty URLs 0.2                                                ??
 ================================================================================
  ! Base: Don't give pretty URLs to recycled topics, and fixed '&quot;' issues. (Subs-PrettyUrls.php)
  ! Base: Adding and changing board URLs is now done through modifyBoard(). (Subs-Boards.php)
+ ! ext-none: Fixed the Display template because a change hadn't been committed somehow.
+ ! Base: Don't add an action in .htaccess because it won't work with an invalid board URL. (QueryString.php)
+ + ext-none: Replace topic urls in SSI.php, News.php and Recent.php.
 
 Pretty URLs 0.1                                                December 13, 2006
 ================================================================================

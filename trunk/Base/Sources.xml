@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls</id>
-	<version>0.1</version>
+	<version>0.2</version>
 
 	<file name="$boarddir/index.php">
 		<operation>
@@ -18,16 +18,6 @@ $context = array('pretty' => array());
 $context['pretty']['board_urls'] = unserialize($modSettings['pretty_board_urls']);
 // Clean the request variables, add slashes, etc.
 cleanRequest();
-]]></add>
-		</operation>
-
-		<operation>
-			<search position="replace"><![CDATA[
-		'mergetopics' => array('SplitTopics.php', 'MergeTopics'),
-]]></search>
-			<add><![CDATA[
-		'mergetopics' => array('SplitTopics.php', 'MergeTopics'),
-		'messageindex' => array('MessageIndex.php', 'MessageIndex'),
 ]]></add>
 		</operation>
 	</file>
@@ -71,7 +61,7 @@ function cleanRequest()
 		if (is_numeric($_REQUEST['board']))
 		{
 			$board = (int) $_REQUEST['board'];
-			if (!isset($_REQUEST['action']))
+			if (!isset($_REQUEST['pretty']))
 				$context['pretty']['oldschoolquery'] = true;
 		} else {
 			$board = (int) array_search(strtolower($_REQUEST['board']), $context['pretty']['board_urls']);
@@ -88,7 +78,7 @@ function cleanRequest()
 		if (is_numeric($_REQUEST['topic']))
 		{
 			$topic = (int) $_REQUEST['topic'];
-			if (!isset($_REQUEST['action']))
+			if (!isset($_REQUEST['pretty']))
 				$context['pretty']['oldschoolquery'] = true;
 		} else {
 			$_REQUEST['topic'] = strtolower($_REQUEST['topic']);
