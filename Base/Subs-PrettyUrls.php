@@ -1,5 +1,5 @@
 <?php
-//	Version: 0.2; Subs-PrettyUrls
+//	Version: 0.3; Subs-PrettyUrls
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -14,9 +14,9 @@ function generatePrettyUrl($text)
 		'd'	=>	array ('d', 'D', 'Ð'),
 		'e'	=>	array ('e', 'E', 'è', 'È', 'é', 'É', 'ê', 'Ê', 'ë', 'Ë'),
 		'f'	=>	array ('f', 'F'),
-		'g'	=>	array ('g', 'G'),
+		'g'	=>	array ('g', 'G', 'ğ', 'Ğ'),
 		'h'	=>	array ('h', 'H'),
-		'i'	=>	array ('i', 'I', 'ì', 'Ì', 'í', 'Í', 'î', 'Î', 'ï', 'Ï'),
+		'i'	=>	array ('i', 'I', 'ì', 'Ì', 'í', 'Í', 'î', 'Î', 'ï', 'Ï', 'ı', 'İ'),
 		'j'	=>	array ('j', 'J'),
 		'k'	=>	array ('k', 'K'),
 		'l'	=>	array ('l', 'L'),
@@ -26,7 +26,7 @@ function generatePrettyUrl($text)
 		'p'	=>	array ('p', 'P'),
 		'q'	=>	array ('q', 'Q'),
 		'r'	=>	array ('r', 'R', '®'),
-		's'	=>	array ('s', 'S'),
+		's'	=>	array ('s', 'S', 'ş', 'Ş'),
 		't'	=>	array ('t', 'T'),
 		'u'	=>	array ('u', 'U', 'ù', 'Ù', 'ú', 'Ú', 'û', 'Û', 'ü', 'Ü', 'µ'),
 		'v'	=>	array ('v', 'V'),

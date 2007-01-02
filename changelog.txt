@@ -1,4 +1,4 @@
-Changelog started November, 2006; Currently at version 0.2
+Changelog started November 2006; Currently at version 0.3
 
 Legend:
 --------------------------------------------------------------------------------
@@ -9,6 +9,13 @@ Legend:
  - Feature or option removal.
  % Development flag or note, such as branching.
 
+
+Pretty URLs 0.3                                                ??
+================================================================================
+ + Base: Added some Turkish characters. (Subs-PrettyUrls.php)
+ ! ext-none: Fixed some problems in SSI.php.
+ + Base: Give new topics a pretty URL. (Subs-Post.php)
+ + TP-ext-none: Change the URLs of the front page in TP_boardNews(). (TPortal.php)
 
 Pretty URLs 0.2                                                December 26, 2006
 ================================================================================

@@ -1,4 +1,4 @@
-Copyright (c) 2006, Dannii Willis
+Copyright (c) 2006-2007, Dannii Willis
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
