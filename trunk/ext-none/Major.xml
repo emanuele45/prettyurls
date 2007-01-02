@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls-ext-none</id>
-	<version>0.2</version>
+	<version>0.3</version>
 
 	<file name="$boarddir/SSI.php">
 		<operation>
@@ -35,7 +35,7 @@
 
 		// Build the array.
 		$pretty_board = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']) . '/';
-		$pretty_topic = $pretty_board . (isset($row['pretty_url']) && $row['pretty_url'] != '' ? $row['pretty_url'] : $row) . '/';
+		$pretty_topic = $pretty_board . (isset($row['pretty_url']) && $row['pretty_url'] != '' ? $row['pretty_url'] : $row['ID_TOPIC']) . '/';
 		$posts[] = array(
 			'board' => array(
 				'id' => $row['ID_BOARD'],
@@ -111,7 +111,7 @@
 
 		// Build the array.
 		$pretty_board = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']) . '/';
-		$pretty_topic = $pretty_board . (isset($row['pretty_url']) && $row['pretty_url'] != '' ? $row['pretty_url'] : $row) . '/';
+		$pretty_topic = $pretty_board . (isset($row['pretty_url']) && $row['pretty_url'] != '' ? $row['pretty_url'] : $row['ID_TOPIC']) . '/';
 		$posts[] = array(
 			'board' => array(
 				'id' => $row['ID_BOARD'],
@@ -220,7 +220,7 @@
 			'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0">' . $row['subject'] . '</a>',
 ]]></search>
 			<add><![CDATA[
-		$pretty_topic = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']) . '/' . (isset($row['pretty_url']) && $row['pretty_url'] != '' ? $row['pretty_url'] : $row) . '/0/';
+		$pretty_topic = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']) . '/' . (isset($row['pretty_url']) && $row['pretty_url'] != '' ? $row['pretty_url'] : $row['ID_TOPIC']) . '/0/';
 		$topics[] = array(
 			'id' => $row['ID_TOPIC'],
 			'subject' => $row['subject'],
@@ -249,7 +249,7 @@
 			<add><![CDATA[
 		censorText($row['body']);
 
-		$pretty_topic = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']) . '/' . (isset($row['pretty_url']) && $row['pretty_url'] != '' ? $row['pretty_url'] : $row) . '/';
+		$pretty_topic = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']) . '/' . (isset($row['pretty_url']) && $row['pretty_url'] != '' ? $row['pretty_url'] : $row['ID_TOPIC']) . '/';
 		$return[] = array(
 ]]></add>
 		</operation>
@@ -296,7 +296,7 @@
 		// Check if we've already come by an event linked to this same topic with the same title... and don't display it if we have.
 ]]></search>
 			<add><![CDATA[
-		$pretty_topic = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']) . '/' . (isset($row['pretty_url']) && $row['pretty_url'] != '' ? $row['pretty_url'] : $row) . '/0/';
+		$pretty_topic = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']) . '/' . (isset($row['pretty_url']) && $row['pretty_url'] != '' ? $row['pretty_url'] : $row['ID_TOPIC']) . '/0/';
 		// Check if we've already come by an event linked to this same topic with the same title... and don't display it if we have.
 ]]></add>
 		</operation>
