@@ -16,6 +16,8 @@ Pretty URLs 0.3                                                ??
  ! ext-none: Fixed some problems in SSI.php.
  + Base: Give new topics a pretty URL. (Subs-Post.php)
  + TP-ext-none: Change the URLs of the front page in TP_boardNews(). (TPortal.php)
+ + ext-none: Change the URLs of Stats.php.
+ + Added a Package List. (packages.xml)
 
 Pretty URLs 0.2                                                December 26, 2006
 ================================================================================

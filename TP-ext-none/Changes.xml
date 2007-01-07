@@ -21,7 +21,7 @@
 ]]></search>
 			<add><![CDATA[
 		//	Pretty URLs
-		$pretty_topic = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']) . '/' . $pretty_board . (isset($row['pretty_url']) && $row['pretty_url'] != '' ? $row['pretty_url'] : $row['ID_TOPIC']) . '/';
+		$pretty_topic = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']) . '/' . (isset($row['pretty_url']) && $row['pretty_url'] != '' ? $row['pretty_url'] : $row['ID_TOPIC']) . '/';
 
 		// If we want to limit the length of the post.
 ]]></add>

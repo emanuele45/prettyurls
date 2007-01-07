@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>el:prettyurls-ext-none</id>
+	<version>0.3</version>
+
+	<file name="$sourcedir/Stats.php">
+		<operation>
+			<search position="replace"><![CDATA[
+		$context['top_boards'][] = array(
+			'id' => $row_board['ID_BOARD'],
+			'name' => $row_board['name'],
+			'num_posts' => $row_board['numPosts'],
+			'href' => $scripturl . '?board=' . $row_board['ID_BOARD'] . '.0',
+			'link' => '<a href="' . $scripturl . '?board=' . $row_board['ID_BOARD'] . '.0">' . $row_board['name'] . '</a>'
+]]></search>
+			<add><![CDATA[
+		$pretty_board = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row_board['ID_BOARD']]) ? $context['pretty']['board_urls'][$row_board['ID_BOARD']] : $row_board['ID_BOARD']) . '/0/';
+		$context['top_boards'][] = array(
+			'id' => $row_board['ID_BOARD'],
+			'name' => $row_board['name'],
+			'num_posts' => $row_board['numPosts'],
+			'href' => $pretty_board,
+			'link' => '<a href="' . $pretty_board . '">' . $row_board['name'] . '</a>'
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		SELECT m.subject, t.numReplies, t.ID_BOARD, t.ID_TOPIC, b.name
+]]></search>
+			<add><![CDATA[
+		SELECT m.subject, t.numReplies, t.ID_BOARD, t.ID_TOPIC, b.name, t.pretty_url
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		$context['top_topics_replies'][] = array(
+			'id' => $row_topic_reply['ID_TOPIC'],
+			'board' => array(
+				'id' => $row_topic_reply['ID_BOARD'],
+				'name' => $row_topic_reply['name'],
+				'href' => $scripturl . '?board=' . $row_topic_reply['ID_BOARD'] . '.0',
+				'link' => '<a href="' . $scripturl . '?board=' . $row_topic_reply['ID_BOARD'] . '.0">' . $row_topic_reply['name'] . '</a>'
+			),
+			'subject' => $row_topic_reply['subject'],
+			'num_replies' => $row_topic_reply['numReplies'],
+			'href' => $scripturl . '?topic=' . $row_topic_reply['ID_TOPIC'] . '.0',
+			'link' => '<a href="' . $scripturl . '?topic=' . $row_topic_reply['ID_TOPIC'] . '.0">' . $row_topic_reply['subject'] . '</a>'
+]]></search>
+			<add><![CDATA[
+		$pretty_board = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row_topic_reply['ID_BOARD']]) ? $context['pretty']['board_urls'][$row_topic_reply['ID_BOARD']] : $row_topic_reply['ID_BOARD']) . '/';
+		$pretty_topic = $pretty_board . (isset($row_topic_reply['pretty_url']) && $row_topic_reply['pretty_url'] != '' ? $row_topic_reply['pretty_url'] : $row_topic_reply['ID_TOPIC']) . '/0/';
+		$context['top_topics_replies'][] = array(
+			'id' => $row_topic_reply['ID_TOPIC'],
+			'board' => array(
+				'id' => $row_topic_reply['ID_BOARD'],
+				'name' => $row_topic_reply['name'],
+				'href' => $pretty_board . '0/',
+				'link' => '<a href="' . $pretty_board . '0/">' . $row_topic_reply['name'] . '</a>'
+			),
+			'subject' => $row_topic_reply['subject'],
+			'num_replies' => $row_topic_reply['numReplies'],
+			'href' => $pretty_topic,
+			'link' => '<a href="' . $pretty_topic . '">' . $row_topic_reply['subject'] . '</a>'
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		SELECT m.subject, t.numViews, t.ID_BOARD, t.ID_TOPIC, b.name
+]]></search>
+			<add><![CDATA[
+		SELECT m.subject, t.numViews, t.ID_BOARD, t.ID_TOPIC, b.name, t.pretty_url
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		$context['top_topics_views'][] = array(
+			'id' => $row_topic_views['ID_TOPIC'],
+			'board' => array(
+				'id' => $row_topic_views['ID_BOARD'],
+				'name' => $row_topic_views['name'],
+				'href' => $scripturl . '?board=' . $row_topic_views['ID_BOARD'] . '.0',
+				'link' => '<a href="' . $scripturl . '?board=' . $row_topic_views['ID_BOARD'] . '.0">' . $row_topic_views['name'] . '</a>'
+			),
+			'subject' => $row_topic_views['subject'],
+			'num_views' => $row_topic_views['numViews'],
+			'href' => $scripturl . '?topic=' . $row_topic_views['ID_TOPIC'] . '.0',
+			'link' => '<a href="' . $scripturl . '?topic=' . $row_topic_views['ID_TOPIC'] . '.0">' . $row_topic_views['subject'] . '</a>'
+]]></search>
+			<add><![CDATA[
+		$pretty_board = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row_topic_views['ID_BOARD']]) ? $context['pretty']['board_urls'][$row_topic_views['ID_BOARD']] : $row_topic_views['ID_BOARD']) . '/';
+		$pretty_topic = $pretty_board . (isset($row_topic_views['pretty_url']) && $row_topic_views['pretty_url'] != '' ? $row_topic_views['pretty_url'] : $row_topic_views['ID_TOPIC']) . '/0/';
+		$context['top_topics_views'][] = array(
+			'id' => $row_topic_views['ID_TOPIC'],
+			'board' => array(
+				'id' => $row_topic_views['ID_BOARD'],
+				'name' => $row_topic_views['name'],
+				'href' => $pretty_board . '0/',
+				'link' => '<a href="' . $pretty_board . '0/">' . $row_topic_views['name'] . '</a>'
+			),
+			'subject' => $row_topic_views['subject'],
+			'num_views' => $row_topic_views['numViews'],
+			'href' => $pretty_topic,
+			'link' => '<a href="' . $pretty_topic . '">' . $row_topic_views['subject'] . '</a>'
+]]></add>
+		</operation>
+	</file>
+
+</modification>
