@@ -10,7 +10,7 @@ Legend:
  % Development flag or note, such as branching.
 
 
-Pretty URLs 0.3                                                ??
+Pretty URLs 0.3                                                 January 20, 2007
 ================================================================================
  + Base: Added some Turkish (and other) characters. (Subs-PrettyUrls.php)
  ! ext-none: Fixed some problems in SSI.php.
