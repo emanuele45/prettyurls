@@ -6,7 +6,7 @@
 	forum's SSI.php file.
 *******************************************************************************/
 
-//	Pretty URLs mod v0.1
+//	Pretty URLs - Base v0.3
 
 //	If SSI.php is in the same place as this file, and SMF isn't defined, this is being run standalone.
 if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
@@ -72,5 +72,19 @@ db_query("
 
 //	Update the settings table
 updateSettings(array('pretty_board_urls' => serialize($pretty_board_urls)));
+
+//	Add the Package List if it hasn't been added already
+	$query = db_query("
+		SELECT url
+		FROM {$db_prefix}package_servers
+		WHERE url = 'http://prettyurls.googlecode.com/svn/trunk'
+		LIMIT 1", __FILE__, __LINE__);
+	if (mysql_num_rows($query) == 0)
+	{
+		db_query("
+			INSERT INTO {$db_prefix}package_servers (name, url)
+			VALUES ('Pretty URLs Package List', 'http://prettyurls.googlecode.com/svn/trunk')", __FILE__, __LINE__);
+	}
+	mysql_free_result($query);
 
 ?>
