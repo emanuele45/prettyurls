@@ -36,6 +36,45 @@ cleanRequest();
 		</operation>
 	</file>
 
+	<file name="$sourcedir/PackageGet.php">
+		<operation>
+			<search position="replace"><![CDATA[
+	if (getPackageInfo($url . $_REQUEST['package']) == false)
+]]></search>
+			<add><![CDATA[
+	if (getPackageInfo(canonicaliseUrl($url . $_REQUEST['package'])) == false)
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+	package_put_contents($boarddir . '/Packages/' . $package_name, fetch_web_data($url . $_REQUEST['package']));
+]]></search>
+			<add><![CDATA[
+	package_put_contents($boarddir . '/Packages/' . $package_name, fetch_web_data(canonicaliseUrl($url . $_REQUEST['package'])));
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="end"></search>
+			<add><![CDATA[
+//	Canonicalise a url
+//	http://au.php.net/manual/en/function.realpath.php#71334
+function canonicaliseUrl($url)
+{
+	$url = explode('/', $url);
+	$keys = array_keys($url, '..');
+
+	foreach($keys AS $keypos => $key)
+		array_splice($url, $key - ($keypos * 2 + 1), 2);
+
+	$url = implode('/', $url);
+	return str_replace('./', '', $url);
+}
+]]></add>
+		</operation>
+	</file>
+
 	<file name="$sourcedir/QueryString.php">
 		<operation>
 			<search position="replace"><![CDATA[

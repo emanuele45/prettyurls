@@ -12,12 +12,13 @@ Legend:
 
 Pretty URLs 0.3                                                ??
 ================================================================================
- + Base: Added some Turkish characters. (Subs-PrettyUrls.php)
+ + Base: Added some Turkish (and other) characters. (Subs-PrettyUrls.php)
  ! ext-none: Fixed some problems in SSI.php.
  + Base: Give new topics a pretty URL. (Subs-Post.php)
  + TP-ext-none: Change the URLs of the front page in TP_boardNews(). (TPortal.php)
  + ext-none: Change the URLs of Stats.php.
  + Added a Package List. (packages.xml)
+ + Added the canonicaliseUrl() function to fix relative URLs. (PackageGet.php)
 
 Pretty URLs 0.2                                                December 26, 2006
 ================================================================================

@@ -9,7 +9,7 @@
 		<operation>
 			<search position="end"></search>
 			<add><![CDATA[
-//	Packages Directory mod
+//	Pretty URLs mod
 $txt['pretty_root_url'] = 'Pretty URLs root URL<div class="smalltext">(Without a final slash)</div>';
 ]]></add>
 		</operation>
