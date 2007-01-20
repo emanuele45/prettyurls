@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/package-list">
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	This file lists the packages of a SMF package server.
+
+ 	If you are trying to install packages, please try pointing the package
+ 	manager in your forum to this link, instead of accessing it directly.
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<package-list xmlns="http://www.simplemachines.org/xml/package-list" xmlns:smf="http://www.simplemachines.org/">
+	<list-title>Pretty URLs Package List</list-title>
+
+	<section>
+		<title>Pretty URLs Package List</title>
+		<text>Please note, the Base package MUST be installed and configured correctly before other packages can be used.</text>
+
+		<modification>
+			<id>el:prettyurls</id>
+			<version for="1.1, 1.1.0-1.1.99">0.3</version>
+			<name>Pretty URLs - Base</name>
+			<filename>../../files/prettyurls-base_0_3.tar.gz</filename>
+			<description><![CDATA[Pretty URLs - Base]]></description>
+		</modification>
+		<modification>
+			<id>el:prettyurls-ext-none</id>
+			<version for="1.1, 1.1.0-1.1.99">0.3</version>
+			<name>Pretty URLs - Extention: none</name>
+			<filename>../../files/prettyurls-ext-none_0_3.tar.gz</filename>
+			<description><![CDATA[Pretty URLs - Extention: none]]></description>
+		</modification>
+		<modification>
+			<id>el:prettyurls-tp-ext-none</id>
+			<version for="1.1, 1.1.0-1.1.99">0.3</version>
+			<name>Pretty URLs - TinyPortal - Extention: none</name>
+			<filename>../../files/prettyurls-tp-ext-none_0_3.tar.gz</filename>
+			<description><![CDATA[Pretty URLs - TinyPortal - Extention: none]]></description>
+		</modification>
+	</section>
+</package-list>

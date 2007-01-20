@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>el:prettyurls</id>
+	<version>0.1</version>
+
+	<file name="$languagedir/Modifications.english.php" error="skip">
+		<operation>
+			<search position="end"></search>
+			<add><![CDATA[
+//	Pretty URLs mod
+$txt['pretty_root_url'] = 'Pretty URLs root URL<div class="smalltext">(Without a final slash)</div>';
+]]></add>
+		</operation>
+	</file>
+
+</modification>

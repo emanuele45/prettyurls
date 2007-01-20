@@ -1,0 +1,254 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>el:prettyurls</id>
+	<version>0.3</version>
+
+	<file name="$boarddir/index.php">
+		<operation>
+			<search position="replace"><![CDATA[
+// Clean the request variables, add slashes, etc.
+cleanRequest();
+$context = array();
+]]></search>
+			<add><![CDATA[
+$context = array('pretty' => array());
+// Unserialize the array of pretty board URLs
+$context['pretty']['board_urls'] = unserialize($modSettings['pretty_board_urls']);
+// Clean the request variables, add slashes, etc.
+cleanRequest();
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/ModSettings.php">
+		<operation>
+			<search position="replace"><![CDATA[
+			array('int', 'max_image_height'),
+]]></search>
+			<add><![CDATA[
+			array('int', 'max_image_height'),
+		'',
+			//	Packages Directory
+			array('text', 'pretty_root_url', 36),
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/PackageGet.php">
+		<operation>
+			<search position="replace"><![CDATA[
+	if (getPackageInfo($url . $_REQUEST['package']) == false)
+]]></search>
+			<add><![CDATA[
+	if (getPackageInfo(canonicaliseUrl($url . $_REQUEST['package'])) == false)
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+	package_put_contents($boarddir . '/Packages/' . $package_name, fetch_web_data($url . $_REQUEST['package']));
+]]></search>
+			<add><![CDATA[
+	package_put_contents($boarddir . '/Packages/' . $package_name, fetch_web_data(canonicaliseUrl($url . $_REQUEST['package'])));
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="end"></search>
+			<add><![CDATA[
+//	Canonicalise a url
+//	http://au.php.net/manual/en/function.realpath.php#71334
+function canonicaliseUrl($url)
+{
+	$url = explode('/', $url);
+	$keys = array_keys($url, '..');
+
+	foreach($keys AS $keypos => $key)
+		array_splice($url, $key - ($keypos * 2 + 1), 2);
+
+	$url = implode('/', $url);
+	return str_replace('./', '', $url);
+}
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/QueryString.php">
+		<operation>
+			<search position="replace"><![CDATA[
+function cleanRequest()
+{
+	global $board, $topic, $boardurl, $scripturl, $modSettings;
+]]></search>
+			<add><![CDATA[
+function cleanRequest()
+{
+	global $board, $topic, $boardurl, $scripturl, $modSettings, $context, $db_prefix;
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		// Now make absolutely sure it's a number.
+		$board = (int) $_REQUEST['board'];
+]]></search>
+			<add><![CDATA[
+		// Now make absolutely sure it's a number.
+		// Check for pretty board URLs too, and possibly redirect if oldschool queries were used.
+		if (is_numeric($_REQUEST['board']))
+		{
+			$board = (int) $_REQUEST['board'];
+			if (!isset($_REQUEST['pretty']))
+				$context['pretty']['oldschoolquery'] = true;
+		} else {
+			$board = (int) array_search(strtolower($_REQUEST['board']), $context['pretty']['board_urls']);
+		}
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		$topic = (int) $_REQUEST['topic'];
+]]></search>
+			<add><![CDATA[
+		// Check for pretty topic URLs, and possibly redirect if oldschool queries were used.
+		if (is_numeric($_REQUEST['topic']))
+		{
+			$topic = (int) $_REQUEST['topic'];
+			if (!isset($_REQUEST['pretty']))
+				$context['pretty']['oldschoolquery'] = true;
+		} else {
+			$_REQUEST['topic'] = strtolower($_REQUEST['topic']);
+//			Are we feeling lucky?
+			$query = db_query("
+				SELECT ID_TOPIC
+				FROM {$db_prefix}pretty_topic_urls
+				WHERE pretty_url = '$_REQUEST[topic]'
+				LIMIT 1", __FILE__, __LINE__);
+//			No? No topic?!
+			if (mysql_num_rows($query) == 0)
+			{
+				$topic = 0;
+			} else {
+				while ($row = mysql_fetch_assoc($query))
+					$topic = (int) $row['ID_TOPIC'];
+			}
+			mysql_free_result($query);
+		}
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Subs-Boards.php">
+		<operation>
+			<search position="replace"><![CDATA[
+function modifyBoard($board_id, &$boardOptions)
+{
+	global $sourcedir, $cat_tree, $boards, $boardList, $modSettings, $db_prefix;
+]]></search>
+			<add><![CDATA[
+function modifyBoard($board_id, &$boardOptions)
+{
+	global $sourcedir, $cat_tree, $boards, $boardList, $modSettings, $db_prefix, $context;
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+	if (isset($boardOptions['move_to']))
+		reorderBoards();
+]]></search>
+			<add><![CDATA[
+	if (isset($boardOptions['move_to']))
+		reorderBoards();
+
+//	Update the pretty board URLs
+	if (isset($boardOptions['pretty_url']))
+	{
+		require_once($sourcedir . '/Subs-PrettyUrls.php');
+
+		$pretty_url = generatePrettyUrl($boardOptions['pretty_url']);
+
+//		Set the current URL blank so that the array_search will work
+		$context['pretty']['board_urls'][$board_id] = '';
+
+//		Can't be empty, can't be a number and can't be the same as another
+		if ($pretty_url == '' || is_numeric($pretty_url) || array_search($pretty_url, $context['pretty']['board_urls']) != 0)
+//			Add suffix '-bID_BOARD' to the pretty url
+			$pretty_url .= ($pretty_url != '' ? '-b' : 'b') . $ID_BOARD;
+
+//		Save to the database
+		$context['pretty']['board_urls'][$board_id] = $pretty_url;
+		updateSettings(array('pretty_board_urls' => serialize($context['pretty']['board_urls'])));
+	}
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+	// Change the board according to the given specifications.
+]]></search>
+			<add><![CDATA[
+	if (!isset($boardOptions['pretty_url']))
+		$boardOptions['pretty_url'] = $boardOptions['board_name'];
+
+	// Change the board according to the given specifications.
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Subs-Post.php">
+		<operation>
+			<search position="replace"><![CDATA[
+function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
+{
+	global $db_prefix, $user_info, $ID_MEMBER, $txt, $modSettings;
+]]></search>
+			<add><![CDATA[
+function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
+{
+	global $db_prefix, $user_info, $ID_MEMBER, $txt, $modSettings, $context, $sourcedir;
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		// There's been a new topic AND a new post today.
+]]></search>
+			<add><![CDATA[
+//		Generate the pretty URL of our exciting new topic
+		require_once($sourcedir . '/Subs-PrettyUrls.php');
+		$pretty_text = substr(generatePrettyUrl($msgOptions['subject']), 0, 80);
+
+//		Is the URL already there?
+		$query = db_query("
+			SELECT ID_TOPIC
+			FROM {$db_prefix}topics
+			WHERE pretty_url = '$pretty_text'
+			LIMIT 1", __FILE__, __LINE__);
+//		If it's not unique we need to change it
+		$notunique = mysql_num_rows($query);
+		mysql_free_result($query);
+
+//		Can't be empty, can't be a number and can't be the same as another
+		if ($pretty_text == '' || is_numeric($pretty_text) || $notunique != 0)
+//			Add suffix '-tID_TOPIC' to the pretty url
+			$pretty_text = substr($pretty_text, 0, 70) . ($pretty_text != '' ? '-t' : 't') . $topicOptions['id'];
+
+//		Update the database
+		db_query("
+			UPDATE {$db_prefix}topics
+			SET pretty_url = '" . $pretty_text . "'
+			WHERE ID_TOPIC = " . $topicOptions['id'], __FILE__, __LINE__);
+		db_query("
+			REPLACE INTO {$db_prefix}pretty_topic_urls (ID_TOPIC, ID_BOARD, pretty_url) 
+			VALUES (" . $topicOptions['id'] .", " . $topicOptions['board'] . ", '" . $pretty_text . "')", __FILE__, __LINE__);
+
+		// There's been a new topic AND a new post today.
+]]></add>
+		</operation>
+	</file>
+
+</modification>
