@@ -1,4 +1,4 @@
-Changelog started November 2006; Currently at version 0.3
+Changelog started November 2006; Currently at version 0.4
 
 Legend:
 --------------------------------------------------------------------------------
@@ -9,6 +9,12 @@ Legend:
  - Feature or option removal.
  % Development flag or note, such as branching.
 
+
+Pretty URLs 0.4                                                 ??
+================================================================================
+ ! Now following the SMF Coding Guidelines (I hope).
+ ! It wasn't compatible with another mod, my own! (Oh the shame!) (PackageGet.php)
+ + Transliterate some Cyrillic characters. (Subs-PrettyUrls.php)
 
 Pretty URLs 0.3                                                 January 20, 2007
 ================================================================================
