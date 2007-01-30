@@ -1,5 +1,5 @@
 <?php
-//	Version: 0.3; Subs-PrettyUrls
+//	Version: 0.4; Subs-PrettyUrls
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -8,32 +8,32 @@ if (!defined('SMF'))
 function generatePrettyUrl($text)
 {
 	static $characterHash = array (
-		'a'	=>	array ('a', 'A', 'à', 'À', 'á', 'Á', 'â', 'Â', 'ã', 'Ã', 'ä', 'Ä', 'å', 'Å', 'ª', 'ą', 'Ą'),
-		'b'	=>	array ('b', 'B'),
+		'a'	=>	array ('a', 'A', 'à', 'À', 'á', 'Á', 'â', 'Â', 'ã', 'Ã', 'ä', 'Ä', 'å', 'Å', 'ª', 'ą', 'Ą', 'а', 'А'),
+		'b'	=>	array ('b', 'B', 'б', 'Б'),
 		'c'	=>	array ('c', 'C', 'ç', 'Ç', 'ć', 'Ć'),
-		'd'	=>	array ('d', 'D', 'Ð'),
-		'e'	=>	array ('e', 'E', 'è', 'È', 'é', 'É', 'ê', 'Ê', 'ë', 'Ë', 'ę', 'Ę'),
-		'f'	=>	array ('f', 'F'),
-		'g'	=>	array ('g', 'G', 'ğ', 'Ğ'),
+		'd'	=>	array ('d', 'D', 'Ð', 'д', 'Д'),
+		'e'	=>	array ('e', 'E', 'è', 'È', 'é', 'É', 'ê', 'Ê', 'ë', 'Ë', 'ę', 'Ę', 'е', 'Е', 'ё', 'Ё', 'э', 'Э'),
+		'f'	=>	array ('f', 'F', 'ф', 'Ф'),
+		'g'	=>	array ('g', 'G', 'ğ', 'Ğ', 'г', 'Г'),
 		'h'	=>	array ('h', 'H'),
-		'i'	=>	array ('i', 'I', 'ì', 'Ì', 'í', 'Í', 'î', 'Î', 'ï', 'Ï', 'ı', 'İ'),
+		'i'	=>	array ('i', 'I', 'ì', 'Ì', 'í', 'Í', 'î', 'Î', 'ï', 'Ï', 'ı', 'İ', 'и', 'И'),
 		'j'	=>	array ('j', 'J'),
-		'k'	=>	array ('k', 'K'),
-		'l'	=>	array ('l', 'L', 'ł', 'Ł'),
-		'm'	=>	array ('m', 'M'),
-		'n'	=>	array ('n', 'N', 'ñ', 'Ñ', 'ń', 'Ń'),
-		'o'	=>	array ('o', 'O', 'ò', 'Ò', 'ó', 'Ó', 'ô', 'Ô', 'õ', 'Õ', 'ö', 'Ö', 'ø', 'Ø', 'º'),
-		'p'	=>	array ('p', 'P'),
+		'k'	=>	array ('k', 'K', 'к', 'К'),
+		'l'	=>	array ('l', 'L', 'ł', 'Ł', 'л', 'Л'),
+		'm'	=>	array ('m', 'M', 'м', 'М'),
+		'n'	=>	array ('n', 'N', 'ñ', 'Ñ', 'ń', 'Ń', 'н', 'Н'),
+		'o'	=>	array ('o', 'O', 'ò', 'Ò', 'ó', 'Ó', 'ô', 'Ô', 'õ', 'Õ', 'ö', 'Ö', 'ø', 'Ø', 'º', 'о', 'О'),
+		'p'	=>	array ('p', 'P', 'п', 'П'),
 		'q'	=>	array ('q', 'Q'),
-		'r'	=>	array ('r', 'R', '®'),
-		's'	=>	array ('s', 'S', 'ş', 'Ş', 'ś', 'Ś'),
-		't'	=>	array ('t', 'T'),
-		'u'	=>	array ('u', 'U', 'ù', 'Ù', 'ú', 'Ú', 'û', 'Û', 'ü', 'Ü', 'µ'),
-		'v'	=>	array ('v', 'V'),
+		'r'	=>	array ('r', 'R', '®', 'р', 'Р'),
+		's'	=>	array ('s', 'S', 'ş', 'Ş', 'ś', 'Ś', 'с', 'С'),
+		't'	=>	array ('t', 'T', 'т', 'Т'),
+		'u'	=>	array ('u', 'U', 'ù', 'Ù', 'ú', 'Ú', 'û', 'Û', 'ü', 'Ü', 'µ', 'у', 'У'),
+		'v'	=>	array ('v', 'V', 'в', 'В'),
 		'w'	=>	array ('w', 'W'),
 		'x'	=>	array ('x', 'X', '×'),
-		'y'	=>	array ('y', 'Y', 'ý', 'Ý', 'ÿ'),
-		'z'	=>	array ('z', 'Z', 'ż', 'Ż', 'ź', 'Ź'),
+		'y'	=>	array ('y', 'Y', 'ý', 'Ý', 'ÿ', 'й', 'Й', 'ы', 'Ы'),
+		'z'	=>	array ('z', 'Z', 'ż', 'Ż', 'ź', 'Ź', 'з', 'З'),
 		'-'	=>	array ('-', ' ', '.', ','),
 		'_'	=>	array ('_'),
 		'0'	=>	array ('0'),
@@ -50,19 +50,27 @@ function generatePrettyUrl($text)
 		'and'	=>	array ('&'),
 		'at'	=>	array ('@'),
 		'cent'	=>	array ('¢'),
+		'ch'	=>	array ('ч', 'Ч'),
 		'copyright'	=>	array ('©'),
 		'degrees'	=>	array ('°'),
 		'dollar'	=>	array ('$'),
 		'half'	=>	array ('½'),
+		'kh'	=>	array ('х', 'Х'),
 		'percent'	=>	array ('%'),
 		'plus'	=>	array ('+'),
 		'plusminus'	=>	array ('±'),
 		'pound'	=>	array ('£'),
 		'quarter'	=>	array ('¼'),
 		'section'	=>	array ('§'),
-		'ss'	=> array ('ß'),
+		'sh'	=>	array ('ш', 'Ш'),
+		'shch'	=>	array ('щ', 'Щ'),
+		'ss'	=>	array ('ß'),
 		'three-quarters'	=>	array ('¾'),
+		'ts'	=>	array ('ц', 'Ц'),
+		'ya'	=>	array ('я', 'Я'),
 		'yen'	=>	array ('¥'),
+		'yu'	=>	array ('ю', 'Ю'),
+		'zh'	=>	array ('ж', 'Ж'),
 	);
 
 //	Change the entities back to normal characters
@@ -97,8 +105,7 @@ function synchroniseTopicUrls()
 	$query = db_query("
 		SELECT t.ID_TOPIC, t.ID_BOARD, t.pretty_url, m.subject, p.ID_BOARD as ID_BOARD2, p.pretty_url as pretty_url2
 		FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m)
-		LEFT JOIN {$db_prefix}pretty_topic_urls AS p
-		ON t.ID_TOPIC = p.ID_TOPIC
+			LEFT JOIN {$db_prefix}pretty_topic_urls AS p ON (t.ID_TOPIC = p.ID_TOPIC)
 		WHERE m.ID_MSG = t.ID_FIRST_MSG", __FILE__, __LINE__);
 
 	$topicData = array();

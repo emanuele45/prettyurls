@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls</id>
-	<version>0.3</version>
+	<version>0.4</version>
 
 	<file name="$boarddir/index.php">
 		<operation>
@@ -47,11 +47,13 @@ cleanRequest();
 		</operation>
 
 		<operation>
-			<search position="replace"><![CDATA[
-	package_put_contents($boarddir . '/Packages/' . $package_name, fetch_web_data($url . $_REQUEST['package']));
+			<search position="replace"><![CDATA[$url . $_REQUEST['package']));
+
+	// Done!  Did we get this package automatically
 ]]></search>
-			<add><![CDATA[
-	package_put_contents($boarddir . '/Packages/' . $package_name, fetch_web_data(canonicaliseUrl($url . $_REQUEST['package'])));
+			<add><![CDATA[canonicaliseUrl($url . $_REQUEST['package'])));
+
+	// Done!  Did we get this package automatically?
 ]]></add>
 		</operation>
 
@@ -240,7 +242,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 //		Update the database
 		db_query("
 			UPDATE {$db_prefix}topics
-			SET pretty_url = '" . $pretty_text . "'
+			SET pretty_url = '$pretty_text'
 			WHERE ID_TOPIC = " . $topicOptions['id'], __FILE__, __LINE__);
 		db_query("
 			REPLACE INTO {$db_prefix}pretty_topic_urls (ID_TOPIC, ID_BOARD, pretty_url) 
