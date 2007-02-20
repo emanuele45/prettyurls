@@ -10,17 +10,19 @@
 
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls-ext-none</id>
-	<version>0.3</version>
+	<version>0.4</version>
 	<name>Pretty URLs - Extention: none</name>
 	<type>modification</type>
 
 	<install for="1.1, 1.1.0-1.1.99">
 		<modification format="xml" type="file">Major.xml</modification>
 		<modification format="xml" type="file">Minor.xml</modification>
+		<modification format="xml" type="file">TinyPortal.xml</modification>
 	</install>
 	<uninstall for="1.1, 1.1.0-1.1.99">
 		<modification format="xml" type="file" reverse="true">Major.xml</modification>
 		<modification format="xml" type="file" reverse="true">Minor.xml</modification>
+		<modification format="xml" type="file" reverse="true">TinyPortal.xml</modification>
 	</uninstall>
 
 </package-info>

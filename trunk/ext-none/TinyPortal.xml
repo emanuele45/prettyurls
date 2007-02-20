@@ -2,10 +2,10 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
-	<id>el:prettyurls-tp-ext-none</id>
-	<version>0.3</version>
+	<id>el:prettyurls-ext-none</id>
+	<version>0.4</version>
 
-	<file name="$sourcedir/TPortal.php">
+	<file name="$sourcedir/TPortal.php" error="skip">
 		<operation>
 			<search position="replace"><![CDATA[
 			t.numReplies, t.ID_TOPIC, m.ID_MEMBER, m.smileysEnabled, m.ID_MSG, t.locked, t.numViews,t.numReplies
@@ -27,7 +27,7 @@
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 			'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0',
 			'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0">' . $row['numReplies'] . ' ' . ($row['numReplies'] == 1 ? $txt['smf_news_1'] : $txt['smf_news_2']) . '</a>',
