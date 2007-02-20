@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls-ext-none</id>
-	<version>0.3</version>
+	<version>0.4</version>
 
 	<file name="$boarddir/SSI.php">
 		<operation>
@@ -45,7 +45,7 @@
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 			'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . ';topicseen#new',
 			'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG'] . '">' . $row['subject'] . '</a>',
@@ -56,7 +56,7 @@
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 					', $post['new'] ? '' : '<a href="' . $scripturl . '?topic=' . $post['topic'] . '.msg' . $post['new_from'] . ';topicseen#new"><img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/new.gif" alt="' . $txt[302] . '" border="0" /></a>', '
 				</td>
@@ -121,7 +121,7 @@
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 			'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . ';topicseen#new',
 			'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#new">' . $row['subject'] . '</a>',
@@ -132,7 +132,7 @@
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 					', $post['new'] ? '' : '<a href="' . $scripturl . '?topic=' . $post['topic'] . '.msg' . $post['new_from'] . ';topicseen#new"><img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/new.gif" alt="' . $txt[302] . '" border="0" /></a>', '
 				</td>
@@ -209,7 +209,7 @@
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 		$topics[] = array(
 			'id' => $row['ID_TOPIC'],
@@ -240,7 +240,7 @@
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 		censorText($row['body']);
 
@@ -254,7 +254,7 @@
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 			'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0',
 			'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0">' . $row['numReplies'] . ' ' . ($row['numReplies'] == 1 ? $txt['smf_news_1'] : $txt['smf_news_2']) . '</a>',
@@ -301,7 +301,7 @@
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 			'modify_href' => $scripturl . '?action=' . ($row['ID_BOARD'] == 0 ? 'calendar;sa=post;' : 'post;msg=' . $row['ID_FIRST_MSG'] . ';topic=' . $row['ID_TOPIC'] . '.0;calendar;') . 'eventid=' . $row['ID_EVENT'] . ';sesc=' . $sc,
 			'href' => $row['ID_BOARD'] == 0 ? '' : $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0',
@@ -345,7 +345,7 @@ function BoardIndex()
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 					'href' => $scripturl . '?board=' . $row_board['ID_BOARD'] . '.0',
 					'link' => '<a href="' . $scripturl . '?board=' . $row_board['ID_BOARD'] . '.0">' . $row_board['boardName'] . '</a>'
@@ -358,7 +358,7 @@ function BoardIndex()
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 				'new' => empty($row_board['isRead']) && $row_board['posterName'] != '',
 				'topics' => $row_board['numTopics'],
@@ -377,7 +377,7 @@ function BoardIndex()
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 			$this_last_post['href'] = $scripturl . '?topic=' . $row_board['ID_TOPIC'] . '.msg' . ($user_info['is_guest'] ? $modSettings['maxMsgID'] : $row_board['new_from']) . (empty($row_board['isRead']) ? ';boardseen' : '') . '#new';
 ]]></search>
@@ -421,7 +421,7 @@ function Display()
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 	$context['page_index'] = constructPageIndex($scripturl . '?topic=' . $topic . '.%d', $_REQUEST['start'], $topicinfo['numReplies'] + 1, $modSettings['defaultMaxMessages'], true);
 ]]></search>
@@ -430,7 +430,7 @@ function Display()
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 		'first' => $_REQUEST['start'] >= $modSettings['defaultMaxMessages'] ? $scripturl . '?topic=' . $topic . '.0' : '',
 		'prev' => $_REQUEST['start'] >= $modSettings['defaultMaxMessages'] ? $scripturl . '?topic=' . $topic . '.' . ($_REQUEST['start'] - $modSettings['defaultMaxMessages']) : '',
@@ -447,7 +447,7 @@ function Display()
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 		'url' => $scripturl . '?topic=' . $topic . '.0',
 ]]></search>
@@ -456,7 +456,7 @@ function Display()
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 				'modify_href' => $scripturl . '?action=post;msg=' . $topicinfo['ID_FIRST_MSG'] . ';topic=' . $topic . '.0;calendar;eventid=' . $row['ID_EVENT'] . ';sesc=' . $context['session_id'],
 ]]></search>
@@ -478,7 +478,7 @@ function prepareDisplayContext($reset = false)
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 		'href' => $scripturl . '?topic=' . $topic . '.msg' . $message['ID_MSG'] . '#msg' . $message['ID_MSG'],
 		'link' => '<a href="' . $scripturl . '?topic=' . $topic . '.msg' . $message['ID_MSG'] . '#msg' . $message['ID_MSG'] . '">' . $message['subject'] . '</a>',
@@ -491,7 +491,7 @@ function prepareDisplayContext($reset = false)
 	</file>
 
 	<file name="$sourcedir/Load.php">
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 			array_reverse($board_info['parent_boards']),
 			array(array(
@@ -517,7 +517,7 @@ function getBoardParents($id_parent)
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 				$boards[$row['ID_BOARD']] = array(
 					'url' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0',
@@ -584,7 +584,7 @@ function MessageIndex()
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 						'href' => $row_board['subject'] != '' ? $scripturl . '?topic=' . $row_board['ID_TOPIC'] . '.new' . (empty($row_board['isRead']) ? ';boardseen' : '') . '#new' : '',
 						'link' => $row_board['subject'] != '' ? '<a href="' . $scripturl . '?topic=' . $row_board['ID_TOPIC'] . '.new' . (empty($row_board['isRead']) ? ';boardseen' : '') . '#new" title="' . $row_board['subject'] . '">' . $short_subject . '</a>' : $txt[470]
@@ -595,7 +595,7 @@ function MessageIndex()
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 					'href' => $scripturl . '?board=' . $row_board['ID_BOARD'] . '.0',
 					'link' => '<a href="' . $scripturl . '?board=' . $row_board['ID_BOARD'] . '.0">' . $row_board['name'] . '</a>'
@@ -608,7 +608,7 @@ function MessageIndex()
 ]]></add>
 		</operation>
 		
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 				'href' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0',
 				'link' => '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '.0">' . $row['name'] . '</a>'
@@ -656,7 +656,7 @@ function MessageIndex()
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 					$tmppages[] = '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.' . $tmpb . '">' . $tmpa . '</a>';
 ]]></search>
@@ -665,7 +665,7 @@ function MessageIndex()
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 					$pages .= ' &nbsp;<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0;all">' . $txt[190] . '</a>';
 ]]></search>
@@ -674,7 +674,7 @@ function MessageIndex()
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 					'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0',
 					'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0">' . $row['firstSubject'] . '</a>'
@@ -685,7 +685,7 @@ function MessageIndex()
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 					'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . ($row['numReplies'] == 0 ? '.0' : '.msg' . $row['ID_LAST_MSG']) . '#new',
 					'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . ($row['numReplies'] == 0 ? '.0' : '.msg' . $row['ID_LAST_MSG']) . '#new">' . $row['lastSubject'] . '</a>'
@@ -696,7 +696,7 @@ function MessageIndex()
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 				'new_href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['new_from'] . '#new',
 ]]></search>
@@ -755,7 +755,7 @@ function getXmlNews($xml_format)
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 				'guid' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG']
 			);
@@ -798,7 +798,7 @@ function getXmlNews($xml_format)
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 					'link' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0'
 				),
@@ -899,7 +899,7 @@ function getXmlRecent($xml_format)
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 					'link' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.new#new'
 				),
@@ -960,7 +960,7 @@ function getLastPost()
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 		'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.new;topicseen#new',
 		'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.new;topicseen#new">' . $row['subject'] . '</a>'
@@ -1017,7 +1017,7 @@ function getLastPosts($showlatestcount)
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 			'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . ';topicseen#msg' . $row['ID_MSG'],
 			'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . ';topicseen#msg' . $row['ID_MSG'] . '">' . $row['subject'] . '</a>'
@@ -1028,7 +1028,7 @@ function getLastPosts($showlatestcount)
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 		$context['page_index'] = constructPageIndex($scripturl . '?action=recent;board=' . $board . '.%d', $_REQUEST['start'], min(100, $total_posts), 10, true);
 ]]></search>
@@ -1061,7 +1061,7 @@ function getLastPosts($showlatestcount)
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 				'href' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0',
 				'link' => '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '.0">' . $row['bname'] . '</a>'
@@ -1101,7 +1101,7 @@ function getLastPosts($showlatestcount)
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 				$tmppages[] = '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.' . $tmpb . ';topicseen">' . $tmpa . '</a>';
 ]]></search>
@@ -1110,7 +1110,7 @@ function getLastPosts($showlatestcount)
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 				$pages .= ' &nbsp;<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0;all">' . $txt[190] . '</a>';
 ]]></search>
@@ -1119,7 +1119,7 @@ function getLastPosts($showlatestcount)
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 				'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0;topicseen',
 				'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0;topicseen">' . $row['firstSubject'] . '</a>'
@@ -1130,7 +1130,7 @@ function getLastPosts($showlatestcount)
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 				'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . ($row['numReplies'] == 0 ? '.0' : '.msg' . $row['ID_LAST_MSG']) . ';topicseen#msg' . $row['ID_LAST_MSG'],
 				'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . ($row['numReplies'] == 0 ? '.0' : '.msg' . $row['ID_LAST_MSG']) . ';topicseen#msg' . $row['ID_LAST_MSG'] . '">' . $row['lastSubject'] . '</a>'
@@ -1151,7 +1151,7 @@ function getLastPosts($showlatestcount)
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation error="skip">
 			<search position="replace"><![CDATA[
 				'href' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0',
 				'link' => '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '.0">' . $row['bname'] . '</a>'
