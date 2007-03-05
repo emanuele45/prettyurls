@@ -7,7 +7,7 @@ if (!defined('SMF'))
 //	Generate a pretty URL from a given text
 function generatePrettyUrl($text)
 {
-	static $characterHash = array (
+	$characterHash = array (
 		'a'	=>	array ('a', 'A', 'à', 'À', 'á', 'Á', 'â', 'Â', 'ã', 'Ã', 'ä', 'Ä', 'å', 'Å', 'ª', 'ą', 'Ą', 'а', 'А'),
 		'b'	=>	array ('b', 'B', 'б', 'Б'),
 		'c'	=>	array ('c', 'C', 'ç', 'Ç', 'ć', 'Ć'),
@@ -73,18 +73,22 @@ function generatePrettyUrl($text)
 		'zh'	=>	array ('ж', 'Ж'),
 	);
 
-//	Change the entities back to normal characters
+	//	If the database encoding isn't UTF-8 and multibyte functions are available, try converting the text to UTF-8
+	if ((empty($modSettings['global_character_set']) || $modSettings['global_character_set'] != 'UTF-8') && function_exists(mb_convert_encoding))
+		$text = mb_convert_encoding($text, 'UTF-8', 'auto');
+
+	//	Change the entities back to normal characters
 	$text = str_replace('&amp;', '&', $text);
 	$text = str_replace('&quot;', '"', $text);
 	$prettytext = '';
 
-//	Split up $text into UTF-8 letters
+	//	Split up $text into UTF-8 letters
 	preg_match_all("~.~su", $text, $characters);
 	foreach ($characters[0] as $aLetter)
 	{
 		foreach ($characterHash as $replace => $search)
 		{
-//			Found a character? Replace it!
+			//	Found a character? Replace it!
 			if (in_array($aLetter, $search))
 			{
 				$prettytext .= $replace;
@@ -92,16 +96,17 @@ function generatePrettyUrl($text)
 			}
 		}
 	}
-//	Remove unwanted '-'s
+	//	Remove unwanted '-'s
 	$prettytext = preg_replace(array('~^-+|-+$~', '~-+~'), array('', '-'), $prettytext);
 	return $prettytext;
 }
 
+//	Synchronise the topic URLs, fixing any differences between the topics and pretty_topic_urls tables
 function synchroniseTopicUrls()
 {
 	global $db_prefix, $modSettings;
 
-//	Get the current database pretty URLs and other stuff
+	//	Get the current database pretty URLs and other stuff
 	$query = db_query("
 		SELECT t.ID_TOPIC, t.ID_BOARD, t.pretty_url, m.subject, p.ID_BOARD as ID_BOARD2, p.pretty_url as pretty_url2
 		FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m)
@@ -109,10 +114,11 @@ function synchroniseTopicUrls()
 		WHERE m.ID_MSG = t.ID_FIRST_MSG", __FILE__, __LINE__);
 
 	$topicData = array();
-	$newData = array();
 	$oldUrls = array();
+	$tableTopics = array();
+	$tablePretty = array();
 
-//	Fill the $topicData array
+	//	Fill the $topicData array
 	while ($row = mysql_fetch_assoc($query))
 	{
 		$topicData[] = array(
@@ -128,54 +134,58 @@ function synchroniseTopicUrls()
 	}
 	mysql_free_result($query);
 
-//	Go through the $topicData array and fix anything that needs fixing
+	//	Go through the $topicData array and fix anything that needs fixing
 	foreach ($topicData as $row)
 	{
-//		Both empty? Then get a new pretty URL :)
+		//	Both empty? Then get a new pretty URL :)
 		if ($row['pretty_url'] == '' && $row['pretty_url2'] == '')
 		{
-//			A topic in the recycle board deserves only a blank URL
+			//	A topic in the recycle board deserves only a blank URL
 			$pretty_text = $modSettings['recycle_enable'] && $row['ID_BOARD'] == $modSettings['recycle_board'] ? '' : substr(generatePrettyUrl($row['subject']), 0, 80);
-//			Can't be empty, can't be a number and can't be the same as another
+			//	Can't be empty, can't be a number and can't be the same as another
 			if ($pretty_text == '' || is_numeric($pretty_text) || array_search($pretty_text, $oldUrls) != 0)
-//				Add suffix '-tID_TOPIC' to the pretty url
+				//	Add suffix '-tID_TOPIC' to the pretty url
 				$pretty_text = substr($pretty_text, 0, 70) . ($pretty_text != '' ? '-t' : 't') . $row['ID_TOPIC'];
 
-//			Update the arrays
-			$newData[] = array(
+			//	Update the arrays
+			$tableTopics[] = array(
 				'ID_TOPIC' => $row['ID_TOPIC'],
-				'ID_BOARD' => $row['ID_BOARD'],
 				'pretty_url' => $pretty_text
 			);
+			$tablePretty[] = '(' . $row['ID_TOPIC'] . ', ' . $row['ID_BOARD'] . ', "' . $pretty_text . '")';
 			$oldUrls[] = $pretty_text;
 		}
-//		First is empty, so use the second
+		//	First is empty, so use the second
 		elseif ($row['pretty_url'] == '')
-			$newData[] = array(
+		{
+			$tableTopics[] = array(
 				'ID_TOPIC' => $row['ID_TOPIC'],
-				'ID_BOARD' => $row['ID_BOARD'],
 				'pretty_url' => $row['pretty_url2']
-			);	
-//		If the pretty URLs or the board IDs don't match, use the first
+			);
+			$tablePretty[] = '(' . $row['ID_TOPIC'] . ', ' . $row['ID_BOARD'] . ', "' . $row['pretty_url2'] . '")';
+		}
+		//	If the pretty URLs or the board IDs don't match, use the first
 		elseif ($row['pretty_url'] =! $row['pretty_url2'] || $row['ID_BOARD'] =! $row['ID_BOARD2'])
-			$newData[] = array(
+		{
+			$tableTopics[] = array(
 				'ID_TOPIC' => $row['ID_TOPIC'],
-				'ID_BOARD' => $row['ID_BOARD'],
 				'pretty_url' => $row['pretty_url']
-			);	
+			);
+			$tablePretty[] = '(' . $row['ID_TOPIC'] . ', ' . $row['ID_BOARD'] . ', "' . $row['pretty_url'] . '")';
+		}
 	}
 
-//	Update the database
-	foreach ($newData as $row)
-	{
+	//	Update the database
+	foreach ($tableTopics as $row)
 		db_query("
 			UPDATE {$db_prefix}topics
 			SET pretty_url = '" . $row['pretty_url'] . "'
 			WHERE ID_TOPIC = " . $row['ID_TOPIC'], __FILE__, __LINE__);
-		db_query("
-			REPLACE INTO {$db_prefix}pretty_topic_urls (ID_TOPIC, ID_BOARD, pretty_url) 
-			VALUES (" . $row['ID_TOPIC'] .", " . $row['ID_BOARD'] . ", '" . $row['pretty_url'] . "')", __FILE__, __LINE__);
-	}
+
+	db_query("
+		REPLACE INTO {$db_prefix}pretty_topic_urls
+			(ID_TOPIC, ID_BOARD, pretty_url)
+		VALUES " . implode(',', $tablePretty), __FILE__, __LINE__);
 }
 
 ?>
