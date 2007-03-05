@@ -9,33 +9,69 @@ function generatePrettyUrl($text)
 {
 	$characterHash = array (
 		'a'	=>	array ('a', 'A', 'à', 'À', 'á', 'Á', 'â', 'Â', 'ã', 'Ã', 'ä', 'Ä', 'å', 'Å', 'ª', 'ą', 'Ą', 'а', 'А'),
-		'b'	=>	array ('b', 'B', 'б', 'Б'),
+		'aa'	=>	array ('ا'),
+		'ae'	=>	array ('æ', 'Æ', 'ﻯ'),
+		'and'	=>	array ('&'),
+		'at'	=>	array ('@'),
+		'b'	=>	array ('b', 'B', 'б', 'Б', 'ب'),
 		'c'	=>	array ('c', 'C', 'ç', 'Ç', 'ć', 'Ć'),
-		'd'	=>	array ('d', 'D', 'Ð', 'д', 'Д'),
+		'cent'	=>	array ('¢'),
+		'ch'	=>	array ('ч', 'Ч'),
+		'copyright'	=>	array ('©'),
+		'd'	=>	array ('d', 'D', 'Ð', 'д', 'Д', 'د', 'ض'),
+		'degrees'	=>	array ('°'),
+		'dh'	=>	array('ذ'),
+		'dollar'	=>	array ('$'),
 		'e'	=>	array ('e', 'E', 'è', 'È', 'é', 'É', 'ê', 'Ê', 'ë', 'Ë', 'ę', 'Ę', 'е', 'Е', 'ё', 'Ё', 'э', 'Э'),
-		'f'	=>	array ('f', 'F', 'ф', 'Ф'),
+		'f'	=>	array ('f', 'F', 'ф', 'Ф', 'ﻑ'),
 		'g'	=>	array ('g', 'G', 'ğ', 'Ğ', 'г', 'Г'),
-		'h'	=>	array ('h', 'H'),
+		'gh'	=>	array ('غ'),
+		'h'	=>	array ('h', 'H', 'ح', 'ه'),
+		'half'	=>	array ('½'),
 		'i'	=>	array ('i', 'I', 'ì', 'Ì', 'í', 'Í', 'î', 'Î', 'ï', 'Ï', 'ı', 'İ', 'и', 'И'),
-		'j'	=>	array ('j', 'J'),
-		'k'	=>	array ('k', 'K', 'к', 'К'),
-		'l'	=>	array ('l', 'L', 'ł', 'Ł', 'л', 'Л'),
-		'm'	=>	array ('m', 'M', 'м', 'М'),
-		'n'	=>	array ('n', 'N', 'ñ', 'Ñ', 'ń', 'Ń', 'н', 'Н'),
+		'j'	=>	array ('j', 'J', 'ج'),
+		'k'	=>	array ('k', 'K', 'к', 'К', 'ك'),
+		'kh'	=>	array ('х', 'Х', 'خ'),
+		'l'	=>	array ('l', 'L', 'ł', 'Ł', 'л', 'Л', 'ل'),
+		'la'	=>	array ('ﻻ'),
+		'm'	=>	array ('m', 'M', 'м', 'М', 'م'),
+		'n'	=>	array ('n', 'N', 'ñ', 'Ñ', 'ń', 'Ń', 'н', 'Н', 'ن'),
 		'o'	=>	array ('o', 'O', 'ò', 'Ò', 'ó', 'Ó', 'ô', 'Ô', 'õ', 'Õ', 'ö', 'Ö', 'ø', 'Ø', 'º', 'о', 'О'),
 		'p'	=>	array ('p', 'P', 'п', 'П'),
-		'q'	=>	array ('q', 'Q'),
-		'r'	=>	array ('r', 'R', '®', 'р', 'Р'),
-		's'	=>	array ('s', 'S', 'ş', 'Ş', 'ś', 'Ś', 'с', 'С'),
-		't'	=>	array ('t', 'T', 'т', 'Т'),
+		'percent'	=>	array ('%'),
+		'plus'	=>	array ('+'),
+		'plusminus'	=>	array ('±'),
+		'pound'	=>	array ('£'),
+		'q'	=>	array ('q', 'Q', 'ق'),
+		'quarter'	=>	array ('¼'),
+		'r'	=>	array ('r', 'R', '®', 'р', 'Р', 'ر'),
+		's'	=>	array ('s', 'S', 'ş', 'Ş', 'ś', 'Ś', 'с', 'С', 'س', 'ص'),
+		'section'	=>	array ('§'),
+		'sh'	=>	array ('ш', 'Ш', 'ش'),
+		'shch'	=>	array ('щ', 'Щ'),
+		'ss'	=>	array ('ß'),
+		't'	=>	array ('t', 'T', 'т', 'Т', 'ت', 'ط'),
+		'th'	=>	array ('ث'),
+		'three-quarters'	=>	array ('¾'),
+		'ts'	=>	array ('ц', 'Ц'),
 		'u'	=>	array ('u', 'U', 'ù', 'Ù', 'ú', 'Ú', 'û', 'Û', 'ü', 'Ü', 'µ', 'у', 'У'),
 		'v'	=>	array ('v', 'V', 'в', 'В'),
-		'w'	=>	array ('w', 'W'),
+		'w'	=>	array ('w', 'W', 'و'),
 		'x'	=>	array ('x', 'X', '×'),
-		'y'	=>	array ('y', 'Y', 'ý', 'Ý', 'ÿ', 'й', 'Й', 'ы', 'Ы'),
-		'z'	=>	array ('z', 'Z', 'ż', 'Ż', 'ź', 'Ź', 'з', 'З'),
+		'y'	=>	array ('y', 'Y', 'ý', 'Ý', 'ÿ', 'й', 'Й', 'ы', 'Ы', 'ي'),
+		'ya'	=>	array ('я', 'Я'),
+		'yen'	=>	array ('¥'),
+		'yu'	=>	array ('ю', 'Ю'),
+		'z'	=>	array ('z', 'Z', 'ż', 'Ż', 'ź', 'Ź', 'з', 'З', 'ز', 'ظ'),
+		'zh'	=>	array ('ж', 'Ж'),
 		'-'	=>	array ('-', ' ', '.', ','),
 		'_'	=>	array ('_'),
+		'!'	=>	array ('!'),
+		'~'	=>	array ('~'),
+		'*'	=>	array ('*'),
+		"\\'"	=>	array ("'", '"', 'ﺀ', 'ع'),
+		'('	=>	array ('('),
+		')'	=>	array (')'),
 		'0'	=>	array ('0'),
 		'1'	=>	array ('1', '¹'),
 		'2'	=>	array ('2', '²'),
@@ -46,35 +82,10 @@ function generatePrettyUrl($text)
 		'7'	=>	array ('7'),
 		'8'	=>	array ('8'),
 		'9'	=>	array ('9'),
-		'ae'	=>	array ('æ', 'Æ'),
-		'and'	=>	array ('&'),
-		'at'	=>	array ('@'),
-		'cent'	=>	array ('¢'),
-		'ch'	=>	array ('ч', 'Ч'),
-		'copyright'	=>	array ('©'),
-		'degrees'	=>	array ('°'),
-		'dollar'	=>	array ('$'),
-		'half'	=>	array ('½'),
-		'kh'	=>	array ('х', 'Х'),
-		'percent'	=>	array ('%'),
-		'plus'	=>	array ('+'),
-		'plusminus'	=>	array ('±'),
-		'pound'	=>	array ('£'),
-		'quarter'	=>	array ('¼'),
-		'section'	=>	array ('§'),
-		'sh'	=>	array ('ш', 'Ш'),
-		'shch'	=>	array ('щ', 'Щ'),
-		'ss'	=>	array ('ß'),
-		'three-quarters'	=>	array ('¾'),
-		'ts'	=>	array ('ц', 'Ц'),
-		'ya'	=>	array ('я', 'Я'),
-		'yen'	=>	array ('¥'),
-		'yu'	=>	array ('ю', 'Ю'),
-		'zh'	=>	array ('ж', 'Ж'),
 	);
 
-	//	If the database encoding isn't UTF-8 and multibyte functions are available, try converting the text to UTF-8
-	if ((empty($modSettings['global_character_set']) || $modSettings['global_character_set'] != 'UTF-8') && function_exists(mb_convert_encoding))
+	//	If the database encoding isn't UTF-8 and multibyte string functions are available, try converting the text to UTF-8
+	if ((empty($modSettings['global_character_set']) || $modSettings['global_character_set'] !== 'UTF-8') && function_exists('mb_convert_encoding'))
 		$text = mb_convert_encoding($text, 'UTF-8', 'auto');
 
 	//	Change the entities back to normal characters
@@ -181,11 +192,11 @@ function synchroniseTopicUrls()
 			UPDATE {$db_prefix}topics
 			SET pretty_url = '" . $row['pretty_url'] . "'
 			WHERE ID_TOPIC = " . $row['ID_TOPIC'], __FILE__, __LINE__);
-
-	db_query("
-		REPLACE INTO {$db_prefix}pretty_topic_urls
-			(ID_TOPIC, ID_BOARD, pretty_url)
-		VALUES " . implode(',', $tablePretty), __FILE__, __LINE__);
+	if (count($tablePretty) > 0)
+		db_query("
+			REPLACE INTO {$db_prefix}pretty_topic_urls
+				(ID_TOPIC, ID_BOARD, pretty_url)
+			VALUES " . implode(',', $tablePretty), __FILE__, __LINE__);
 }
 
 ?>

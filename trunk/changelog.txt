@@ -18,8 +18,9 @@ Pretty URLs 0.4                                                 ??
  % Removed the TP-ext-none package, and moved its changes to the ext-none package.
  ! ext-none: Added error="skip" attributes to many less essential changes so it will have a better chance of installing.
  ! Base: $context['pretty'] wasn't defined in SSI.php.
- + Base: If the database encoding isn't UTF-8 and multibyte functions are available, try converting the text to UTF-8. (Subs-PrettyUrls.php)
+ + Base: If the database encoding isn't UTF-8 and multibyte string functions are available, try converting the text to UTF-8. (Subs-PrettyUrls.php)
  ! Base: Halved the number of queries used to synchronise the topic URLs. (Subs-PrettyUrls.php)
+ + Base: Allow Arabic to be translated. (QueryString.php, Subs-PrettyUrls.php, example.htaccess)
 
 Pretty URLs 0.3                                                 January 20, 2007
 ================================================================================

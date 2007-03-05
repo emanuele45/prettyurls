@@ -136,14 +136,15 @@ function cleanRequest()
 			if (!isset($_REQUEST['pretty']))
 				$context['pretty']['oldschoolquery'] = true;
 		} else {
-			$_REQUEST['topic'] = strtolower($_REQUEST['topic']);
-//			Are we feeling lucky?
+			$_REQUEST['topic'] = str_replace('\\', '', $_REQUEST['topic']);
+			$_REQUEST['topic'] = str_replace('&#039;', "\'", $_REQUEST['topic']);
+			//	Are we feeling lucky?
 			$query = db_query("
 				SELECT ID_TOPIC
 				FROM {$db_prefix}pretty_topic_urls
 				WHERE pretty_url = '$_REQUEST[topic]'
 				LIMIT 1", __FILE__, __LINE__);
-//			No? No topic?!
+			//	No? No topic?!
 			if (mysql_num_rows($query) == 0)
 			{
 				$topic = 0;
@@ -187,15 +188,15 @@ function modifyBoard($board_id, &$boardOptions)
 
 		$pretty_url = generatePrettyUrl($boardOptions['pretty_url']);
 
-//		Set the current URL blank so that the array_search will work
+		//	Set the current URL blank so that the array_search will work
 		$context['pretty']['board_urls'][$board_id] = '';
 
-//		Can't be empty, can't be a number and can't be the same as another
+		//	Can't be empty, can't be a number and can't be the same as another
 		if ($pretty_url == '' || is_numeric($pretty_url) || array_search($pretty_url, $context['pretty']['board_urls']) != 0)
-//			Add suffix '-bID_BOARD' to the pretty url
+			//	Add suffix '-bID_BOARD' to the pretty url
 			$pretty_url .= ($pretty_url != '' ? '-b' : 'b') . $ID_BOARD;
 
-//		Save to the database
+		//	Save to the database
 		$context['pretty']['board_urls'][$board_id] = $pretty_url;
 		updateSettings(array('pretty_board_urls' => serialize($context['pretty']['board_urls'])));
 	}
@@ -234,26 +235,26 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		// There's been a new topic AND a new post today.
 ]]></search>
 			<add><![CDATA[
-//		Generate the pretty URL of our exciting new topic
+		//	Generate the pretty URL of our exciting new topic
 		require_once($sourcedir . '/Subs-PrettyUrls.php');
 		$pretty_text = substr(generatePrettyUrl($msgOptions['subject']), 0, 80);
 
-//		Is the URL already there?
+		//	Is the URL already there?
 		$query = db_query("
 			SELECT ID_TOPIC
 			FROM {$db_prefix}topics
 			WHERE pretty_url = '$pretty_text'
 			LIMIT 1", __FILE__, __LINE__);
-//		If it's not unique we need to change it
+		//	If it's not unique we need to change it
 		$notunique = mysql_num_rows($query);
 		mysql_free_result($query);
 
-//		Can't be empty, can't be a number and can't be the same as another
+		//	Can't be empty, can't be a number and can't be the same as another
 		if ($pretty_text == '' || is_numeric($pretty_text) || $notunique != 0)
-//			Add suffix '-tID_TOPIC' to the pretty url
+			//	Add suffix '-tID_TOPIC' to the pretty url
 			$pretty_text = substr($pretty_text, 0, 70) . ($pretty_text != '' ? '-t' : 't') . $topicOptions['id'];
 
-//		Update the database
+		//	Update the database
 		db_query("
 			UPDATE {$db_prefix}topics
 			SET pretty_url = '$pretty_text'
