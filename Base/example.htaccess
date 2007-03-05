@@ -4,14 +4,12 @@
 RewriteEngine on
 
 #	Pretty board urls
-RewriteRule ^([-_a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1.0 [L,QSA]
-RewriteRule ^([-_a-zA-Z0-9]+)/([0-9]*)/?$ ./index.php?pretty;board=$1.$2 [L,QSA]
+RewriteRule ^([-_!~*'()a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1.0 [L,QSA]
+RewriteRule ^([-_!~*'()a-zA-Z0-9]+)/([0-9]*)/?$ ./index.php?pretty;board=$1.$2 [L,QSA]
 
 #	Pretty topic urls
-RewriteRule ^([-_a-zA-Z0-9]+)/([-_a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1;topic=$2.0 [L,QSA]
-RewriteRule ^([-_a-zA-Z0-9]+)/([-_a-zA-Z0-9]+)/([0-9]*)/?$ ./index.php?pretty;board=$1;topic=$2.$3 [L,QSA]
-RewriteRule ^([-_a-zA-Z0-9]+)/([-_a-zA-Z0-9]+)/msg([0-9]*)/?$ ./index.php?pretty;board=$1;topic=$2.msg$3 [L,QSA]
-RewriteRule ^([-_a-zA-Z0-9]+)/([-_a-zA-Z0-9]+)/new/?$ ./index.php?pretty;board=$1;topic=$2.new [L,QSA]
+RewriteRule ^([-_!~*'()a-zA-Z0-9]+)/([-_!~*'()a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1;topic=$2.0 [L,QSA]
+RewriteRule ^([-_!~*'()a-zA-Z0-9]+)/([-_!~*'()a-zA-Z0-9]+)/([0-9]*|msg[0-9]*|new)/?$ ./index.php?pretty;board=$1;topic=$2.$3 [L,QSA]
 
 #	To change the base url, just add the child folder name to the front of the pattern. Example:
-#	RewriteRule ^/forum/([-_a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1.0 [L,QSA]
+#	RewriteRule ^/forum/([-_!~*'()a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1.0 [L,QSA]
