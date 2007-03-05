@@ -22,6 +22,20 @@ cleanRequest();
 		</operation>
 	</file>
 
+	<file name="$boarddir/SSI.php">
+		<operation>
+			<search position="replace"><![CDATA[
+// Clean the request variables.
+]]></search>
+			<add><![CDATA[
+$context = array('pretty' => array());
+// Unserialize the array of pretty board URLs
+$context['pretty']['board_urls'] = unserialize($modSettings['pretty_board_urls']);
+// Clean the request variables.
+]]></add>
+		</operation>
+	</file>
+
 	<file name="$sourcedir/ModSettings.php">
 		<operation>
 			<search position="replace"><![CDATA[
@@ -49,7 +63,7 @@ cleanRequest();
 		<operation>
 			<search position="replace"><![CDATA[$url . $_REQUEST['package']));
 
-	// Done!  Did we get this package automatically
+	// Done!  Did we get this package automatically?
 ]]></search>
 			<add><![CDATA[canonicaliseUrl($url . $_REQUEST['package'])));
 
