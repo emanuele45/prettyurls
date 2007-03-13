@@ -20,7 +20,8 @@ Pretty URLs 0.4                                                 ??
  ! Base: $context['pretty'] wasn't defined in SSI.php.
  + Base: If the database encoding isn't UTF-8 and multibyte string functions are available, try converting the text to UTF-8. (Subs-PrettyUrls.php)
  ! Base: Halved the number of queries used to synchronise the topic URLs. (Subs-PrettyUrls.php)
- + Base: Allow Arabic to be translated. (QueryString.php, Subs-PrettyUrls.php, example.htaccess)
+ + Base: Allow Arabic to be romanised. (QueryString.php, Subs-PrettyUrls.php, example.htaccess)
+ % ext-none: Broke up Major.xml into 3 files because it was too big for the package manager.
 
 Pretty URLs 0.3                                                 January 20, 2007
 ================================================================================
