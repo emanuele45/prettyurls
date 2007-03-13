@@ -1,0 +1,60 @@
+Changelog started November 2006; Currently at version 0.4
+
+Legend:
+--------------------------------------------------------------------------------
+ ! Minor change or bugfix. (don't bother to log typos except between releases.)
+ * Change like above, but affects templates.
+ & Change that affects a language file. (make two if it affects templates too.)
+ + Feature addition or improvement.
+ - Feature or option removal.
+ % Development flag or note, such as branching.
+
+
+Pretty URLs 0.4                                                   March 14, 2007
+================================================================================
+ ! Base: Now following the SMF Coding Guidelines (I hope).
+ ! Base: It wasn't compatible with another mod, my own! (Oh the shame!) (PackageGet.php)
+ + Base: Transliterate some Cyrillic characters. (Subs-PrettyUrls.php)
+ % Removed the TP-ext-none package, and moved its changes to the ext-none package.
+ ! ext-none: Added error="skip" attributes to many less essential changes so it will have a better chance of installing.
+ ! Base: $context['pretty'] wasn't defined in SSI.php.
+ + Base: If the database encoding isn't UTF-8 and multibyte string functions are available, try converting the text to UTF-8. (Subs-PrettyUrls.php)
+ ! Base: Halved the number of queries used to synchronise the topic URLs. (Subs-PrettyUrls.php)
+ + Base: Allow Arabic to be romanised. (QueryString.php, Subs-PrettyUrls.php, example.htaccess)
+ % ext-none: Broke up Major.xml into 3 files because it was too big for the package manager.
+
+Pretty URLs 0.3                                                 January 20, 2007
+================================================================================
+ + Base: Added some Turkish (and other) characters. (Subs-PrettyUrls.php)
+ ! ext-none: Fixed some problems in SSI.php.
+ + Base: Give new topics a pretty URL. (Subs-Post.php)
+ + TP-ext-none: Change the URLs of the front page in TP_boardNews(). (TPortal.php)
+ + ext-none: Change the URLs of Stats.php.
+ + Added a Package List. (packages.xml)
+ + Base: Added the canonicaliseUrl() function to fix relative URLs. (PackageGet.php)
+
+Pretty URLs 0.2                                                December 26, 2006
+================================================================================
+ ! Base: Don't give pretty URLs to recycled topics, and fixed '&quot;' issues. (Subs-PrettyUrls.php)
+ ! Base: Adding and changing board URLs is now done through modifyBoard(). (Subs-Boards.php)
+ ! ext-none: Fixed the Display template because a change hadn't been committed somehow.
+ ! Base: Don't add an action in .htaccess because it won't work with an invalid board URL. (QueryString.php)
+ + ext-none: Replace topic urls in SSI.php, News.php and Recent.php.
+
+Pretty URLs 0.1                                                December 13, 2006
+================================================================================
+ + Base: Added generatePrettyUrl function and $characterHash with almost all characters from latin-1. (Subs-PrettyUrls.php)
+ + Base: Generate the pretty URLs of the forum's boards. (install.php)
+ + Base: Included an example .htaccess file (example.htaccess)
+ + Base: Added 'pretty_root_url' setting, defaulting to $boardurl.
+ + ext-none: Replace the board urls in the BoardIndex and MessageIndex templates.
+ ! Base: Fixed $characterHash so '+' would never be in a URL. (Subs-PrettyUrls.php)
+ ! Base: Fixed issues with '&amp;' and removed unwanted '-'s. (Subs-PrettyUrls.php)
+ + Base: A new board deserves a new URL! (ManageBoards.php)
+ + ext-none: Replaced the board URLs in SSI.php, News.php and Recent.php.
+ ! Base: generatePrettyUrl is now simpler and hopefully more efficient. (Subs-PrettyUrls.php)
+ + Base: If numbers were used in the query string, allow the possibility of redirecting to a pretty URL. (QueryString.php)
+ + Base: Added the smf_pretty_topic_urls table and the processing to allow topic urls. (install.php, QueryString.php)
+ + Base: Created the synchroniseTopicUrls() function. (Subs-PrettyUrls.php)
+ + ext-none: Replace the topic urls in the BoardIndex, MessageIndex and Display templates.
+ ! Base: Altered the example.htaccess file so that the new topic urls would work.
