@@ -17,24 +17,17 @@
 
 		<modification>
 			<id>el:prettyurls</id>
-			<version for="1.1, 1.1.0-1.1.99">0.3</version>
+			<version for="1.1, 1.1.0-1.1.99">0.4</version>
 			<name>Pretty URLs - Base</name>
-			<filename>../../files/prettyurls-base_0_3.tar.gz</filename>
+			<filename>../../files/prettyurls-base_0_4.tar.gz</filename>
 			<description><![CDATA[Pretty URLs - Base]]></description>
 		</modification>
 		<modification>
 			<id>el:prettyurls-ext-none</id>
-			<version for="1.1, 1.1.0-1.1.99">0.3</version>
+			<version for="1.1, 1.1.0-1.1.99">0.4</version>
 			<name>Pretty URLs - Extention: none</name>
-			<filename>../../files/prettyurls-ext-none_0_3.tar.gz</filename>
+			<filename>../../files/prettyurls-ext-none_0_4.tar.gz</filename>
 			<description><![CDATA[Pretty URLs - Extention: none]]></description>
-		</modification>
-		<modification>
-			<id>el:prettyurls-tp-ext-none</id>
-			<version for="1.1, 1.1.0-1.1.99">0.3</version>
-			<name>Pretty URLs - TinyPortal - Extention: none</name>
-			<filename>../../files/prettyurls-tp-ext-none_0_3.tar.gz</filename>
-			<description><![CDATA[Pretty URLs - TinyPortal - Extention: none]]></description>
 		</modification>
 	</section>
 </package-list>

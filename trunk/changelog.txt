@@ -10,7 +10,7 @@ Legend:
  % Development flag or note, such as branching.
 
 
-Pretty URLs 0.4                                                 ??
+Pretty URLs 0.4                                                   March 14, 2007
 ================================================================================
  ! Base: Now following the SMF Coding Guidelines (I hope).
  ! Base: It wasn't compatible with another mod, my own! (Oh the shame!) (PackageGet.php)
