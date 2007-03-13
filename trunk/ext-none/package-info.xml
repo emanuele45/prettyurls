@@ -16,11 +16,15 @@
 
 	<install for="1.1, 1.1.0-1.1.99">
 		<modification format="xml" type="file">Major.xml</modification>
+		<modification format="xml" type="file">SSI.xml</modification>
+		<modification format="xml" type="file">NewsAndRecent.xml</modification>
 		<modification format="xml" type="file">Minor.xml</modification>
 		<modification format="xml" type="file">TinyPortal.xml</modification>
 	</install>
 	<uninstall for="1.1, 1.1.0-1.1.99">
 		<modification format="xml" type="file" reverse="true">Major.xml</modification>
+		<modification format="xml" type="file" reverse="true">SSI.xml</modification>
+		<modification format="xml" type="file" reverse="true">NewsAndRecent.xml</modification>
 		<modification format="xml" type="file" reverse="true">Minor.xml</modification>
 		<modification format="xml" type="file" reverse="true">TinyPortal.xml</modification>
 	</uninstall>
