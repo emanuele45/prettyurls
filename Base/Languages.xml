@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls</id>
-	<version>0.1</version>
+	<version>0.5</version>
 
 	<file name="$languagedir/Modifications.english.php" error="skip">
 		<operation>
@@ -11,6 +11,7 @@
 			<add><![CDATA[
 //	Pretty URLs mod
 $txt['pretty_root_url'] = 'Pretty URLs root URL<div class="smalltext">(Without a final slash)</div>';
+$txt['pretty_enable_filters'] = 'Enable URL filters<div class="smalltext">This may be a substantial performance hit</div>';
 ]]></add>
 		</operation>
 	</file>
