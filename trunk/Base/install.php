@@ -6,7 +6,7 @@
 	forum's SSI.php file.
 *******************************************************************************/
 
-//	Pretty URLs - Base v0.4
+//	Pretty URLs - Base v0.5
 
 //	If SSI.php is in the same place as this file, and SMF isn't defined, this is being run standalone.
 if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
@@ -50,6 +50,14 @@ db_query("
 	PRIMARY KEY (`ID_TOPIC`),
 	UNIQUE (`pretty_url`))", __FILE__, __LINE__);
 
+//	Create the pretty_urls_cache table
+db_query("
+	CREATE TABLE IF NOT EXISTS {$db_prefix}pretty_urls_cache (
+	`url_crc` INT NOT NULL default '0',
+	`replacement` TEXT NOT NULL,
+	`log_time` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (`url_crc`))", __FILE__, __LINE__);
+
 //	Add a pretty_url column to the topics table
 $query = db_query("
 	SHOW COLUMNS
@@ -65,13 +73,15 @@ mysql_free_result($query);
 //	Synchronise the topic URLs
 synchroniseTopicUrls();
 
-//	Add the pretty_root_url setting to the settings table:
+//	Add the pretty_root_url and pretty_callbacks settings:
 db_query("
 	INSERT IGNORE INTO {$db_prefix}settings (variable, value)
-	VALUES ('pretty_root_url', '$boardurl')", __FILE__, __LINE__);
+	VALUES ('pretty_root_url', '$boardurl'),
+		('pretty_enable_filters', '1'),
+		('pretty_filter_callbacks', '" . serialize(array()) . "')", __FILE__, __LINE__);
 
 //	Update the settings table
-updateSettings(array('pretty_board_urls' => serialize($pretty_board_urls)));
+updateSettings(array('pretty_board_urls' => addslashes(serialize($pretty_board_urls))));
 
 //	Add the Package List if it hasn't been added already
 $query = db_query("

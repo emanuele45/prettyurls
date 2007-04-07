@@ -1,4 +1,4 @@
-Changelog started November 2006; Currently at version 0.4
+Changelog started November 2006; Currently at version 0.5
 
 Legend:
 --------------------------------------------------------------------------------
@@ -9,6 +9,13 @@ Legend:
  - Feature or option removal.
  % Development flag or note, such as branching.
 
+
+Pretty URLs 0.5                                                   ??
+================================================================================
+ ! Base: Fixed problems with board URLs containing quotes. (install.php, Subs-Board.php)
+ + Base: Added the 'pretty_enable_filters' and 'pretty_filter_callbacks' settings. (install.php)
+ + Base: Added the 'pretty_urls_cache' table. (install.php)
+ + Base: Run the filter callbacks against all URLs in a page, caching any new urls. (QueryString.php)
 
 Pretty URLs 0.4                                                   March 14, 2007
 ================================================================================

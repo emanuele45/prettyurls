@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls</id>
-	<version>0.4</version>
+	<version>0.5</version>
 
 	<file name="$boarddir/index.php">
 		<operation>
@@ -39,13 +39,24 @@ $context['pretty']['board_urls'] = unserialize($modSettings['pretty_board_urls']
 	<file name="$sourcedir/ModSettings.php">
 		<operation>
 			<search position="replace"><![CDATA[
+			array('check', 'queryless_urls'),
+]]></search>
+			<add><![CDATA[
+			//	Pretty URLs mod - disable the default queryless URLs
+			//	array('check', 'queryless_urls'),
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
 			array('int', 'max_image_height'),
 ]]></search>
 			<add><![CDATA[
 			array('int', 'max_image_height'),
 		'',
-			//	Packages Directory
+			//	Pretty URLs mod
 			array('text', 'pretty_root_url', 36),
+			array('check', 'pretty_enable_filters'),
 ]]></add>
 		</operation>
 	</file>
@@ -156,6 +167,103 @@ function cleanRequest()
 		}
 ]]></add>
 		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+function ob_sessrewrite($buffer)
+{
+	global $scripturl, $modSettings, $user_info, $context;
+]]></search>
+			<add><![CDATA[
+function ob_sessrewrite($buffer)
+{
+	global $scripturl, $modSettings, $user_info, $context, $db_prefix, $sourcedir;
+		}
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+	// This should work even in 4.2.x, just not CGI without cgi.fix_pathinfo.
+	if (!empty($modSettings['queryless_urls']) && (!$context['server']['is_cgi'] || @ini_get('cgi.fix_pathinfo') == 1) && $context['server']['is_apache'])
+	{
+		// Let's do something special for session ids!
+		if (defined('SID') && SID != '')
+			$buffer = preg_replace('/"' . preg_quote($scripturl, '/') . '\?(?:' . SID . ';)((?:board|topic)=[^#"]+?)(#[^"]*?)?"/e', "'\"' . \$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html?' . SID . '\$2\"'", $buffer);
+		else
+			$buffer = preg_replace('/"' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+?)(#[^"]*?)?"/e', "'\"' . \$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html\$2\"'", $buffer);
+	}
+]]></search>
+			<add><![CDATA[
+	//	Rewrite the buffer with Pretty URLs!
+	if ($modSettings['pretty_enable_filters'])
+	{
+		//	Find all URLs in the buffer
+		$pattern = '~<a[^>]+href=(?:\"([^\"#]+)|\'([^\'#]+))~';
+		$crc_query = array();
+		$uncached_urls = array();
+		preg_match_all($pattern, $buffer, $matches, PREG_PATTERN_ORDER);
+		foreach ($matches[1] as $match)
+		{
+			$crc = crc32($match);
+			$crc_query[] = $crc; 
+			$uncached_urls[$crc] = array(
+				'url' => $match,
+				'crc' => $crc
+			);
+		}
+
+		//	Retrieve cached URLs
+		$context['pretty']['cached_urls'] = array();
+		$query = db_query("
+			SELECT url_crc, replacement
+			FROM {$db_prefix}pretty_urls_cache
+			WHERE url_crc IN (" . implode(', ', $crc_query) . ")
+				AND log_time > " . (time() - 86400), __FILE__, __LINE__);
+		while ($row = mysql_fetch_assoc($query))
+		{
+			$context['pretty']['cached_urls'][$row['url_crc']] = $row['replacement'];
+			unset($uncached_urls[$row['url_crc']]);
+		}
+		mysql_free_result($query);
+
+		//	If there are any uncached URLs, process them
+		if (count($uncached_urls) != 0)
+		{
+			//	Run each filter callback function on each URL
+			$filter_callbacks = unserialize($modSettings['pretty_filter_callbacks']);
+			foreach ($filter_callbacks as $callback)
+			{
+				require_once($sourcedir . '/' . $callback[0]);
+				$uncached_urls = call_user_func($callback[1], $uncached_urls);
+			}
+
+			//	Fill the cached URLs array
+			$cache_data = array();
+			foreach ($uncached_urls as $crc => $url)
+			{
+				$url['replacement'] = str_replace('"', '%22', (isset($url['replacement']) ? $url['replacement'] : $url['url']));
+				$context['pretty']['cached_urls'][$crc] = $url['replacement'];
+				$cache_data[] = '(' . $crc . ', "' . addslashes($url['replacement']) . '")';
+				$buffer .= '<br>' . $crc;
+			}
+
+			//	Cache these URLs in the database
+			db_query("
+				REPLACE INTO {$db_prefix}pretty_urls_cache
+					(url_crc, replacement)
+				VALUES " . implode(', ', $cache_data), __FILE__, __LINE__);
+		}
+
+		//	Put the URLs back into the buffer
+		$pattern = '~(<a[^>]+href=)(?:\"([^\"#]+)([^\"]*)\"|\'([^\'#]+)([^\']*)\')~';
+		$buffer = preg_replace_callback($pattern, create_function('$matches', '
+			global $context;
+			$replacement = isset($context[\'pretty\'][\'cached_urls\'][crc32($matches[2])]) ? $context[\'pretty\'][\'cached_urls\'][crc32($matches[2])] : $matches[2];
+			return $matches[1] . \'"\' . $replacement . $matches[3] . \'"\';'), $buffer);
+	}
+]]></add>
+		</operation>
 	</file>
 
 	<file name="$sourcedir/Subs-Boards.php">
@@ -198,7 +306,7 @@ function modifyBoard($board_id, &$boardOptions)
 
 		//	Save to the database
 		$context['pretty']['board_urls'][$board_id] = $pretty_url;
-		updateSettings(array('pretty_board_urls' => serialize($context['pretty']['board_urls'])));
+		updateSettings(array('pretty_board_urls' => addslashes(serialize($context['pretty']['board_urls']))));
 	}
 ]]></add>
 		</operation>
