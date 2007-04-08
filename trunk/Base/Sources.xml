@@ -244,15 +244,17 @@ function ob_sessrewrite($buffer)
 			{
 				$url['replacement'] = str_replace('"', '%22', (isset($url['replacement']) ? $url['replacement'] : $url['url']));
 				$context['pretty']['cached_urls'][$crc] = $url['replacement'];
-				$cache_data[] = '(' . $crc . ', "' . addslashes($url['replacement']) . '")';
-				$buffer .= '<br>' . $crc;
+				//	Don't cache URLs with a session
+				if (strpos($url['replacement'], 'sesc=') === false && strpos($url['replacement'], 'SESSID=') === false)
+					$cache_data[] = '(' . $crc . ', \'' . addslashes($url['replacement']) . '\')';
 			}
 
 			//	Cache these URLs in the database
-			db_query("
-				REPLACE INTO {$db_prefix}pretty_urls_cache
-					(url_crc, replacement)
-				VALUES " . implode(', ', $cache_data), __FILE__, __LINE__);
+			if (count($cache_data) != 0)
+				db_query("
+					REPLACE INTO {$db_prefix}pretty_urls_cache
+						(url_crc, replacement)
+					VALUES " . implode(', ', $cache_data), __FILE__, __LINE__);
 		}
 
 		//	Put the URLs back into the buffer

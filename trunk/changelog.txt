@@ -16,6 +16,10 @@ Pretty URLs 0.5                                                   ??
  + Base: Added the 'pretty_enable_filters' and 'pretty_filter_callbacks' settings. (install.php)
  + Base: Added the 'pretty_urls_cache' table. (install.php)
  + Base: Run the filter callbacks against all URLs in a page, caching any new urls. (QueryString.php)
+ ! Base: Made some minor changes so that the above will work. (QueryString.php)
+ ! Base: Don't cache URLs with a session. (QueryString.php)
+ + Base: Added a file, PrettyUrls-Filters.php, to place the code of filter extensions in.
+ % Started the actions-ext-none package, to rewrite miscellaneous action urls.
 
 Pretty URLs 0.4                                                   March 14, 2007
 ================================================================================
