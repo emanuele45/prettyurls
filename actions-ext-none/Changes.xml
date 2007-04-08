@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>el:prettyurls-actions-ext-none</id>
+	<version>0.5</version>
+
+	<file name="$sourcedir/PrettyUrls-Filters.php">
+		<operation>
+			<search position="end"></search>
+			<add><![CDATA[
+//	Filter miscellaneous action urls
+function pretty_urls_actions_filter($urls)
+{
+	global $scripturl, $boardurl;
+
+	$pattern = '~' . $scripturl . '(.*)action=([^;]+)~S';
+	$replacement = $boardurl . '/$2/$1';
+	foreach ($urls as $crc => $url)
+		if (!isset($url['replacement']) && preg_match($pattern, $url['url']))
+			$urls[$crc]['replacement'] = preg_replace($pattern, $replacement, $url['url']);
+	return $urls;
+}
+]]></add>
+		</operation>
+	</file>
+
+</modification>
