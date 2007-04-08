@@ -10,7 +10,7 @@ Legend:
  % Development flag or note, such as branching.
 
 
-Pretty URLs 0.5                                                   ??
+Pretty URLs 0.5                                                    April 8, 2007
 ================================================================================
  ! Base: Fixed problems with board URLs containing quotes. (install.php, Subs-Board.php)
  + Base: Added the 'pretty_enable_filters' and 'pretty_filter_callbacks' settings. (install.php)

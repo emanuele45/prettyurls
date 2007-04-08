@@ -17,9 +17,9 @@
 
 		<modification>
 			<id>el:prettyurls</id>
-			<version for="1.1, 1.1.0-1.1.99">0.4</version>
+			<version for="1.1, 1.1.0-1.1.99">0.5</version>
 			<name>Pretty URLs - Base</name>
-			<filename>../../files/prettyurls-base_0_4.tar.gz</filename>
+			<filename>../../files/prettyurls-base_0_5.tar.gz</filename>
 			<description><![CDATA[Pretty URLs - Base]]></description>
 		</modification>
 		<modification>
@@ -28,6 +28,13 @@
 			<name>Pretty URLs - Extention: none</name>
 			<filename>../../files/prettyurls-ext-none_0_4.tar.gz</filename>
 			<description><![CDATA[Pretty URLs - Extention: none]]></description>
+		</modification>
+		<modification>
+			<id>el:prettyurls-actions-ext-none</id>
+			<version for="1.1, 1.1.0-1.1.99">0.5</version>
+			<name>Pretty URLs - Actions - Extention: none</name>
+			<filename>../../files/prettyurls-actions-ext-none_0_5.tar.gz</filename>
+			<description><![CDATA[Pretty URLs - Actions - Extention: none]]></description>
 		</modification>
 	</section>
 </package-list>
