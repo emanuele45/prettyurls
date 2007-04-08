@@ -1,0 +1,467 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>el:prettyurls-ext-none</id>
+	<version>0.4</version>
+
+	<file name="$sourcedir/News.php">
+		<operation>
+			<search position="replace"><![CDATA[
+function getXmlNews($xml_format)
+{
+	global $db_prefix, $user_info, $scripturl, $modSettings, $board;
+]]></search>
+			<add><![CDATA[
+function getXmlNews($xml_format)
+{
+	global $db_prefix, $user_info, $scripturl, $modSettings, $board, $context;
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+			m.smileysEnabled, m.posterTime, m.ID_MSG, m.subject, m.body, t.ID_TOPIC, t.ID_BOARD,
+]]></search>
+			<add><![CDATA[
+			m.smileysEnabled, m.posterTime, m.ID_MSG, m.subject, m.body, t.ID_TOPIC, t.ID_BOARD, t.pretty_url,
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		// Being news, this actually makes sense in rss format.
+		if ($xml_format == 'rss' || $xml_format == 'rss2')
+			$data[] = array(
+				'title' => cdata_parse($row['subject']),
+				'link' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0',
+				'description' => cdata_parse($row['body']),
+				'author' => (!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']) || (!empty($row['hideEmail']) && !empty($modSettings['allow_hideEmail']) && !allowedTo('moderate_forum')) ? null : $row['posterEmail'],
+				'comments' => $scripturl . '?action=post;topic=' . $row['ID_TOPIC'] . '.0',
+]]></search>
+			<add><![CDATA[
+		$pretty_board = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']) . '/';
+		$pretty_topic = $pretty_board . (isset($row['pretty_url']) && $row['pretty_url'] != '' ? $row['pretty_url'] : $row['ID_TOPIC']) . '/';
+
+		// Being news, this actually makes sense in rss format.
+		if ($xml_format == 'rss' || $xml_format == 'rss2')
+			$data[] = array(
+				'title' => cdata_parse($row['subject']),
+				'link' => $pretty_topic . '0/',
+				'description' => cdata_parse($row['body']),
+				'author' => (!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']) || (!empty($row['hideEmail']) && !empty($modSettings['allow_hideEmail']) && !allowedTo('moderate_forum')) ? null : $row['posterEmail'],
+				'comments' => $pretty_topic . '0/?action=post',
+]]></add>
+		</operation>
+
+		<operation error="skip">
+			<search position="replace"><![CDATA[
+				'guid' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG']
+			);
+		elseif ($xml_format == 'rdf')
+			$data[] = array(
+				'title' => cdata_parse($row['subject']),
+				'link' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0',
+				'description' => cdata_parse($row['body']),
+			);
+		elseif ($xml_format == 'atom')
+			$data[] = array(
+				'title' => cdata_parse($row['subject']),
+				'link' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0',
+				'summary' => cdata_parse($row['body']),
+				'author' => array('name' => $row['posterName']),
+				'created' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['posterTime']),
+				'issued' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['posterTime']),
+				'modified' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', empty($row['modifiedTime']) ? $row['posterTime'] : $row['modifiedTime']),
+				'id' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG']
+]]></search>
+			<add><![CDATA[
+				'guid' => $pretty_topic . 'msg' . $row['ID_MSG'] . '/#msg' . $row['ID_MSG']
+			);
+		elseif ($xml_format == 'rdf')
+			$data[] = array(
+				'title' => cdata_parse($row['subject']),
+				'link' => $pretty_topic . '0/',
+				'description' => cdata_parse($row['body']),
+			);
+		elseif ($xml_format == 'atom')
+			$data[] = array(
+				'title' => cdata_parse($row['subject']),
+				'link' => $pretty_topic . '0/',
+				'summary' => cdata_parse($row['body']),
+				'author' => array('name' => $row['posterName']),
+				'created' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['posterTime']),
+				'issued' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['posterTime']),
+				'modified' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', empty($row['modifiedTime']) ? $row['posterTime'] : $row['modifiedTime']),
+				'id' => $pretty_topic . 'msg' . $row['ID_MSG'] . '/#msg' . $row['ID_MSG']
+]]></add>
+		</operation>
+
+		<operation error="skip">
+			<search position="replace"><![CDATA[
+					'link' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0'
+				),
+				'link' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0'
+]]></search>
+			<add><![CDATA[
+					'link' => $pretty_board . '0/'
+				),
+				'link' => $pretty_topic . '0/'
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+function getXmlRecent($xml_format)
+{
+	global $db_prefix, $user_info, $scripturl, $modSettings, $board;
+]]></search>
+			<add><![CDATA[
+function getXmlRecent($xml_format)
+{
+	global $db_prefix, $user_info, $scripturl, $modSettings, $board, $context;
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+			m.smileysEnabled, m.posterTime, m.ID_MSG, m.subject, m.body, m.ID_TOPIC, t.ID_BOARD,
+]]></search>
+			<add><![CDATA[
+			m.smileysEnabled, m.posterTime, m.ID_MSG, m.subject, m.body, m.ID_TOPIC, t.ID_BOARD, t.pretty_url,
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		// Doesn't work as well as news, but it kinda does..
+		if ($xml_format == 'rss' || $xml_format == 'rss2')
+			$data[] = array(
+				'title' => cdata_parse($row['subject']),
+				'link' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG'],
+				'description' => cdata_parse($row['body']),
+				'author' => (!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']) || (!empty($row['hideEmail']) && !empty($modSettings['allow_hideEmail']) && !allowedTo('moderate_forum')) ? null : $row['posterEmail'],
+				'category' => cdata_parse($row['bname']),
+				'comments' => $scripturl . '?action=post;topic=' . $row['ID_TOPIC'] . '.0',
+				'pubDate' => gmdate('D, d M Y H:i:s \G\M\T', $row['posterTime']),
+				'guid' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG']
+			);
+		elseif ($xml_format == 'rdf')
+			$data[] = array(
+				'title' => cdata_parse($row['subject']),
+				'link' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG'],
+				'description' => cdata_parse($row['body']),
+			);
+		elseif ($xml_format == 'atom')
+			$data[] = array(
+				'title' => cdata_parse($row['subject']),
+				'link' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG'],
+				'summary' => cdata_parse($row['body']),
+				'author' => array('name' => $row['posterName']),
+				'created' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['posterTime']),
+				'issued' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['posterTime']),
+				'modified' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', empty($row['modifiedTime']) ? $row['posterTime'] : $row['modifiedTime']),
+				'id' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG']
+]]></search>
+			<add><![CDATA[
+		$pretty_board = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']) . '/';
+		$pretty_topic = $pretty_board . (isset($row['pretty_url']) && $row['pretty_url'] != '' ? $row['pretty_url'] : $row['ID_TOPIC']) . '/';
+
+		// Doesn't work as well as news, but it kinda does..
+		if ($xml_format == 'rss' || $xml_format == 'rss2')
+			$data[] = array(
+				'title' => cdata_parse($row['subject']),
+				'link' => $pretty_topic . 'msg' . $row['ID_MSG'] . '/#msg' . $row['ID_MSG'],
+				'description' => cdata_parse($row['body']),
+				'author' => (!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']) || (!empty($row['hideEmail']) && !empty($modSettings['allow_hideEmail']) && !allowedTo('moderate_forum')) ? null : $row['posterEmail'],
+				'category' => cdata_parse($row['bname']),
+				'comments' => $pretty_topic . '0/?action=post',
+				'pubDate' => gmdate('D, d M Y H:i:s \G\M\T', $row['posterTime']),
+				'guid' => $pretty_topic . 'msg' . $row['ID_MSG'] . '/#msg' . $row['ID_MSG']
+			);
+		elseif ($xml_format == 'rdf')
+			$data[] = array(
+				'title' => cdata_parse($row['subject']),
+				'link' => $pretty_topic . 'msg' . $row['ID_MSG'] . '/#msg' . $row['ID_MSG'],
+				'description' => cdata_parse($row['body']),
+			);
+		elseif ($xml_format == 'atom')
+			$data[] = array(
+				'title' => cdata_parse($row['subject']),
+				'link' => $pretty_topic . 'msg' . $row['ID_MSG'] . '/#msg' . $row['ID_MSG'],
+				'summary' => cdata_parse($row['body']),
+				'author' => array('name' => $row['posterName']),
+				'created' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['posterTime']),
+				'issued' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['posterTime']),
+				'modified' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', empty($row['modifiedTime']) ? $row['posterTime'] : $row['modifiedTime']),
+				'id' => $pretty_topic . 'msg' . $row['ID_MSG'] . '/#msg' . $row['ID_MSG']
+]]></add>
+		</operation>
+
+		<operation error="skip">
+			<search position="replace"><![CDATA[
+					'link' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.new#new'
+				),
+				'board' => array(
+					'name' => cdata_parse($row['bname']),
+					'id' => $row['ID_BOARD'],
+					'link' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0'
+				),
+				'link' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG']
+]]></search>
+			<add><![CDATA[
+					'link' => $pretty_topic . 'new/#new'
+				),
+				'board' => array(
+					'name' => cdata_parse($row['bname']),
+					'id' => $row['ID_BOARD'],
+					'link' => $pretty_board . '0/'
+				),
+				'link' => $pretty_topic . 'msg' . $row['ID_MSG'] . '/#msg' . $row['ID_MSG']
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Recent.php">
+		<operation>
+			<search position="replace"><![CDATA[
+function getLastPost()
+{
+	global $db_prefix, $user_info, $scripturl, $modSettings, $func;
+]]></search>
+			<add><![CDATA[
+function getLastPost()
+{
+	global $db_prefix, $user_info, $scripturl, $modSettings, $func, $context;
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		SELECT ml.posterTime, ml.subject, ml.ID_TOPIC, ml.posterName, LEFT(ml.body, 384) AS body, ml.smileysEnabled
+		FROM ({$db_prefix}boards AS b, {$db_prefix}messages AS ml)
+]]></search>
+			<add><![CDATA[
+		SELECT ml.posterTime, ml.subject, ml.ID_TOPIC, ml.posterName, LEFT(ml.body, 384) AS body, ml.smileysEnabled, b.ID_BOARD, t.pretty_url
+		FROM ({$db_prefix}boards AS b, {$db_prefix}messages AS ml)
+			LEFT JOIN {$db_prefix}topics AS t ON (t.ID_TOPIC = ml.ID_TOPIC)
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+	// Send the data.
+]]></search>
+			<add><![CDATA[
+	$pretty_topic = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']) . '/' . (isset($row['pretty_url']) && $row['pretty_url'] != '' ? $row['pretty_url'] : $row['ID_TOPIC']) . '/';
+
+	// Send the data.
+]]></add>
+		</operation>
+
+		<operation error="skip">
+			<search position="replace"><![CDATA[
+		'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.new;topicseen#new',
+		'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.new;topicseen#new">' . $row['subject'] . '</a>'
+]]></search>
+			<add><![CDATA[
+		'href' => $pretty_topic . 'new/?topicseen#new',
+		'link' => '<a href="' . $pretty_topic . 'new/?topicseen#new">' . $row['subject'] . '</a>'
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+function getLastPosts($showlatestcount)
+{
+	global $scripturl, $txt, $db_prefix, $user_info, $modSettings, $func;
+]]></search>
+			<add><![CDATA[
+function getLastPosts($showlatestcount)
+{
+	global $scripturl, $txt, $db_prefix, $user_info, $modSettings, $func, $context;
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+			IFNULL(mem.realName, m.posterName) AS posterName, t.ID_BOARD, b.name AS bName,
+]]></search>
+			<add><![CDATA[
+			IFNULL(mem.realName, m.posterName) AS posterName, t.ID_BOARD, b.name AS bName, t.pretty_url,
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		// Build the array.
+		$posts[] = array(
+			'board' => array(
+				'id' => $row['ID_BOARD'],
+				'name' => $row['bName'],
+				'href' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0',
+				'link' => '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '.0">' . $row['bName'] . '</a>'
+]]></search>
+			<add><![CDATA[
+		$pretty_board = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']) . '/';
+		$pretty_topic = $pretty_board . (isset($row['pretty_url']) && $row['pretty_url'] != '' ? $row['pretty_url'] : $row['ID_TOPIC']) . '/msg' . $row['ID_MSG'] . '/?topicseen#msg' . $row['ID_MSG'];
+
+		// Build the array.
+		$posts[] = array(
+			'board' => array(
+				'id' => $row['ID_BOARD'],
+				'name' => $row['bName'],
+				'href' => $pretty_board . '0/',
+				'link' => '<a href="' . $pretty_board . '0/">' . $row['bName'] . '</a>'
+]]></add>
+		</operation>
+
+		<operation error="skip">
+			<search position="replace"><![CDATA[
+			'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . ';topicseen#msg' . $row['ID_MSG'],
+			'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . ';topicseen#msg' . $row['ID_MSG'] . '">' . $row['subject'] . '</a>'
+]]></search>
+			<add><![CDATA[
+			'href' => $pretty_topic,
+			'link' => '<a href="' . $pretty_topic . '">' . $row['subject'] . '</a>'
+]]></add>
+		</operation>
+
+		<operation error="skip">
+			<search position="replace"><![CDATA[
+		$context['page_index'] = constructPageIndex($scripturl . '?action=recent;board=' . $board . '.%d', $_REQUEST['start'], min(100, $total_posts), 10, true);
+]]></search>
+			<add><![CDATA[
+		$pretty_board = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$board]) ? $context['pretty']['board_urls'][$board] : $board);
+		$context['page_index'] = constructPageIndex($pretty_board . '/%d/' . '?action=recent', $_REQUEST['start'], min(100, $total_posts), 10, true);
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+			m.ID_MSG, m.subject, m.smileysEnabled, m.posterTime, m.body, m.ID_TOPIC, t.ID_BOARD, b.ID_CAT,
+]]></search>
+			<add><![CDATA[
+			m.ID_MSG, m.subject, m.smileysEnabled, m.posterTime, m.body, m.ID_TOPIC, t.ID_BOARD, b.ID_CAT, t.pretty_url,
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		// And build the array.
+		$context['posts'][$row['ID_MSG']] = array(
+]]></search>
+			<add><![CDATA[
+		$pretty_board = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']) . '/';
+		$pretty_topic = $pretty_board . (isset($row['pretty_url']) && $row['pretty_url'] != '' ? $row['pretty_url'] : $row['ID_TOPIC']) . '/';
+
+		// And build the array.
+		$context['posts'][$row['ID_MSG']] = array(
+]]></add>
+		</operation>
+
+		<operation error="skip">
+			<search position="replace"><![CDATA[
+				'href' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0',
+				'link' => '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '.0">' . $row['bname'] . '</a>'
+			),
+			'topic' => $row['ID_TOPIC'],
+			'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG'],
+			'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG'] . '">' . $row['subject'] . '</a>',
+]]></search>
+			<add><![CDATA[
+				'href' => $pretty_board . '0/',
+				'link' => '<a href="' . $pretty_board . '0/">' . $row['bname'] . '</a>'
+			),
+			'topic' => $row['ID_TOPIC'],
+			'href' => $pretty_topic . 'msg' . $row['ID_MSG'] . '/#msg' . $row['ID_MSG'],
+			'link' => '<a href="' . $pretty_topic . 'msg' . $row['ID_MSG'] . '/#msg' . $row['ID_MSG'] . '">' . $row['subject'] . '</a>',
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+				ms.subject AS firstSubject, ms.posterTime AS firstPosterTime, ms.ID_TOPIC, t.ID_BOARD, b.name AS bname,
+]]></search>
+			<add><![CDATA[
+				ms.subject AS firstSubject, ms.posterTime AS firstPosterTime, ms.ID_TOPIC, t.ID_BOARD, b.name AS bname, t.pretty_url,
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		$topic_ids[] = $row['ID_TOPIC'];
+]]></search>
+			<add><![CDATA[
+		$topic_ids[] = $row['ID_TOPIC'];
+
+		$pretty_board = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']) . '/';
+		$pretty_topic = $pretty_board . (isset($row['pretty_url']) && $row['pretty_url'] != '' ? $row['pretty_url'] : $row['ID_TOPIC']) . '/';
+]]></add>
+		</operation>
+
+		<operation error="skip">
+			<search position="replace"><![CDATA[
+				$tmppages[] = '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.' . $tmpb . ';topicseen">' . $tmpa . '</a>';
+]]></search>
+			<add><![CDATA[
+				$tmppages[] = '<a href="' . $pretty_topic . $tmpb . '/?topicseen">' . $tmpa . '</a>';
+]]></add>
+		</operation>
+
+		<operation error="skip">
+			<search position="replace"><![CDATA[
+				$pages .= ' &nbsp;<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0;all">' . $txt[190] . '</a>';
+]]></search>
+			<add><![CDATA[
+				$pages .= ' &nbsp;<a href="' . $pretty_topic . '0/?all">' . $txt[190] . '</a>';
+]]></add>
+		</operation>
+
+		<operation error="skip">
+			<search position="replace"><![CDATA[
+				'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0;topicseen',
+				'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0;topicseen">' . $row['firstSubject'] . '</a>'
+]]></search>
+			<add><![CDATA[
+				'href' => $pretty_topic . '0/?topicseen',
+				'link' => '<a href="' . $pretty_topic . '0/?topicseen">' . $row['firstSubject'] . '</a>'
+]]></add>
+		</operation>
+
+		<operation error="skip">
+			<search position="replace"><![CDATA[
+				'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . ($row['numReplies'] == 0 ? '.0' : '.msg' . $row['ID_LAST_MSG']) . ';topicseen#msg' . $row['ID_LAST_MSG'],
+				'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . ($row['numReplies'] == 0 ? '.0' : '.msg' . $row['ID_LAST_MSG']) . ';topicseen#msg' . $row['ID_LAST_MSG'] . '">' . $row['lastSubject'] . '</a>'
+			),
+			'new_from' => $row['new_from'],
+			'new_href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['new_from'] . ';topicseen#new',
+			'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . ($row['numReplies'] == 0 ? '.0' : '.msg' . $row['new_from']) . ';topicseen' . ($row['numReplies'] == 0 ? '' : 'new'),
+			'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . ($row['numReplies'] == 0 ? '.0' : '.msg' . $row['new_from']) . ';topicseen#msg' . $row['new_from'] . '">' . $row['firstSubject'] . '</a>',
+]]></search>
+			<add><![CDATA[
+				'href' => $pretty_topic . ($row['numReplies'] == 0 ? '0' : 'msg' . $row['ID_LAST_MSG']) . '/?topicseen#msg' . $row['ID_LAST_MSG'],
+				'link' => '<a href="' . $pretty_topic . ($row['numReplies'] == 0 ? '0' : 'msg' . $row['ID_LAST_MSG']) . '/?topicseen#msg' . $row['ID_LAST_MSG'] . '">' . $row['lastSubject'] . '</a>'
+			),
+			'new_from' => $row['new_from'],
+			'new_href' => $pretty_topic . 'msg' . $row['new_from'] . '/?topicseen#new',
+			'href' => $pretty_topic . ($row['numReplies'] == 0 ? '0' : 'msg' . $row['new_from']) . '/?topicseen' . ($row['numReplies'] == 0 ? '' : 'new'),
+			'link' => '<a href="' . $pretty_topic . ($row['numReplies'] == 0 ? '0' : 'msg' . $row['new_from']) . '/?topicseen#msg' . $row['new_from'] . '">' . $row['firstSubject'] . '</a>',
+]]></add>
+		</operation>
+
+		<operation error="skip">
+			<search position="replace"><![CDATA[
+				'href' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0',
+				'link' => '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '.0">' . $row['bname'] . '</a>'
+			)
+]]></search>
+			<add><![CDATA[
+				'href' => $pretty_board . '0/',
+				'link' => '<a href="' . $pretty_board . '0/">' . $row['bname'] . '</a>'
+			)
+]]></add>
+		</operation>
+	</file>
+
+</modification>

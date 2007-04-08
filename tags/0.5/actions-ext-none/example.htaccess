@@ -1,0 +1,6 @@
+#	Example .htaccess file for the SMF Pretty Urls mod - actions-ext-none
+#	Add this line to your existing .htaccess file
+#	Only do this if your base url is not the same as $boardurl!
+
+#	Miscellaneous actions
+RewriteRule ^([a-zA-Z0-9]+)/?$ ./index.php?pretty;action=$1 [L,QSA]

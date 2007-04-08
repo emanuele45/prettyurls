@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>el:prettyurls-ext-none</id>
+	<version>0.4</version>
+
+	<file name="$sourcedir/TPortal.php" error="skip">
+		<operation>
+			<search position="replace"><![CDATA[
+			t.numReplies, t.ID_TOPIC, m.ID_MEMBER, m.smileysEnabled, m.ID_MSG, t.locked, t.numViews,t.numReplies
+]]></search>
+			<add><![CDATA[
+			t.numReplies, t.ID_TOPIC, m.ID_MEMBER, m.smileysEnabled, m.ID_MSG, t.locked, t.numViews,t.numReplies, t.ID_BOARD, t.pretty_url
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		// If we want to limit the length of the post.
+]]></search>
+			<add><![CDATA[
+		//	Pretty URLs
+		$pretty_topic = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']) . '/' . (isset($row['pretty_url']) && $row['pretty_url'] != '' ? $row['pretty_url'] : $row['ID_TOPIC']) . '/';
+
+		// If we want to limit the length of the post.
+]]></add>
+		</operation>
+
+		<operation error="skip">
+			<search position="replace"><![CDATA[
+			'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0',
+			'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0">' . $row['numReplies'] . ' ' . ($row['numReplies'] == 1 ? $txt['smf_news_1'] : $txt['smf_news_2']) . '</a>',
+			'replies' => $row['numReplies'],
+			'comment_href' => !empty($row['locked']) ? '' : $scripturl . '?action=post;topic=' . $row['ID_TOPIC'] . '.' . $row['numReplies'] . ';num_replies=' . $row['numReplies'],
+			'comment_link' => !empty($row['locked']) ? '' : '<a href="' . $scripturl . '?action=post;topic=' . $row['ID_TOPIC'] . '.' . $row['numReplies'] . ';num_replies=' . $row['numReplies'] . '">' . $txt['smf_news_3'] . '</a>',
+			'new_comment' => !empty($row['locked']) ? '' : '<a href="' . $scripturl . '?action=post;topic=' . $row['ID_TOPIC'] . '.' . $row['numReplies'] . '">' . $txt['smf_news_3'] . '</a>',
+]]></search>
+			<add><![CDATA[
+			'href' => $pretty_topic . '0/',
+			'link' => '<a href="' . $pretty_topic . '0/">' . $row['numReplies'] . ' ' . ($row['numReplies'] == 1 ? $txt['smf_news_1'] : $txt['smf_news_2']) . '</a>',
+			'replies' => $row['numReplies'],
+			'comment_href' => !empty($row['locked']) ? '' : $pretty_topic . $row['numReplies'] . '/?action=post;num_replies=' . $row['numReplies'],
+			'comment_link' => !empty($row['locked']) ? '' : '<a href="' . $pretty_topic . $row['numReplies'] . '/?action=post;num_replies=' . $row['numReplies'] . '">' . $txt['smf_news_3'] . '</a>',
+			'new_comment' => !empty($row['locked']) ? '' : '<a href="' . $pretty_topic . $row['numReplies'] . '/?action=post">' . $txt['smf_news_3'] . '</a>',
+]]></add>
+		</operation>
+	</file>
+
+</modification>
