@@ -178,7 +178,6 @@ function ob_sessrewrite($buffer)
 function ob_sessrewrite($buffer)
 {
 	global $scripturl, $modSettings, $user_info, $context, $db_prefix, $sourcedir;
-		}
 ]]></add>
 		</operation>
 
@@ -242,7 +241,8 @@ function ob_sessrewrite($buffer)
 			$cache_data = array();
 			foreach ($uncached_urls as $crc => $url)
 			{
-				$url['replacement'] = str_replace('"', '%22', (isset($url['replacement']) ? $url['replacement'] : $url['url']));
+				$url['replacement'] = isset($url['replacement']) ? $url['replacement'] : $url['url'];
+				$url['replacement'] = preg_replace(array('\"', '~\?;~', '~\?$|;$~'), array('%22', '?', ''), $url['replacement']);
 				$context['pretty']['cached_urls'][$crc] = $url['replacement'];
 				//	Don't cache URLs with a session
 				if (strpos($url['replacement'], 'sesc=') === false && strpos($url['replacement'], 'SESSID=') === false)

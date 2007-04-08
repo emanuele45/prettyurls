@@ -23,4 +23,8 @@ ksort($filter_callbacks);
 //	Update the settings table
 updateSettings(array('pretty_filter_callbacks' => serialize($filter_callbacks)));
 
+//	Clear the URLs cache
+db_query("
+	TRUNCATE TABLE {$db_prefix}pretty_urls_cache", __FILE__, __LINE__);
+
 ?>
