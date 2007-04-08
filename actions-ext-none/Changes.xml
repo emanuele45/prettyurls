@@ -3,9 +3,19 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls-actions-ext-none</id>
-	<version>0.5</version>
+	<version>0.6</version>
 
 	<file name="$sourcedir/PrettyUrls-Filters.php">
+		<operation>
+			<search position="before"><![CDATA[
+	//	Filter callback settings
+	$filterSettings = array(
+]]></search>
+			<add><![CDATA[
+		100 => array('PrettyUrls-Filters.php', 'pretty_urls_actions_filter'),
+]]></add>
+		</operation>
+
 		<operation>
 			<search position="end"></search>
 			<add><![CDATA[

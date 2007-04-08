@@ -1,5 +1,5 @@
 <?php
-//	Version: 0.4; Subs-PrettyUrls
+//	Version: 0.6; Subs-PrettyUrls
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -7,6 +7,8 @@ if (!defined('SMF'))
 //	Generate a pretty URL from a given text
 function generatePrettyUrl($text)
 {
+	global $modSettings;
+
 	$characterHash = array (
 		'a'	=>	array ('a', 'A', 'à', 'À', 'á', 'Á', 'â', 'Â', 'ã', 'Ã', 'ä', 'Ä', 'å', 'Å', 'ª', 'ą', 'Ą', 'а', 'А'),
 		'aa'	=>	array ('ا'),
@@ -197,6 +199,27 @@ function synchroniseTopicUrls()
 			REPLACE INTO {$db_prefix}pretty_topic_urls
 				(ID_TOPIC, ID_BOARD, pretty_url)
 			VALUES " . implode(',', $tablePretty), __FILE__, __LINE__);
+}
+
+//	Update the database based on the installed filters
+function updateFilters()
+{
+	global $sourcedir, $context, $modSettings, $filterSettings, $db_prefix;
+
+	//	Get the filter and htaccess settings
+	require_once($sourcedir . '/PrettyUrls-Filters.php');
+	$filterSettings =  filterAndHtaccessSettings();
+
+	//	Update the settings table
+	ksort($filterSettings['filters']);
+	updateSettings(array('pretty_filter_callbacks' => serialize($filterSettings['filters'])));
+
+	//	Clear the URLs cache
+	db_query("
+		TRUNCATE TABLE {$db_prefix}pretty_urls_cache", __FILE__, __LINE__);
+
+	//	Don't rewrite anything for this page
+	$modSettings['pretty_enable_filters'] = false;
 }
 
 ?>

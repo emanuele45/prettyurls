@@ -6,7 +6,7 @@
 	forum's SSI.php file.
 *******************************************************************************/
 
-//	Pretty URLs - Base v0.5
+//	Pretty URLs - Base v0.6
 
 //	If SSI.php is in the same place as this file, and SMF isn't defined, this is being run standalone.
 if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
@@ -77,8 +77,11 @@ synchroniseTopicUrls();
 db_query("
 	INSERT IGNORE INTO {$db_prefix}settings (variable, value)
 	VALUES ('pretty_root_url', '$boardurl'),
-		('pretty_enable_filters', '1'),
+		('pretty_enable_filters', '0'),
 		('pretty_filter_callbacks', '" . serialize(array()) . "')", __FILE__, __LINE__);
+
+//	Update the filter callbacks
+updateFilters();
 
 //	Update the settings table
 updateSettings(array('pretty_board_urls' => addslashes(serialize($pretty_board_urls))));

@@ -1,4 +1,4 @@
-Changelog started November 2006; Currently at version 0.5
+Changelog started November 2006; Currently at version 0.6
 
 Legend:
 --------------------------------------------------------------------------------
@@ -9,6 +9,13 @@ Legend:
  - Feature or option removal.
  % Development flag or note, such as branching.
 
+
+Pretty URLs 0.6                                                    ??
+================================================================================
+ + Base: Use pretty URLs in redirectExit(). (Subs.php)
+ + Base: Added the updateFilters() and filterAndHtaccessSettings() functions. (Subs-PrettyUrls.php, PrettyUrls-Filters.php)
+ ! Base: Fixed a missing global in generatePrettyUrl(). (Subs-PrettyUrls.php)
+ + Base: Filter board urls. (PrettyUrls-Filters.php)
 
 Pretty URLs 0.5                                                    April 8, 2007
 ================================================================================
