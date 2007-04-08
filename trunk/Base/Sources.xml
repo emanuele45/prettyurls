@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls</id>
-	<version>0.5</version>
+	<version>0.6</version>
 
 	<file name="$boarddir/index.php">
 		<operation>
@@ -242,7 +242,7 @@ function ob_sessrewrite($buffer)
 			foreach ($uncached_urls as $crc => $url)
 			{
 				$url['replacement'] = isset($url['replacement']) ? $url['replacement'] : $url['url'];
-				$url['replacement'] = preg_replace(array('\"', '~\?;~', '~\?$|;$~'), array('%22', '?', ''), $url['replacement']);
+				$url['replacement'] = preg_replace(array('~\"~', '~\?;~', '~\?$|;$~'), array('%22', '?', ''), $url['replacement']);
 				$context['pretty']['cached_urls'][$crc] = $url['replacement'];
 				//	Don't cache URLs with a session
 				if (strpos($url['replacement'], 'sesc=') === false && strpos($url['replacement'], 'SESSID=') === false)
@@ -263,6 +263,51 @@ function ob_sessrewrite($buffer)
 			global $context;
 			$replacement = isset($context[\'pretty\'][\'cached_urls\'][crc32($matches[2])]) ? $context[\'pretty\'][\'cached_urls\'][crc32($matches[2])] : $matches[2];
 			return $matches[1] . \'"\' . $replacement . $matches[3] . \'"\';'), $buffer);
+	}
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Subs.php">
+		<operation>
+			<search position="replace"><![CDATA[
+function redirectexit($setLocation = '', $refresh = false)
+{
+	global $scripturl, $context, $modSettings, $db_show_debug;
+]]></search>
+			<add><![CDATA[
+function redirectexit($setLocation = '', $refresh = false)
+{
+	global $scripturl, $context, $modSettings, $db_show_debug, $sourcedir;
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+	if (!empty($modSettings['queryless_urls']) && (empty($context['server']['is_cgi']) || @ini_get('cgi.fix_pathinfo') == 1) && !empty($context['server']['is_apache']))
+	{
+		if (defined('SID') && SID != '')
+			$setLocation = preg_replace('/^' . preg_quote($scripturl, '/') . '\?(?:' . SID . ';)((?:board|topic)=[^#]+?)(#[^"]*?)?$/e', "\$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html\$2?' . SID", $setLocation);
+		else
+			$setLocation = preg_replace('/^' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+?)(#[^"]*?)?$/e', "\$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html\$2'", $setLocation);
+	}
+]]></search>
+			<add><![CDATA[
+	//	Redirections should be pretty too
+	if ($modSettings['pretty_enable_filters'])
+	{
+		$crc = crc32($setLocation);
+		$url = array($crc => array('url' => $setLocation, 'crc' => $crc));
+		$filter_callbacks = unserialize($modSettings['pretty_filter_callbacks']);
+		foreach ($filter_callbacks as $callback)
+		{
+			require_once($sourcedir . '/' . $callback[0]);
+			$pretty_url = call_user_func($callback[1], $url);
+			if (isset($pretty_url[$crc]['replacement']))
+				break;
+		}
+		$setLocation = isset($pretty_url[$crc]['replacement']) ? $pretty_url[$crc]['replacement'] : $pretty_url[$crc]['url'];
+		$setLocation = preg_replace(array('~\"~', '~\?;~', '~\?$|;$~'), array('%22', '?', ''), $setLocation);
 	}
 ]]></add>
 		</operation>

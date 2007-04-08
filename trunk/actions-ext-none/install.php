@@ -6,7 +6,7 @@
 	forum's SSI.php file.
 *******************************************************************************/
 
-//	Pretty URLs - actions-ext-none v0.5
+//	Pretty URLs - actions-ext-none v0.6
 
 //	If SSI.php is in the same place as this file, and SMF isn't defined, this is being run standalone.
 if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
@@ -15,16 +15,7 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 elseif (!defined('SMF'))
 	die('<b>Error:</b> Cannot install - please verify you put this in the same place as SMF\'s SSI.php.');
 
-//	Add the filter callback
-$filter_callbacks = unserialize($modSettings['pretty_filter_callbacks']);
-$filter_callbacks[50] = array('PrettyUrls-Filters.php', 'pretty_urls_actions_filter');
-ksort($filter_callbacks);
-
-//	Update the settings table
-updateSettings(array('pretty_filter_callbacks' => serialize($filter_callbacks)));
-
-//	Clear the URLs cache
-db_query("
-	TRUNCATE TABLE {$db_prefix}pretty_urls_cache", __FILE__, __LINE__);
+require_once($sourcedir . '/Subs-PrettyUrls.php');
+updateFilters();
 
 ?>

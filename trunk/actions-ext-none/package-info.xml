@@ -10,7 +10,7 @@
 
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls-actions-ext-none</id>
-	<version>0.5</version>
+	<version>0.6</version>
 	<name>Pretty URLs - Actions - Extention: none</name>
 	<type>modification</type>
 
@@ -22,7 +22,7 @@
 	<uninstall for="1.1, 1.1.0-1.1.99">
 		<modification format="xml" type="file" reverse="true">Changes.xml</modification>
 		<remove-file name="$boarddir/example.htaccess" />
-		<code type="file">uninstall.php</code>
+		<code type="file">install.php</code>
 	</uninstall>
 
 </package-info>
