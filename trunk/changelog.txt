@@ -20,6 +20,9 @@ Pretty URLs 0.5                                                   ??
  ! Base: Don't cache URLs with a session. (QueryString.php)
  + Base: Added a file, PrettyUrls-Filters.php, to place the code of filter extensions in.
  % Started the actions-ext-none package, to rewrite miscellaneous action urls.
+ ! actions: Clear the URL cache when (un)installing a new filter. (install.php)
+ ! actions: Include an example.htaccess file too.
+ ! Base: Remove unneeded ';' and '?' characters from URLs. (QueryString.php)
 
 Pretty URLs 0.4                                                   March 14, 2007
 ================================================================================
