@@ -10,7 +10,7 @@
 
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls</id>
-	<version>0.5</version>
+	<version>0.6</version>
 	<name>Pretty URLs - Base</name>
 	<type>modification</type>
 
@@ -28,6 +28,7 @@
 		<remove-file name="$sourcedir/PrettyUrls-Filters.php" />
 		<remove-file name="$sourcedir/Subs-PrettyUrls.php" />
 		<remove-file name="$boarddir/example.htaccess" />
+		<code type="file">uninstall.php</code>
 	</uninstall>
 
 </package-info>

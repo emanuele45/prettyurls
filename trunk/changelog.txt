@@ -16,6 +16,9 @@ Pretty URLs 0.6                                                    ??
  + Base: Added the updateFilters() and filterAndHtaccessSettings() functions. (Subs-PrettyUrls.php, PrettyUrls-Filters.php)
  ! Base: Fixed a missing global in generatePrettyUrl(). (Subs-PrettyUrls.php)
  + Base: Filter board urls. (PrettyUrls-Filters.php)
+ + Base: Allow permanent redirects. (Subs.php)
+ + Base: Filter topic urls. (PrettyUrls-Filters.php)
+ ! Base: Don't try to rewrite urls once the code has been removed! (uninstall.php)
 
 Pretty URLs 0.5                                                    April 8, 2007
 ================================================================================
