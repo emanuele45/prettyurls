@@ -7,11 +7,13 @@
 
 	<file name="$sourcedir/PrettyUrls-Filters.php">
 		<operation>
-			<search position="before"><![CDATA[
+			<search position="replace"><![CDATA[
 	//	Filter callback settings
 	$filterSettings = array(
 ]]></search>
 			<add><![CDATA[
+	//	Filter callback settings
+	$filterSettings = array(
 		100 => array('PrettyUrls-Filters.php', 'pretty_urls_actions_filter'),
 ]]></add>
 		</operation>

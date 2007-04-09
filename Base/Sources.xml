@@ -242,7 +242,7 @@ function ob_sessrewrite($buffer)
 			foreach ($uncached_urls as $crc => $url)
 			{
 				$url['replacement'] = isset($url['replacement']) ? $url['replacement'] : $url['url'];
-				$url['replacement'] = preg_replace(array('~\"~', '~\?;~', '~\?$|;$~'), array('%22', '?', ''), $url['replacement']);
+				$url['replacement'] = preg_replace(array('~\"~', '~\?;~', '~;+~', '~\?$|;$~'), array('%22', '?', ';', ''), $url['replacement']);
 				$context['pretty']['cached_urls'][$crc] = $url['replacement'];
 				//	Don't cache URLs with a session
 				if (strpos($url['replacement'], 'sesc=') === false && strpos($url['replacement'], 'SESSID=') === false)
@@ -276,7 +276,7 @@ function redirectexit($setLocation = '', $refresh = false)
 	global $scripturl, $context, $modSettings, $db_show_debug;
 ]]></search>
 			<add><![CDATA[
-function redirectexit($setLocation = '', $refresh = false)
+function redirectexit($setLocation = '', $refresh = false, $permanent = false)
 {
 	global $scripturl, $context, $modSettings, $db_show_debug, $sourcedir;
 ]]></add>
@@ -291,6 +291,9 @@ function redirectexit($setLocation = '', $refresh = false)
 		else
 			$setLocation = preg_replace('/^' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+?)(#[^"]*?)?$/e', "\$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html\$2'", $setLocation);
 	}
+
+	if (isset($modSettings['integrate_redirect']) && function_exists($modSettings['integrate_redirect']))
+		$modSettings['integrate_redirect']($setLocation, $refresh);
 ]]></search>
 			<add><![CDATA[
 	//	Redirections should be pretty too
@@ -309,6 +312,12 @@ function redirectexit($setLocation = '', $refresh = false)
 		$setLocation = isset($pretty_url[$crc]['replacement']) ? $pretty_url[$crc]['replacement'] : $pretty_url[$crc]['url'];
 		$setLocation = preg_replace(array('~\"~', '~\?;~', '~\?$|;$~'), array('%22', '?', ''), $setLocation);
 	}
+
+	if (isset($modSettings['integrate_redirect']) && function_exists($modSettings['integrate_redirect']))
+		$modSettings['integrate_redirect']($setLocation, $refresh);
+
+	if ($permanent)
+		header('HTTP/1.1 301 Moved Permanently');
 ]]></add>
 		</operation>
 	</file>
