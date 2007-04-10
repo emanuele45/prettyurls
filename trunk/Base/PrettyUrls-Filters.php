@@ -5,18 +5,6 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-//	Filter and .htaccess settings - editable by mods
-function filterAndHtaccessSettings()
-{
-	//	Filter callback settings
-	$filterSettings = array(
-		10 => array('PrettyUrls-Filters.php', 'pretty_urls_topic_filter'),
-		20 => array('PrettyUrls-Filters.php', 'pretty_urls_board_filter'),
-	);
-
-	return array('filters' => $filterSettings);
-}
-
 //	Filter topic urls
 function pretty_urls_topic_filter($urls)
 {
