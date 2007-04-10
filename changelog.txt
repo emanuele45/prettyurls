@@ -19,6 +19,11 @@ Pretty URLs 0.6                                                    ??
  + Base: Allow permanent redirects. (Subs.php)
  + Base: Filter topic urls. (PrettyUrls-Filters.php)
  ! Base: Don't try to rewrite urls once the code has been removed! (uninstall.php)
+ - Base: Remove the pretty_url column from the topics table as it's no longer needed. (install.php)
+ ! Base: Update the synchroniseTopicUrls() function for the above change. (Subs-PrettyUrls.php)
+ ! Base: Changed the format of specifying filters, which are now stored in a DB setting. (install.php, Subs-PrettyUrls.php, PrettyUrls-Filters.php)
+ % Base: All filter callbacks should now be placed only in PrettyUrls-Filters.php.
+ ! Base: Don't do anything if there are no URLs. (QueryString.php)
 
 Pretty URLs 0.5                                                    April 8, 2007
 ================================================================================

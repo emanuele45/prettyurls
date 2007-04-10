@@ -58,33 +58,41 @@ db_query("
 	`log_time` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`url_crc`))", __FILE__, __LINE__);
 
-//	Add a pretty_url column to the topics table
-$query = db_query("
-	SHOW COLUMNS
-	FROM {$db_prefix}topics
-	LIKE 'pretty_url'", __FILE__, __LINE__);
-$no_upgrade = mysql_num_rows($query) > 0;
-if (!$no_upgrade)
-	db_query("
-		ALTER TABLE {$db_prefix}topics
-		ADD `pretty_url` varchar(80) NOT NULL", __FILE__, __LINE__);
-mysql_free_result($query);
-
 //	Synchronise the topic URLs
 synchroniseTopicUrls();
 
-//	Add the pretty_root_url and pretty_callbacks settings:
+//	Add the pretty_root_url and pretty_enable_filters settings:
 db_query("
 	INSERT IGNORE INTO {$db_prefix}settings (variable, value)
 	VALUES ('pretty_root_url', '$boardurl'),
-		('pretty_enable_filters', '0'),
-		('pretty_filter_callbacks', '" . serialize(array()) . "')", __FILE__, __LINE__);
+		('pretty_enable_filters', '0')", __FILE__, __LINE__);
+
+//	Default filter settings
+$prettyFilters = array(
+	'topics' => array(
+		'id' => 'topics',
+		'filter' => array(
+			'priority' => 10,
+			'callback' => 'pretty_urls_topic_filter',
+		),
+	),
+	'boards' => array(
+		'id' => 'boards',
+		'filter' => array(
+			'priority' => 20,
+			'callback' => 'pretty_urls_board_filter',
+		),
+	),
+};
+
+//	Update the settings table
+updateSettings(array(
+	'pretty_board_urls' => addslashes(serialize($pretty_board_urls)),
+	'pretty_filters' => serialize($prettyFilters),
+));
 
 //	Update the filter callbacks
 updateFilters();
-
-//	Update the settings table
-updateSettings(array('pretty_board_urls' => addslashes(serialize($pretty_board_urls))));
 
 //	Add the Package List if it hasn't been added already
 $query = db_query("

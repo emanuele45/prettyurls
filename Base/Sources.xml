@@ -212,57 +212,61 @@ function ob_sessrewrite($buffer)
 			);
 		}
 
-		//	Retrieve cached URLs
-		$context['pretty']['cached_urls'] = array();
-		$query = db_query("
-			SELECT url_crc, replacement
-			FROM {$db_prefix}pretty_urls_cache
-			WHERE url_crc IN (" . implode(', ', $crc_query) . ")
-				AND log_time > " . (time() - 86400), __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($query))
+		//	Procede only if there are actually URLs in the page
+		if (count($crc_query) != 0)
 		{
-			$context['pretty']['cached_urls'][$row['url_crc']] = $row['replacement'];
-			unset($uncached_urls[$row['url_crc']]);
-		}
-		mysql_free_result($query);
-
-		//	If there are any uncached URLs, process them
-		if (count($uncached_urls) != 0)
-		{
-			//	Run each filter callback function on each URL
-			$filter_callbacks = unserialize($modSettings['pretty_filter_callbacks']);
-			foreach ($filter_callbacks as $callback)
+			//	Retrieve cached URLs
+			$context['pretty']['cached_urls'] = array();
+			$query = db_query("
+				SELECT url_crc, replacement
+				FROM {$db_prefix}pretty_urls_cache
+				WHERE url_crc IN (" . implode(', ', $crc_query) . ")
+					AND log_time > " . (time() - 86400), __FILE__, __LINE__);
+			while ($row = mysql_fetch_assoc($query))
 			{
-				require_once($sourcedir . '/' . $callback[0]);
-				$uncached_urls = call_user_func($callback[1], $uncached_urls);
+				$context['pretty']['cached_urls'][$row['url_crc']] = $row['replacement'];
+				unset($uncached_urls[$row['url_crc']]);
+			}
+			mysql_free_result($query);
+
+			//	If there are any uncached URLs, process them
+			if (count($uncached_urls) != 0)
+			{
+				//	Run each filter callback function on each URL
+				$filter_callbacks = unserialize($modSettings['pretty_filter_callbacks']);
+				foreach ($filter_callbacks as $callback)
+				{
+					require_once($sourcedir . '/PrettyUrls-Filters.php');
+					$uncached_urls = call_user_func($callback, $uncached_urls);
+				}
+
+				//	Fill the cached URLs array
+				$cache_data = array();
+				foreach ($uncached_urls as $crc => $url)
+				{
+					$url['replacement'] = isset($url['replacement']) ? $url['replacement'] : $url['url'];
+					$url['replacement'] = preg_replace(array('~\"~', '~\?;~', '~;+~', '~\?$|;$~'), array('%22', '?', ';', ''), $url['replacement']);
+					$context['pretty']['cached_urls'][$crc] = $url['replacement'];
+					//	Don't cache URLs with a session
+					if (strpos($url['replacement'], 'sesc=') === false && strpos($url['replacement'], 'SESSID=') === false)
+						$cache_data[] = '(' . $crc . ', \'' . addslashes($url['replacement']) . '\')';
+				}
+
+				//	Cache these URLs in the database
+				if (count($cache_data) != 0)
+					db_query("
+						REPLACE INTO {$db_prefix}pretty_urls_cache
+							(url_crc, replacement)
+						VALUES " . implode(', ', $cache_data), __FILE__, __LINE__);
 			}
 
-			//	Fill the cached URLs array
-			$cache_data = array();
-			foreach ($uncached_urls as $crc => $url)
-			{
-				$url['replacement'] = isset($url['replacement']) ? $url['replacement'] : $url['url'];
-				$url['replacement'] = preg_replace(array('~\"~', '~\?;~', '~;+~', '~\?$|;$~'), array('%22', '?', ';', ''), $url['replacement']);
-				$context['pretty']['cached_urls'][$crc] = $url['replacement'];
-				//	Don't cache URLs with a session
-				if (strpos($url['replacement'], 'sesc=') === false && strpos($url['replacement'], 'SESSID=') === false)
-					$cache_data[] = '(' . $crc . ', \'' . addslashes($url['replacement']) . '\')';
-			}
-
-			//	Cache these URLs in the database
-			if (count($cache_data) != 0)
-				db_query("
-					REPLACE INTO {$db_prefix}pretty_urls_cache
-						(url_crc, replacement)
-					VALUES " . implode(', ', $cache_data), __FILE__, __LINE__);
+			//	Put the URLs back into the buffer
+			$pattern = '~(<a[^>]+href=)(?:\"([^\"#]+)([^\"]*)\"|\'([^\'#]+)([^\']*)\')~';
+			$buffer = preg_replace_callback($pattern, create_function('$matches', '
+				global $context;
+				$replacement = isset($context[\'pretty\'][\'cached_urls\'][crc32($matches[2])]) ? $context[\'pretty\'][\'cached_urls\'][crc32($matches[2])] : $matches[2];
+				return $matches[1] . \'"\' . $replacement . $matches[3] . \'"\';'), $buffer);
 		}
-
-		//	Put the URLs back into the buffer
-		$pattern = '~(<a[^>]+href=)(?:\"([^\"#]+)([^\"]*)\"|\'([^\'#]+)([^\']*)\')~';
-		$buffer = preg_replace_callback($pattern, create_function('$matches', '
-			global $context;
-			$replacement = isset($context[\'pretty\'][\'cached_urls\'][crc32($matches[2])]) ? $context[\'pretty\'][\'cached_urls\'][crc32($matches[2])] : $matches[2];
-			return $matches[1] . \'"\' . $replacement . $matches[3] . \'"\';'), $buffer);
 	}
 ]]></add>
 		</operation>
@@ -304,8 +308,8 @@ function redirectexit($setLocation = '', $refresh = false, $permanent = false)
 		$filter_callbacks = unserialize($modSettings['pretty_filter_callbacks']);
 		foreach ($filter_callbacks as $callback)
 		{
-			require_once($sourcedir . '/' . $callback[0]);
-			$pretty_url = call_user_func($callback[1], $url);
+			require_once($sourcedir . '/PrettyUrls-Filters.php');
+			$pretty_url = call_user_func($callback, $url);
 			if (isset($pretty_url[$crc]['replacement']))
 				break;
 		}
@@ -406,7 +410,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		//	Is the URL already there?
 		$query = db_query("
 			SELECT ID_TOPIC
-			FROM {$db_prefix}topics
+			FROM {$db_prefix}pretty_topic_urls
 			WHERE pretty_url = '$pretty_text'
 			LIMIT 1", __FILE__, __LINE__);
 		//	If it's not unique we need to change it
@@ -420,12 +424,8 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 
 		//	Update the database
 		db_query("
-			UPDATE {$db_prefix}topics
-			SET pretty_url = '$pretty_text'
-			WHERE ID_TOPIC = " . $topicOptions['id'], __FILE__, __LINE__);
-		db_query("
 			REPLACE INTO {$db_prefix}pretty_topic_urls (ID_TOPIC, ID_BOARD, pretty_url) 
-			VALUES (" . $topicOptions['id'] .", " . $topicOptions['board'] . ", '" . $pretty_text . "')", __FILE__, __LINE__);
+			VALUES (" . $topicOptions['id'] .', ' . $topicOptions['board'] . ', "' . $pretty_text . '")', __FILE__, __LINE__);
 
 		// There's been a new topic AND a new post today.
 ]]></add>

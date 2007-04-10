@@ -22,7 +22,7 @@ function generatePrettyUrl($text)
 		'copyright'	=>	array ('©'),
 		'd'	=>	array ('d', 'D', 'Ð', 'д', 'Д', 'د', 'ض'),
 		'degrees'	=>	array ('°'),
-		'dh'	=>	array('ذ'),
+		'dh'	=>	array ('ذ'),
 		'dollar'	=>	array ('$'),
 		'e'	=>	array ('e', 'E', 'è', 'È', 'é', 'É', 'ê', 'Ê', 'ë', 'Ë', 'ę', 'Ę', 'е', 'Е', 'ё', 'Ё', 'э', 'Э'),
 		'f'	=>	array ('f', 'F', 'ф', 'Ф', 'ﻑ'),
@@ -121,14 +121,13 @@ function synchroniseTopicUrls()
 
 	//	Get the current database pretty URLs and other stuff
 	$query = db_query("
-		SELECT t.ID_TOPIC, t.ID_BOARD, t.pretty_url, m.subject, p.ID_BOARD as ID_BOARD2, p.pretty_url as pretty_url2
+		SELECT t.ID_TOPIC, t.ID_BOARD, m.subject, p.ID_BOARD as ID_BOARD2, p.pretty_url
 		FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m)
 			LEFT JOIN {$db_prefix}pretty_topic_urls AS p ON (t.ID_TOPIC = p.ID_TOPIC)
 		WHERE m.ID_MSG = t.ID_FIRST_MSG", __FILE__, __LINE__);
 
 	$topicData = array();
 	$oldUrls = array();
-	$tableTopics = array();
 	$tablePretty = array();
 
 	//	Fill the $topicData array
@@ -138,20 +137,18 @@ function synchroniseTopicUrls()
 			'ID_TOPIC' => $row['ID_TOPIC'],
 			'ID_BOARD' => $row['ID_BOARD'],
 			'ID_BOARD2' => isset($row['ID_BOARD2']) ? $row['ID_BOARD2'] : 0,
-			'pretty_url' => $row['pretty_url'],
-			'pretty_url2' => isset($row['pretty_url2']) ? $row['pretty_url2'] : '',
+			'pretty_url' => isset($row['pretty_url']) ? $row['pretty_url'] : '',
 			'subject' => $row['subject']
 		);
 		$oldUrls[] = $row['pretty_url'];
-		$oldUrls[] = $row['pretty_url2'];
 	}
 	mysql_free_result($query);
 
 	//	Go through the $topicData array and fix anything that needs fixing
 	foreach ($topicData as $row)
 	{
-		//	Both empty? Then get a new pretty URL :)
-		if ($row['pretty_url'] == '' && $row['pretty_url2'] == '')
+		//	No pretty URL? That's ghastly!
+		if ($row['pretty_url'] == '')
 		{
 			//	A topic in the recycle board deserves only a blank URL
 			$pretty_text = $modSettings['recycle_enable'] && $row['ID_BOARD'] == $modSettings['recycle_board'] ? '' : substr(generatePrettyUrl($row['subject']), 0, 80);
@@ -161,58 +158,37 @@ function synchroniseTopicUrls()
 				$pretty_text = substr($pretty_text, 0, 70) . ($pretty_text != '' ? '-t' : 't') . $row['ID_TOPIC'];
 
 			//	Update the arrays
-			$tableTopics[] = array(
-				'ID_TOPIC' => $row['ID_TOPIC'],
-				'pretty_url' => $pretty_text
-			);
 			$tablePretty[] = '(' . $row['ID_TOPIC'] . ', ' . $row['ID_BOARD'] . ', "' . $pretty_text . '")';
 			$oldUrls[] = $pretty_text;
 		}
-		//	First is empty, so use the second
-		elseif ($row['pretty_url'] == '')
-		{
-			$tableTopics[] = array(
-				'ID_TOPIC' => $row['ID_TOPIC'],
-				'pretty_url' => $row['pretty_url2']
-			);
-			$tablePretty[] = '(' . $row['ID_TOPIC'] . ', ' . $row['ID_BOARD'] . ', "' . $row['pretty_url2'] . '")';
-		}
-		//	If the pretty URLs or the board IDs don't match, use the first
-		elseif ($row['pretty_url'] =! $row['pretty_url2'] || $row['ID_BOARD'] =! $row['ID_BOARD2'])
-		{
-			$tableTopics[] = array(
-				'ID_TOPIC' => $row['ID_TOPIC'],
-				'pretty_url' => $row['pretty_url']
-			);
+		//	If the board IDs don't match, use the real one
+		elseif ($row['ID_BOARD'] != $row['ID_BOARD2'])
 			$tablePretty[] = '(' . $row['ID_TOPIC'] . ', ' . $row['ID_BOARD'] . ', "' . $row['pretty_url'] . '")';
-		}
 	}
 
 	//	Update the database
-	foreach ($tableTopics as $row)
-		db_query("
-			UPDATE {$db_prefix}topics
-			SET pretty_url = '" . $row['pretty_url'] . "'
-			WHERE ID_TOPIC = " . $row['ID_TOPIC'], __FILE__, __LINE__);
 	if (count($tablePretty) > 0)
 		db_query("
 			REPLACE INTO {$db_prefix}pretty_topic_urls
 				(ID_TOPIC, ID_BOARD, pretty_url)
-			VALUES " . implode(',', $tablePretty), __FILE__, __LINE__);
+			VALUES " . implode(', ', $tablePretty), __FILE__, __LINE__);
 }
 
 //	Update the database based on the installed filters
 function updateFilters()
 {
-	global $sourcedir, $context, $modSettings, $filterSettings, $db_prefix;
+	global $modSettings, $db_prefix;
 
-	//	Get the filter and htaccess settings
-	require_once($sourcedir . '/PrettyUrls-Filters.php');
-	$filterSettings =  filterAndHtaccessSettings();
+	//	Get the settings
+	$prettyFilters = unserialize($modSettings['pretty_filters']);
+	$filterSettings = array();
+	foreach ($prettyFilters as $filter)
+		if (isset($filter['filter'])
+			$filterSettings[$filter['filter']['priority']] = $filter['filter']['callback'];
 
 	//	Update the settings table
-	ksort($filterSettings['filters']);
-	updateSettings(array('pretty_filter_callbacks' => serialize($filterSettings['filters'])));
+	ksort($filterSettings);
+	updateSettings(array('pretty_filter_callbacks' => serialize($filterSettings)));
 
 	//	Clear the URLs cache
 	db_query("
