@@ -37,13 +37,14 @@ function pretty_urls_topic_filter($urls)
 	{
 		$topicData = array();
 		$query = db_query("
-			SELECT ID_TOPIC, pretty_url, ID_BOARD
-			FROM {$db_prefix}pretty_topic_urls
-			WHERE ID_TOPIC IN (" . implode(', ', $query_data) . ")", __FILE__, __LINE__);
+			SELECT t.ID_TOPIC, t.ID_BOARD, p.pretty_url
+			FROM {$db_prefix}topics AS t
+				LEFT JOIN {$db_prefix}pretty_topic_urls AS p ON (t.ID_TOPIC = p.ID_TOPIC)
+			WHERE t.ID_TOPIC IN (" . implode(', ', $query_data) . ")", __FILE__, __LINE__);
 		while ($row = mysql_fetch_assoc($query))
 			$topicData[$row['ID_TOPIC']] = array(
 				'pretty_board' => (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']),
-				'pretty_url' => $row['pretty_url'],
+				'pretty_url' => isset($row['pretty_url']) ? $row['pretty_url'] : $row['ID_TOPIC'],
 			);
 		mysql_free_result($query);
 	}
