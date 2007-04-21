@@ -45,7 +45,6 @@ mysql_free_result($query);
 db_query("
 	CREATE TABLE IF NOT EXISTS {$db_prefix}pretty_topic_urls (
 	`ID_TOPIC` mediumint(8) NOT NULL default '0',
-	`ID_BOARD` smallint(5) NOT NULL default '0',
 	`pretty_url` varchar(80) NOT NULL,
 	PRIMARY KEY (`ID_TOPIC`),
 	UNIQUE (`pretty_url`))", __FILE__, __LINE__);
@@ -58,7 +57,7 @@ db_query("
 	`log_time` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`url_crc`))", __FILE__, __LINE__);
 
-//	Synchronise the topic URLs
+//	Build the table of topic URLs
 synchroniseTopicUrls();
 
 //	Add the pretty_root_url and pretty_enable_filters settings:
@@ -83,7 +82,7 @@ $prettyFilters = array(
 			'callback' => 'pretty_urls_board_filter',
 		),
 	),
-};
+);
 
 //	Update the settings table
 updateSettings(array(

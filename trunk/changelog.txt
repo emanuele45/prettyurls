@@ -24,6 +24,8 @@ Pretty URLs 0.6                                                    ??
  ! Base: Changed the format of specifying filters, which are now stored in a DB setting. (install.php, Subs-PrettyUrls.php, PrettyUrls-Filters.php)
  % Base: All filter callbacks should now be placed only in PrettyUrls-Filters.php.
  ! Base: Don't do anything if there are no URLs. (QueryString.php)
+ - Base: Remove the ID_BOARD column from the pretty_topic_urls table. (install.php)
+ ! Base: Rewrite topic URLs correctly if there is no pretty URL. (PrettyUrls-Filters.php)
 
 Pretty URLs 0.5                                                    April 8, 2007
 ================================================================================
