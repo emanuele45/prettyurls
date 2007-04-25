@@ -13,9 +13,11 @@ cleanRequest();
 $context = array();
 ]]></search>
 			<add><![CDATA[
-$context = array('pretty' => array());
 // Unserialize the array of pretty board URLs
-$context['pretty']['board_urls'] = unserialize($modSettings['pretty_board_urls']);
+$context = array('pretty' => array(
+	'board_urls' => unserialize($modSettings['pretty_board_urls']),
+	'db_count' => 0,
+));
 // Clean the request variables, add slashes, etc.
 cleanRequest();
 ]]></add>
@@ -28,10 +30,26 @@ cleanRequest();
 // Clean the request variables.
 ]]></search>
 			<add><![CDATA[
-$context = array('pretty' => array());
 // Unserialize the array of pretty board URLs
-$context['pretty']['board_urls'] = unserialize($modSettings['pretty_board_urls']);
+$context = array('pretty' => array(
+	'board_urls' => unserialize($modSettings['pretty_board_urls']),
+	'db_count' => 0,
+));
 // Clean the request variables.
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/ManageErrors.php">
+		<operation>
+			<search position="replace"><![CDATA[
+	$context['sub_template'] = 'error_log';
+]]></search>
+			<add><![CDATA[
+	$context['sub_template'] = 'error_log';
+
+	//	Don't rewrite any URLs, we need these ones to remain exact!
+	$modSettings['pretty_enable_filters'] = false;
 ]]></add>
 		</operation>
 	</file>
@@ -164,6 +182,9 @@ function cleanRequest()
 					$topic = (int) $row['ID_TOPIC'];
 			}
 			mysql_free_result($query);
+
+			//	That query should be counted separately
+			$context['pretty']['db_count']++;
 		}
 ]]></add>
 		</operation>
@@ -177,7 +198,7 @@ function ob_sessrewrite($buffer)
 			<add><![CDATA[
 function ob_sessrewrite($buffer)
 {
-	global $scripturl, $modSettings, $user_info, $context, $db_prefix, $sourcedir;
+	global $scripturl, $modSettings, $user_info, $context, $db_prefix, $sourcedir, $txt, $time_start, $db_count;
 ]]></add>
 		</operation>
 
@@ -192,18 +213,24 @@ function ob_sessrewrite($buffer)
 		else
 			$buffer = preg_replace('/"' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+?)(#[^"]*?)?"/e', "'\"' . \$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html\$2\"'", $buffer);
 	}
+
+	// Return the changed buffer.
+	return $buffer;
+}
 ]]></search>
 			<add><![CDATA[
 	//	Rewrite the buffer with Pretty URLs!
 	if ($modSettings['pretty_enable_filters'])
 	{
 		//	Find all URLs in the buffer
-		$pattern = '~<a[^>]+href=(?:\"([^\"#]+)|\'([^\'#]+))~';
+		$pattern = '~<a[^>]+href=(\"[^\"#]+|\'[^\'#]+)~';
 		$crc_query = array();
 		$uncached_urls = array();
 		preg_match_all($pattern, $buffer, $matches, PREG_PATTERN_ORDER);
 		foreach ($matches[1] as $match)
 		{
+			//	Rip out everything that shouldn't be cached
+			$match = preg_replace(array('~^[\"\']|PHPSESSID=[^;]+|sesc=[^;]+~', '~\"~', '~;+~', '~\?;~', '~\?$|;$~'), array('', '%22', ';', '?', ''), $match);
 			$crc = crc32($match);
 			$crc_query[] = $crc; 
 			$uncached_urls[$crc] = array(
@@ -245,11 +272,9 @@ function ob_sessrewrite($buffer)
 				foreach ($uncached_urls as $crc => $url)
 				{
 					$url['replacement'] = isset($url['replacement']) ? $url['replacement'] : $url['url'];
-					$url['replacement'] = preg_replace(array('~\"~', '~\?;~', '~;+~', '~\?$|;$~'), array('%22', '?', ';', ''), $url['replacement']);
+					$url['replacement'] = preg_replace(array('~\"~', '~;+~', '~\?;~', '~\?$|;$~'), array('%22', ';', '?', ''), $url['replacement']);
 					$context['pretty']['cached_urls'][$crc] = $url['replacement'];
-					//	Don't cache URLs with a session
-					if (strpos($url['replacement'], 'sesc=') === false && strpos($url['replacement'], 'SESSID=') === false)
-						$cache_data[] = '(' . $crc . ', \'' . addslashes($url['replacement']) . '\')';
+					$cache_data[] = '(' . $crc . ', \'' . addslashes($url['replacement']) . '\')';
 				}
 
 				//	Cache these URLs in the database
@@ -261,13 +286,44 @@ function ob_sessrewrite($buffer)
 			}
 
 			//	Put the URLs back into the buffer
-			$pattern = '~(<a[^>]+href=)(?:\"([^\"#]+)([^\"]*)\"|\'([^\'#]+)([^\']*)\')~';
-			$buffer = preg_replace_callback($pattern, create_function('$matches', '
-				global $context;
-				$replacement = isset($context[\'pretty\'][\'cached_urls\'][crc32($matches[2])]) ? $context[\'pretty\'][\'cached_urls\'][crc32($matches[2])] : $matches[2];
-				return $matches[1] . \'"\' . $replacement . $matches[3] . \'"\';'), $buffer);
+			$buffer = preg_replace_callback('~(<a[^>]+href=)(\"[^\"]+\"|\'[^\']+\')~', 'pretty_buffer_callback', $buffer);
 		}
 	}
+
+	//	Update the load times
+	$pattern = '~<span class="smalltext">' . $txt['smf301'] . '([.0-9]+)' . $txt['smf302'] . '([0-9]+)' . $txt['smf302b'] . '</span>~';
+	if (preg_match($pattern, $buffer, $matches))
+	{
+		$newTime = round(array_sum(explode(' ', microtime())) - array_sum(explode(' ', $time_start)), 3);
+		$timeDiff = $newTime - (float) $matches[1];
+		$queriesDiff = $db_count + $context['pretty']['db_count'] - (int) $matches[2];
+		//	Remove the link if you like, I won't enforce it like others do
+		$newLoadTime = '<span class="smalltext">' . $txt['smf301'] . $newTime . $txt['smf302'] . $db_count . $txt['smf302b'] . ' (<a href="http://code.google.com/p/prettyurls/">Pretty URLs</a> adds ' . $timeDiff . 's, ' . $queriesDiff . 'q)</span>';
+		$buffer = str_replace($matches[0], $newLoadTime, $buffer);
+	}
+
+	// Return the changed buffer.
+	return $buffer;
+}
+
+//	A callback function to replace the buffer's URLs with their cached URLs
+function pretty_buffer_callback($matches)
+{
+	global $context;
+
+	$matches[2] = preg_replace('~^[\"\']|[\"\']$~', '', $matches[2]);
+	//	Store the parts of the URL that won't be cached so they can be inserted later
+	preg_match('~PHPSESSID=[^;#]+~', $matches[2], $PHPSESSID);
+	preg_match('~sesc=[^;#]+~', $matches[2], $sesc);
+	preg_match('~#.*~', $matches[2], $fragment);
+	//	Rip out everything that won't have been cached
+	$cacheableurl = preg_replace(array('~PHPSESSID=[^;#]+|sesc=[^;#]+|#.*$~', '~\"~', '~;+~', '~\?;~', '~\?$|;$~'), array('', '%22', ';', '?', ''), $matches[2]);
+	$crc = crc32($cacheableurl);
+	//	Stich everything back together, clean it up and return
+	$replacement = (isset($context['pretty']['cached_urls'][$crc]) ? $context['pretty']['cached_urls'][$crc] : $cacheableurl) . (strpos($cacheableurl, '?') === false ? '?' : ';') . (isset($PHPSESSID[0]) ? $PHPSESSID[0] : '') . ';' . (isset($sesc[0]) ? $sesc[0] : '') . (isset($fragment[0]) ? $fragment[0] : '');
+	$replacement = preg_replace(array('~;+~', '~\?;~', '~\?#|;#~', '~\?$|;$|#$~'), array(';', '?', '#', ''), $replacement);
+	return $matches[1] . '"' . $replacement . '"';
+}
 ]]></add>
 		</operation>
 	</file>
@@ -367,6 +423,9 @@ function modifyBoard($board_id, &$boardOptions)
 		//	Save to the database
 		$context['pretty']['board_urls'][$board_id] = $pretty_url;
 		updateSettings(array('pretty_board_urls' => addslashes(serialize($context['pretty']['board_urls']))));
+
+		//	Count that query!
+		$context['pretty']['db_count']++;
 	}
 ]]></add>
 		</operation>
@@ -426,6 +485,9 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		db_query("
 			REPLACE INTO {$db_prefix}pretty_topic_urls (ID_TOPIC, ID_BOARD, pretty_url) 
 			VALUES (" . $topicOptions['id'] .', ' . $topicOptions['board'] . ', "' . $pretty_text . '")', __FILE__, __LINE__);
+
+		//	Count those queries!
+		$context['pretty']['db_count'] = $context['pretty']['db_count'] + 2;
 
 		// There's been a new topic AND a new post today.
 ]]></add>
