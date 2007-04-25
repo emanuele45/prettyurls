@@ -26,6 +26,10 @@ Pretty URLs 0.6                                                    ??
  ! Base: Don't do anything if there are no URLs. (QueryString.php)
  - Base: Remove the ID_BOARD column from the pretty_topic_urls table. (install.php)
  ! Base: Rewrite topic URLs correctly if there is no pretty URL. (PrettyUrls-Filters.php)
+ + Base: Update the load time and query display. (QueryString.php)
+ ! Base: Made the topic and board filters a little more efficient. (PrettyUrls-Filters.php)
+ ! Base: Don't rewrite URLs on the error log page. (ManageErrors.php)
+ + Base: Better handling of session URLs to reduce queries. (QueryString.php)
 
 Pretty URLs 0.5                                                    April 8, 2007
 ================================================================================
