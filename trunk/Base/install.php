@@ -17,8 +17,9 @@ elseif (!defined('SMF'))
 
 require_once($sourcedir . '/Subs-PrettyUrls.php');
 
-//	Get the current pretty board urls, or make a new array if there are none
+//	Get the current pretty board urls, or make new arrays if there are none
 $pretty_board_urls = isset($modSettings['pretty_board_urls']) ? unserialize($modSettings['pretty_board_urls']) : array();
+$pretty_board_lookup = isset($modSettings['pretty_board_lookup']) ? unserialize($modSettings['pretty_board_lookup']) : array();
 
 //	Get the board names
 $query = db_query("
@@ -28,15 +29,16 @@ $query = db_query("
 while ($row = mysql_fetch_assoc($query))
 {
 //	Don't replace the board urls if they already exist
-	if (!isset($pretty_board_urls[$row['ID_BOARD']]) || $pretty_board_urls[$row['ID_BOARD']] == '')
+	if (!isset($pretty_board_urls[$row['ID_BOARD']]) || $pretty_board_urls[$row['ID_BOARD']] == '' || array_search($row['ID_BOARD'], $pretty_board_lookup) === false)
 	{
 		$pretty_text = generatePrettyUrl($row['name']);
-//		Can't be empty, can't be a number and can't be the same as another
-		if ($pretty_text != '' && !is_numeric($pretty_text) && !array_search($pretty_text, $pretty_board_urls))
-			$pretty_board_urls[$row['ID_BOARD']] = $pretty_text;
-		else
-//			Add suffix '-bID_BOARD' to the pretty url
-			$pretty_board_urls[$row['ID_BOARD']] = $pretty_text . ($pretty_text != '' ? '-b' : 'b') . $row['ID_BOARD'];
+		//	Can't be empty, can't be a number and can't be the same as another
+		if ($pretty_text == '' !! is_numeric($pretty_text) || isset($pretty_board_lookup[$pretty_text]))
+			//	Add suffix '-bID_BOARD' to the pretty url
+			$pretty_text .= ($pretty_text != '' ? '-b' : 'b') . $row['ID_BOARD'];
+		//	Update the arrays
+		$pretty_board_urls[$row['ID_BOARD']] = $pretty_text;
+		$pretty_board_lookup[$pretty_text] = $row['ID_BOARD'];
 	}
 }
 mysql_free_result($query);
@@ -86,6 +88,7 @@ $prettyFilters = array(
 
 //	Update the settings table
 updateSettings(array(
+	'pretty_board_lookup' => addslashes(serialize($pretty_board_lookup)),
 	'pretty_board_urls' => addslashes(serialize($pretty_board_urls)),
 	'pretty_filters' => serialize($prettyFilters),
 ));
