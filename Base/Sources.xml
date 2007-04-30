@@ -123,74 +123,6 @@ function canonicaliseUrl($url)
 	<file name="$sourcedir/QueryString.php">
 		<operation>
 			<search position="replace"><![CDATA[
-function cleanRequest()
-{
-	global $board, $topic, $boardurl, $scripturl, $modSettings;
-]]></search>
-			<add><![CDATA[
-function cleanRequest()
-{
-	global $board, $topic, $boardurl, $scripturl, $modSettings, $context, $db_prefix;
-]]></add>
-		</operation>
-
-		<operation>
-			<search position="replace"><![CDATA[
-		// Now make absolutely sure it's a number.
-		$board = (int) $_REQUEST['board'];
-]]></search>
-			<add><![CDATA[
-		// Now make absolutely sure it's a number.
-		// Check for pretty board URLs too, and possibly redirect if oldschool queries were used.
-		if (is_numeric($_REQUEST['board']))
-		{
-			$board = (int) $_REQUEST['board'];
-			if (!isset($_REQUEST['pretty']))
-				$context['pretty']['oldschoolquery'] = true;
-		} else {
-			$board = (int) array_search(strtolower($_REQUEST['board']), $context['pretty']['board_urls']);
-		}
-]]></add>
-		</operation>
-
-		<operation>
-			<search position="replace"><![CDATA[
-		$topic = (int) $_REQUEST['topic'];
-]]></search>
-			<add><![CDATA[
-		// Check for pretty topic URLs, and possibly redirect if oldschool queries were used.
-		if (is_numeric($_REQUEST['topic']))
-		{
-			$topic = (int) $_REQUEST['topic'];
-			if (!isset($_REQUEST['pretty']))
-				$context['pretty']['oldschoolquery'] = true;
-		} else {
-			$_REQUEST['topic'] = str_replace('\\', '', $_REQUEST['topic']);
-			$_REQUEST['topic'] = str_replace('&#039;', "\'", $_REQUEST['topic']);
-			//	Are we feeling lucky?
-			$query = db_query("
-				SELECT ID_TOPIC
-				FROM {$db_prefix}pretty_topic_urls
-				WHERE pretty_url = '$_REQUEST[topic]'
-				LIMIT 1", __FILE__, __LINE__);
-			//	No? No topic?!
-			if (mysql_num_rows($query) == 0)
-			{
-				$topic = 0;
-			} else {
-				while ($row = mysql_fetch_assoc($query))
-					$topic = (int) $row['ID_TOPIC'];
-			}
-			mysql_free_result($query);
-
-			//	That query should be counted separately
-			$context['pretty']['db_count']++;
-		}
-]]></add>
-		</operation>
-
-		<operation>
-			<search position="replace"><![CDATA[
 function ob_sessrewrite($buffer)
 {
 	global $scripturl, $modSettings, $user_info, $context;
@@ -230,7 +162,7 @@ function ob_sessrewrite($buffer)
 		foreach ($matches[1] as $match)
 		{
 			//	Rip out everything that shouldn't be cached
-			$match = preg_replace(array('~^[\"\']|PHPSESSID=[^;]+|sesc=[^;]+~', '~\"~', '~;+~', '~\?;~', '~\?$|;$~'), array('', '%22', ';', '?', ''), $match);
+			$match = preg_replace(array('~^[\"\']|PHPSESSID=[^;]+|sesc=[^;]+~', '~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('', '%22', ';', '?', ''), $match);
 			$crc = crc32($match);
 			$crc_query[] = $crc; 
 			$uncached_urls[$crc] = array(
@@ -272,7 +204,7 @@ function ob_sessrewrite($buffer)
 				foreach ($uncached_urls as $crc => $url)
 				{
 					$url['replacement'] = isset($url['replacement']) ? $url['replacement'] : $url['url'];
-					$url['replacement'] = preg_replace(array('~\"~', '~;+~', '~\?;~', '~\?$|;$~'), array('%22', ';', '?', ''), $url['replacement']);
+					$url['replacement'] = preg_replace(array('~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('%22', ';', '?', ''), $url['replacement']);
 					$context['pretty']['cached_urls'][$crc] = $url['replacement'];
 					$cache_data[] = '(' . $crc . ', \'' . addslashes($url['replacement']) . '\')';
 				}
@@ -313,15 +245,16 @@ function pretty_buffer_callback($matches)
 
 	$matches[2] = preg_replace('~^[\"\']|[\"\']$~', '', $matches[2]);
 	//	Store the parts of the URL that won't be cached so they can be inserted later
-	preg_match('~PHPSESSID=[^;#]+~', $matches[2], $PHPSESSID);
+	preg_match('~PHPSESSID=[^;#&]+~', $matches[2], $PHPSESSID);
 	preg_match('~sesc=[^;#]+~', $matches[2], $sesc);
 	preg_match('~#.*~', $matches[2], $fragment);
 	//	Rip out everything that won't have been cached
-	$cacheableurl = preg_replace(array('~PHPSESSID=[^;#]+|sesc=[^;#]+|#.*$~', '~\"~', '~;+~', '~\?;~', '~\?$|;$~'), array('', '%22', ';', '?', ''), $matches[2]);
+	$cacheableurl = preg_replace(array('~PHPSESSID=[^;#]+|sesc=[^;#]+|#.*$~', '~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('', '%22', ';', '?', ''), $matches[2]);
 	$crc = crc32($cacheableurl);
 	//	Stich everything back together, clean it up and return
-	$replacement = (isset($context['pretty']['cached_urls'][$crc]) ? $context['pretty']['cached_urls'][$crc] : $cacheableurl) . (strpos($cacheableurl, '?') === false ? '?' : ';') . (isset($PHPSESSID[0]) ? $PHPSESSID[0] : '') . ';' . (isset($sesc[0]) ? $sesc[0] : '') . (isset($fragment[0]) ? $fragment[0] : '');
-	$replacement = preg_replace(array('~;+~', '~\?;~', '~\?#|;#~', '~\?$|;$|#$~'), array(';', '?', '#', ''), $replacement);
+	$replacement = isset($context['pretty']['cached_urls'][$crc]) ? $context['pretty']['cached_urls'][$crc] : $cacheableurl;
+	$replacement .= (strpos($replacement, '?') === false ? '?' : ';') . (isset($PHPSESSID[0]) ? $PHPSESSID[0] : '') . ';' . (isset($sesc[0]) ? $sesc[0] : '') . (isset($fragment[0]) ? $fragment[0] : '');
+	$replacement = preg_replace(array('~;+|=;~', '~\?;~', '~\?#|;#|=#~', '~\?$|;$|#$|=$~'), array(';', '?', '#', ''), $replacement);
 	return $matches[1] . '"' . $replacement . '"';
 }
 ]]></add>
@@ -359,18 +292,18 @@ function redirectexit($setLocation = '', $refresh = false, $permanent = false)
 	//	Redirections should be pretty too
 	if ($modSettings['pretty_enable_filters'])
 	{
-		$crc = crc32($setLocation);
-		$url = array($crc => array('url' => $setLocation, 'crc' => $crc));
+		$url = array(0 => array('url' => $setLocation, 'crc' => 0));
 		$filter_callbacks = unserialize($modSettings['pretty_filter_callbacks']);
 		foreach ($filter_callbacks as $callback)
 		{
 			require_once($sourcedir . '/PrettyUrls-Filters.php');
 			$pretty_url = call_user_func($callback, $url);
-			if (isset($pretty_url[$crc]['replacement']))
+			if (isset($pretty_url[0]['replacement']))
 				break;
 		}
-		$setLocation = isset($pretty_url[$crc]['replacement']) ? $pretty_url[$crc]['replacement'] : $pretty_url[$crc]['url'];
-		$setLocation = preg_replace(array('~\"~', '~\?;~', '~\?$|;$~'), array('%22', '?', ''), $setLocation);
+		if (isset($pretty_url[0]['replacement']))
+			$setLocation = $pretty_url[0]['replacement'];
+		$setLocation = preg_replace(array('~;+|=;~', '~\?;~', '~\?#|;#|=#~', '~\?$|;$|#$|=$~'), array(';', '?', '#', ''), $setLocation);
 	}
 
 	if (isset($modSettings['integrate_redirect']) && function_exists($modSettings['integrate_redirect']))
@@ -378,118 +311,6 @@ function redirectexit($setLocation = '', $refresh = false, $permanent = false)
 
 	if ($permanent)
 		header('HTTP/1.1 301 Moved Permanently');
-]]></add>
-		</operation>
-	</file>
-
-	<file name="$sourcedir/Subs-Boards.php">
-		<operation>
-			<search position="replace"><![CDATA[
-function modifyBoard($board_id, &$boardOptions)
-{
-	global $sourcedir, $cat_tree, $boards, $boardList, $modSettings, $db_prefix;
-]]></search>
-			<add><![CDATA[
-function modifyBoard($board_id, &$boardOptions)
-{
-	global $sourcedir, $cat_tree, $boards, $boardList, $modSettings, $db_prefix, $context;
-]]></add>
-		</operation>
-
-		<operation>
-			<search position="replace"><![CDATA[
-	if (isset($boardOptions['move_to']))
-		reorderBoards();
-]]></search>
-			<add><![CDATA[
-	if (isset($boardOptions['move_to']))
-		reorderBoards();
-
-//	Update the pretty board URLs
-	if (isset($boardOptions['pretty_url']))
-	{
-		require_once($sourcedir . '/Subs-PrettyUrls.php');
-
-		$pretty_url = generatePrettyUrl($boardOptions['pretty_url']);
-
-		//	Set the current URL blank so that the array_search will work
-		$context['pretty']['board_urls'][$board_id] = '';
-
-		//	Can't be empty, can't be a number and can't be the same as another
-		if ($pretty_url == '' || is_numeric($pretty_url) || array_search($pretty_url, $context['pretty']['board_urls']) != 0)
-			//	Add suffix '-bID_BOARD' to the pretty url
-			$pretty_url .= ($pretty_url != '' ? '-b' : 'b') . $ID_BOARD;
-
-		//	Save to the database
-		$context['pretty']['board_urls'][$board_id] = $pretty_url;
-		updateSettings(array('pretty_board_urls' => addslashes(serialize($context['pretty']['board_urls']))));
-
-		//	Count that query!
-		$context['pretty']['db_count']++;
-	}
-]]></add>
-		</operation>
-
-		<operation>
-			<search position="replace"><![CDATA[
-	// Change the board according to the given specifications.
-]]></search>
-			<add><![CDATA[
-	if (!isset($boardOptions['pretty_url']))
-		$boardOptions['pretty_url'] = $boardOptions['board_name'];
-
-	// Change the board according to the given specifications.
-]]></add>
-		</operation>
-	</file>
-
-	<file name="$sourcedir/Subs-Post.php">
-		<operation>
-			<search position="replace"><![CDATA[
-function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
-{
-	global $db_prefix, $user_info, $ID_MEMBER, $txt, $modSettings;
-]]></search>
-			<add><![CDATA[
-function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
-{
-	global $db_prefix, $user_info, $ID_MEMBER, $txt, $modSettings, $context, $sourcedir;
-]]></add>
-		</operation>
-
-		<operation>
-			<search position="replace"><![CDATA[
-		// There's been a new topic AND a new post today.
-]]></search>
-			<add><![CDATA[
-		//	Generate the pretty URL of our exciting new topic
-		require_once($sourcedir . '/Subs-PrettyUrls.php');
-		$pretty_text = substr(generatePrettyUrl($msgOptions['subject']), 0, 80);
-
-		//	Is the URL already there?
-		$query = db_query("
-			SELECT ID_TOPIC
-			FROM {$db_prefix}pretty_topic_urls
-			WHERE pretty_url = '$pretty_text'
-			LIMIT 1", __FILE__, __LINE__);
-		//	If it's not unique we need to change it
-		$notunique = mysql_num_rows($query);
-		mysql_free_result($query);
-
-		//	Can't be empty, can't be a number and can't be the same as another
-		if ($pretty_text == '' || is_numeric($pretty_text) || $notunique != 0)
-			//	Add suffix '-tID_TOPIC' to the pretty url
-			$pretty_text = substr($pretty_text, 0, 70) . ($pretty_text != '' ? '-t' : 't') . $topicOptions['id'];
-
-		//	Update the database
-		db_query("
-			REPLACE INTO {$db_prefix}pretty_topic_urls (ID_TOPIC, ID_BOARD, pretty_url) 
-			VALUES (" . $topicOptions['id'] .', ' . $topicOptions['board'] . ', "' . $pretty_text . '")', __FILE__, __LINE__);
-
-		//	Count those queries!
-		$context['pretty']['db_count'] = $context['pretty']['db_count'] + 2;
-
-		// There's been a new topic AND a new post today.
 ]]></add>
 		</operation>
 	</file>

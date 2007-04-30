@@ -30,6 +30,9 @@ Pretty URLs 0.6                                                    ??
  ! Base: Made the topic and board filters a little more efficient. (PrettyUrls-Filters.php)
  ! Base: Don't rewrite URLs on the error log page. (ManageErrors.php)
  + Base: Better handling of session URLs to reduce queries. (QueryString.php)
+ % Base: Split out board and topic related changes to BoardsAndTopics.xml.
+ + Base: Use 301 redirects for numbered board and topic pages. (Display.php, MessageIndex.php)
+ + Base: Added the pretty_board_lookup setting to store all board URLs, even old ones. (install.php, QueryString.php, Subs-Boards.php)
 
 Pretty URLs 0.5                                                    April 8, 2007
 ================================================================================
