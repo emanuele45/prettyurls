@@ -16,13 +16,11 @@
 
 	<install for="1.1, 1.1.0-1.1.99">
 		<modification format="xml" type="file">Changes.xml</modification>
-		<require-file name="example.htaccess" destination="$boarddir" />
 		<code type="file">install.php</code>
 	</install>
 	<uninstall for="1.1, 1.1.0-1.1.99">
 		<modification format="xml" type="file" reverse="true">Changes.xml</modification>
-		<remove-file name="$boarddir/example.htaccess" />
-		<code type="file">install.php</code>
+		<code type="file">uninstall.php</code>
 	</uninstall>
 
 </package-info>

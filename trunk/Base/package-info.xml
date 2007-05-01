@@ -20,7 +20,6 @@
 		<modification format="xml" type="file">Languages.xml</modification>
 		<require-file name="PrettyUrls-Filters.php" destination="$sourcedir" />
 		<require-file name="Subs-PrettyUrls.php" destination="$sourcedir" />
-		<require-file name="example.htaccess" destination="$boarddir" />
 		<code type="file">install.php</code>
 	</install>
 	<uninstall for="1.1, 1.1.0-1.1.99">
@@ -29,7 +28,6 @@
 		<modification format="xml" type="file" reverse="true">Languages.xml</modification>
 		<remove-file name="$sourcedir/PrettyUrls-Filters.php" />
 		<remove-file name="$sourcedir/Subs-PrettyUrls.php" />
-		<remove-file name="$boarddir/example.htaccess" />
 		<code type="file">uninstall.php</code>
 	</uninstall>
 

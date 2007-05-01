@@ -33,7 +33,7 @@ while ($row = mysql_fetch_assoc($query))
 	{
 		$pretty_text = generatePrettyUrl($row['name']);
 		//	Can't be empty, can't be a number and can't be the same as another
-		if ($pretty_text == '' !! is_numeric($pretty_text) || isset($pretty_board_lookup[$pretty_text]))
+		if ($pretty_text == '' || is_numeric($pretty_text) || isset($pretty_board_lookup[$pretty_text]))
 			//	Add suffix '-bID_BOARD' to the pretty url
 			$pretty_text .= ($pretty_text != '' ? '-b' : 'b') . $row['ID_BOARD'];
 		//	Update the arrays
@@ -73,15 +73,25 @@ $prettyFilters = array(
 	'topics' => array(
 		'id' => 'topics',
 		'filter' => array(
-			'priority' => 10,
+			'priority' => 40,
 			'callback' => 'pretty_urls_topic_filter',
+		),
+		'rewrite' => array(
+			'priority' => 45,
+			'rule' => 'RewriteRule ^ROOTURL([-_!~*\'()a-zA-Z0-9]+)/([-_!~*\'()a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1;topic=$2.0 [L,QSA]
+RewriteRule ^ROOTURL([-_!~*\'()a-zA-Z0-9]+)/([-_!~*\'()a-zA-Z0-9]+)/([0-9]*|msg[0-9]*|new)/?$ ./index.php?pretty;board=$1;topic=$2.$3 [L,QSA]',
 		),
 	),
 	'boards' => array(
 		'id' => 'boards',
 		'filter' => array(
-			'priority' => 20,
+			'priority' => 45,
 			'callback' => 'pretty_urls_board_filter',
+		),
+		'rewrite' => array(
+			'priority' => 40,
+			'rule' => 'RewriteRule ^ROOTURL([-_!~*\'()a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1.0 [L,QSA]
+RewriteRule ^ROOTURL([-_!~*\'()a-zA-Z0-9]+)/([0-9]*)/?$ ./index.php?pretty;board=$1.$2 [L,QSA]',
 		),
 	),
 );
@@ -90,7 +100,7 @@ $prettyFilters = array(
 updateSettings(array(
 	'pretty_board_lookup' => addslashes(serialize($pretty_board_lookup)),
 	'pretty_board_urls' => addslashes(serialize($pretty_board_urls)),
-	'pretty_filters' => serialize($prettyFilters),
+	'pretty_filters' => addslashes(serialize($prettyFilters)),
 ));
 
 //	Update the filter callbacks

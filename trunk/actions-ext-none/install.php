@@ -16,6 +16,23 @@ elseif (!defined('SMF'))
 	die('<b>Error:</b> Cannot install - please verify you put this in the same place as SMF\'s SSI.php.');
 
 require_once($sourcedir . '/Subs-PrettyUrls.php');
+
+//	Update the pretty_filters setting
+$prettyFilters = unserialize($modSettings['pretty_filters']);
+$prettyFilters['actions'] = array(
+	'id' => 'actions',
+	'filter' => array(
+		'priority' => 90,
+		'callback' => 'pretty_urls_actions_filter',
+	),
+	'rewrite' => array(
+		'priority' => 20,
+		'rule' => 'RewriteRule ^([a-zA-Z0-9]+)/?$ ./index.php?pretty;action=$1 [L,QSA]',
+	),
+);
+updateSettings(array('pretty_filters' => addslashes(serialize($prettyFilters))));
+
+//	Update everything now
 updateFilters();
 
 ?>

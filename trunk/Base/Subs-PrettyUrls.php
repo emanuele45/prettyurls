@@ -171,17 +171,53 @@ function synchroniseTopicUrls()
 			VALUES " . implode(', ', $tablePretty), __FILE__, __LINE__);
 }
 
-//	Update the database based on the installed filters
+//	Update the database based on the installed filters and build the .htaccess file
 function updateFilters()
 {
-	global $modSettings, $db_prefix;
+	global $modSettings, $db_prefix, $boarddir, $boardurl;
 
 	//	Get the settings
 	$prettyFilters = unserialize($modSettings['pretty_filters']);
 	$filterSettings = array();
+	$rewrites = array();
 	foreach ($prettyFilters as $filter)
+	{
 		if (isset($filter['filter']))
 			$filterSettings[$filter['filter']['priority']] = $filter['filter']['callback'];
+		if (isset($filter['rewrite']))
+			$rewrites[$filter['rewrite']['priority']] = array(
+				'id' => $filter['id'],
+				'rule' => $filter['rewrite']['rule'],
+			);
+	}
+
+	//	Backup the current .htaccess file
+	copy($boarddir . '/.htaccess', $boarddir . '/.htaccess.backup-' . date('Y-m-d'));
+
+	//	Build the new .htaccess file
+	$htaccess = '#	Pretty URLs mod
+#	http://code.google.com/p/prettyurls/
+#	.htaccess file generated automatically on: ' . date('F j, Y, G:i') . '
+
+RewriteEngine on';
+
+	ksort($rewrites);
+	foreach ($rewrites as $rule)
+		$htaccess .= '
+
+#	Rules for: ' . $rule['id'] . '
+' . $rule['rule'];
+
+	//	Fix the Root URL
+	if (preg_match('~' . $boardurl . '/?(.*)?~', $modSettings['pretty_root_url'], $match))
+		$htaccess = str_replace('ROOTURL', $match[1] . '/', $htaccess);
+	else
+		$htaccess = str_replace('ROOTURL', '', $htaccess);
+
+	//	Output the file
+	$handle = fopen($boarddir . '/.htaccess', 'w');
+	fwrite($handle, $htaccess);
+	fclose($handle);
 
 	//	Update the settings table
 	ksort($filterSettings);
