@@ -10,7 +10,7 @@ Legend:
  % Development flag or note, such as branching.
 
 
-Pretty URLs 0.6                                                    ??
+Pretty URLs 0.6                                                      May 2, 2007
 ================================================================================
  + Base: Use pretty URLs in redirectExit(). (Subs.php)
  + Base: Added the updateFilters() and filterAndHtaccessSettings() functions. (Subs-PrettyUrls.php, PrettyUrls-Filters.php)
@@ -33,6 +33,10 @@ Pretty URLs 0.6                                                    ??
  % Base: Split out board and topic related changes to BoardsAndTopics.xml.
  + Base: Use 301 redirects for numbered board and topic pages. (Display.php, MessageIndex.php)
  + Base: Added the pretty_board_lookup setting to store all board URLs, even old ones. (install.php, QueryString.php, Subs-Boards.php)
+ + Base: Backup old .htaccess files. (Subs-PrettyUrls.php)
+ + Base: Build the .htaccess file from the pretty_filters settings array. example.htaccess is no longer needed! (install.php, Subs-PrettyUrls.php)
+ % Removed the ext-none package.
+ ! actions: Updated for the above changes.
 
 Pretty URLs 0.5                                                    April 8, 2007
 ================================================================================

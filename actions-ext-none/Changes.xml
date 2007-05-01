@@ -7,18 +7,6 @@
 
 	<file name="$sourcedir/PrettyUrls-Filters.php">
 		<operation>
-			<search position="replace"><![CDATA[
-	//	Filter callback settings
-	$filterSettings = array(
-]]></search>
-			<add><![CDATA[
-	//	Filter callback settings
-	$filterSettings = array(
-		100 => array('PrettyUrls-Filters.php', 'pretty_urls_actions_filter'),
-]]></add>
-		</operation>
-
-		<operation>
 			<search position="end"></search>
 			<add><![CDATA[
 //	Filter miscellaneous action urls
@@ -29,8 +17,9 @@ function pretty_urls_actions_filter($urls)
 	$pattern = '~' . $scripturl . '(.*)action=([^;]+)~S';
 	$replacement = $boardurl . '/$2/$1';
 	foreach ($urls as $crc => $url)
-		if (!isset($url['replacement']) && preg_match($pattern, $url['url']))
-			$urls[$crc]['replacement'] = preg_replace($pattern, $replacement, $url['url']);
+		if (!isset($url['replacement']))
+			if (preg_match($pattern, $url['url']))
+				$urls[$crc]['replacement'] = preg_replace($pattern, $replacement, $url['url']);
 	return $urls;
 }
 ]]></add>
