@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls</id>
-	<version>0.6</version>
+	<version>0.7</version>
 
 	<file name="$boarddir/index.php">
 		<operation>
@@ -75,6 +75,20 @@ $context = array('pretty' => array(
 			//	Pretty URLs mod
 			array('text', 'pretty_root_url', 36),
 			array('check', 'pretty_enable_filters'),
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/News.php">
+		<operation>
+			<search position="replace"><![CDATA[
+	if ($xml_format == 'smf' || isset($_REQUEST['debug']))
+]]></search>
+			<add><![CDATA[
+	//	Pretty URLs need to be rewritten
+	ob_start('ob_sessrewrite');
+
+	if ($xml_format == 'smf' || isset($_REQUEST['debug']))
 ]]></add>
 		</operation>
 	</file>
@@ -155,11 +169,11 @@ function ob_sessrewrite($buffer)
 	if ($modSettings['pretty_enable_filters'])
 	{
 		//	Find all URLs in the buffer
-		$pattern = '~<a[^>]+href=(\"[^\"#]+|\'[^\'#]+)~';
+		$pattern = '~(<a[^>]+href=|<link[^>]+href=|<link>|<id>|<comments>|<guid>)|(\"[^\"#]+|\'[^\'#]+|[^#<]+)~';
 		$crc_query = array();
 		$uncached_urls = array();
 		preg_match_all($pattern, $buffer, $matches, PREG_PATTERN_ORDER);
-		foreach ($matches[1] as $match)
+		foreach ($matches[2] as $match)
 		{
 			//	Rip out everything that shouldn't be cached
 			$match = preg_replace(array('~^[\"\']|PHPSESSID=[^;]+|sesc=[^;]+~', '~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('', '%22', ';', '?', ''), $match);
@@ -218,7 +232,8 @@ function ob_sessrewrite($buffer)
 			}
 
 			//	Put the URLs back into the buffer
-			$buffer = preg_replace_callback('~(<a[^>]+href=)(\"[^\"]+\"|\'[^\']+\')~', 'pretty_buffer_callback', $buffer);
+			$pattern = '~(<a[^>]+href=|<link[^>]+href=|<link>|<id>|<comments>|<guid>)(\"[^\"]+\"|\'[^\']+\'|[^<]+)~';
+			$buffer = preg_replace_callback($pattern, 'pretty_buffer_callback', $buffer);
 		}
 	}
 
@@ -243,19 +258,26 @@ function pretty_buffer_callback($matches)
 {
 	global $context;
 
+	//	Is this URL part of a feed?
+	$isFeed = strpos($matches[1], '>');
+
+	//	Remove those annoying quotes
 	$matches[2] = preg_replace('~^[\"\']|[\"\']$~', '', $matches[2]);
+
 	//	Store the parts of the URL that won't be cached so they can be inserted later
 	preg_match('~PHPSESSID=[^;#&]+~', $matches[2], $PHPSESSID);
 	preg_match('~sesc=[^;#]+~', $matches[2], $sesc);
 	preg_match('~#.*~', $matches[2], $fragment);
+
 	//	Rip out everything that won't have been cached
 	$cacheableurl = preg_replace(array('~PHPSESSID=[^;#]+|sesc=[^;#]+|#.*$~', '~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('', '%22', ';', '?', ''), $matches[2]);
 	$crc = crc32($cacheableurl);
+
 	//	Stich everything back together, clean it up and return
 	$replacement = isset($context['pretty']['cached_urls'][$crc]) ? $context['pretty']['cached_urls'][$crc] : $cacheableurl;
 	$replacement .= (strpos($replacement, '?') === false ? '?' : ';') . (isset($PHPSESSID[0]) ? $PHPSESSID[0] : '') . ';' . (isset($sesc[0]) ? $sesc[0] : '') . (isset($fragment[0]) ? $fragment[0] : '');
 	$replacement = preg_replace(array('~;+|=;~', '~\?;~', '~\?#|;#|=#~', '~\?$|;$|#$|=$~'), array(';', '?', '#', ''), $replacement);
-	return $matches[1] . '"' . $replacement . '"';
+	return $matches[1] . ($isFeed === false ? '"' : '') . $replacement . ($isFeed === false ? '"' : '');
 }
 ]]></add>
 		</operation>
