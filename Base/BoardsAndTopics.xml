@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls</id>
-	<version>0.6</version>
+	<version>0.7</version>
 
 	<file name="$sourcedir/Display.php">
 		<operation>
@@ -12,7 +12,7 @@
 ]]></search>
 			<add><![CDATA[
 	//	301 redirects
-	if (isset($context['pretty']['oldschoolquery']))
+	if (isset($context['pretty']['oldschoolquery']) && $modSettings['pretty_enable_filters'])
 	{
 		$url = 'topic=' . $topic . '.' . (isset($_REQUEST['start']) ? $_REQUEST['start'] : '0') . (isset($_REQUEST['prev_next']) ? ';prev_next=' . $_REQUEST['prev_next'] : '') . (isset($_REQUEST['topicseen']) ? ';topicseen' : '') . (isset($_REQUEST['all']) ? ';all' : '') . (isset($_REQUEST['viewResults']) ? ';viewResults' : '');
 		redirectexit($url, false, true);
@@ -30,7 +30,7 @@
 ]]></search>
 			<add><![CDATA[
 	//	301 redirects
-	if (isset($context['pretty']['oldschoolquery']) || $_REQUEST['board'] != $context['pretty']['board_urls'][$board])
+	if ((isset($context['pretty']['oldschoolquery']) || $_REQUEST['board'] != $context['pretty']['board_urls'][$board]) && $modSettings['pretty_enable_filters'])
 	{
 		$url = 'board=' . $board . '.' . (isset($_REQUEST['start']) ? $_REQUEST['start'] : '0') . (isset($_REQUEST['sort']) ? ';sort=' . $_REQUEST['sort'] : '');
 		redirectexit($url, false, true);
@@ -217,8 +217,8 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 
 		//	Update the database
 		db_query("
-			REPLACE INTO {$db_prefix}pretty_topic_urls (ID_TOPIC, ID_BOARD, pretty_url) 
-			VALUES (" . $topicOptions['id'] .', ' . $topicOptions['board'] . ', "' . $pretty_text . '")', __FILE__, __LINE__);
+			REPLACE INTO {$db_prefix}pretty_topic_urls (ID_TOPIC, pretty_url) 
+			VALUES (" . $topicOptions['id'] . ', "' . $pretty_text . '")', __FILE__, __LINE__);
 
 		//	Count those queries!
 		$context['pretty']['db_count'] = $context['pretty']['db_count'] + 2;

@@ -169,7 +169,7 @@ function ob_sessrewrite($buffer)
 	if ($modSettings['pretty_enable_filters'])
 	{
 		//	Find all URLs in the buffer
-		$pattern = '~(<a[^>]+href=|<link[^>]+href=|<link>|<id>|<comments>|<guid>)|(\"[^\"#]+|\'[^\'#]+|[^#<]+)~';
+		$pattern = '~(<a[^>]+href=|<link[^>]+href=|<link>|<id>|<comments>|<guid>)(\"[^\"#]+|\'[^\'#]+|[^#<]+)~';
 		$crc_query = array();
 		$uncached_urls = array();
 		preg_match_all($pattern, $buffer, $matches, PREG_PATTERN_ORDER);
