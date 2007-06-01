@@ -14,8 +14,10 @@ Pretty URLs 0.7                                                      ??
 ================================================================================
  + Base: Romanise Vietnamese, Croatian, Hiragana and Katakana. (Subs-PrettyUrls.php)
  % Started the profiles package.
- ! Base: Fixed a broken query in Subs-Post.php.
  ! Base: URLs in <link> tags and feeds should be rewritten too. (QueryString.php, News.php)
+ ! Base: Fixed a broken query in Subs-Post.php.
+ ! Base: Don't use 301 redirections if rewriting isn't enabled! (Display.php, MessageIndex.php)
+ ! Base: Hopefully fixed the queries to work in MySQL 3.34. (install.php)
 
 Pretty URLs 0.6                                                      May 2, 2007
 ================================================================================
