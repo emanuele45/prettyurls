@@ -1,0 +1,112 @@
+Changelog started November 2006; Currently at version 0.7
+
+Legend:
+--------------------------------------------------------------------------------
+ ! Minor change or bugfix. (don't bother to log typos except between releases.)
+ * Change like above, but affects templates.
+ & Change that affects a language file. (make two if it affects templates too.)
+ + Feature addition or improvement.
+ - Feature or option removal.
+ % Development flag or note, such as branching.
+
+
+Pretty URLs 0.7                                                    June 12, 2007
+================================================================================
+ + Base: Romanise Vietnamese, Croatian, Hiragana and Katakana. (Subs-PrettyUrls.php)
+ % Started the profiles package.
+ ! Base: URLs in <link> tags and feeds should be rewritten too. (QueryString.php, News.php)
+ ! Base: Fixed a broken query in Subs-Post.php.
+ ! Base: Don't use 301 redirections if rewriting isn't enabled! (Display.php, MessageIndex.php)
+ ! Base: Hopefully fixed the queries to work in MySQL 3.34. (install.php)
+ ! Base: Fixed some wrong variables in Subs-Boards.php, weird...
+
+Pretty URLs 0.6                                                      May 2, 2007
+================================================================================
+ + Base: Use pretty URLs in redirectExit(). (Subs.php)
+ + Base: Added the updateFilters() and filterAndHtaccessSettings() functions. (Subs-PrettyUrls.php, PrettyUrls-Filters.php)
+ ! Base: Fixed a missing global in generatePrettyUrl(). (Subs-PrettyUrls.php)
+ + Base: Filter board urls. (PrettyUrls-Filters.php)
+ + Base: Allow permanent redirects. (Subs.php)
+ + Base: Filter topic urls. (PrettyUrls-Filters.php)
+ ! Base: Don't try to rewrite urls once the code has been removed! (uninstall.php)
+ - Base: Remove the pretty_url column from the topics table as it's no longer needed. (install.php)
+ ! Base: Update the synchroniseTopicUrls() function for the above change. (Subs-PrettyUrls.php)
+ ! Base: Changed the format of specifying filters, which are now stored in a DB setting. (install.php, Subs-PrettyUrls.php, PrettyUrls-Filters.php)
+ % Base: All filter callbacks should now be placed only in PrettyUrls-Filters.php.
+ ! Base: Don't do anything if there are no URLs. (QueryString.php)
+ - Base: Remove the ID_BOARD column from the pretty_topic_urls table. (install.php)
+ ! Base: Rewrite topic URLs correctly if there is no pretty URL. (PrettyUrls-Filters.php)
+ + Base: Update the load time and query display. (QueryString.php)
+ ! Base: Made the topic and board filters a little more efficient. (PrettyUrls-Filters.php)
+ ! Base: Don't rewrite URLs on the error log page. (ManageErrors.php)
+ + Base: Better handling of session URLs to reduce queries. (QueryString.php)
+ % Base: Split out board and topic related changes to BoardsAndTopics.xml.
+ + Base: Use 301 redirects for numbered board and topic pages. (Display.php, MessageIndex.php)
+ + Base: Added the pretty_board_lookup setting to store all board URLs, even old ones. (install.php, QueryString.php, Subs-Boards.php)
+ + Base: Backup old .htaccess files. (Subs-PrettyUrls.php)
+ + Base: Build the .htaccess file from the pretty_filters settings array. example.htaccess is no longer needed! (install.php, Subs-PrettyUrls.php)
+ % Removed the ext-none package.
+ ! actions: Updated for the above changes.
+
+Pretty URLs 0.5                                                    April 8, 2007
+================================================================================
+ ! Base: Fixed problems with board URLs containing quotes. (install.php, Subs-Board.php)
+ + Base: Added the 'pretty_enable_filters' and 'pretty_filter_callbacks' settings. (install.php)
+ + Base: Added the 'pretty_urls_cache' table. (install.php)
+ + Base: Run the filter callbacks against all URLs in a page, caching any new urls. (QueryString.php)
+ ! Base: Made some minor changes so that the above will work. (QueryString.php)
+ ! Base: Don't cache URLs with a session. (QueryString.php)
+ + Base: Added a file, PrettyUrls-Filters.php, to place the code of filter extensions in.
+ % Started the actions-ext-none package, to rewrite miscellaneous action urls.
+ ! actions: Clear the URL cache when (un)installing a new filter. (install.php)
+ ! actions: Include an example.htaccess file too.
+ ! Base: Remove unneeded ';' and '?' characters from URLs. (QueryString.php)
+
+Pretty URLs 0.4                                                   March 14, 2007
+================================================================================
+ ! Base: Now following the SMF Coding Guidelines (I hope).
+ ! Base: It wasn't compatible with another mod, my own! (Oh the shame!) (PackageGet.php)
+ + Base: Transliterate some Cyrillic characters. (Subs-PrettyUrls.php)
+ % Removed the TP-ext-none package, and moved its changes to the ext-none package.
+ ! ext-none: Added error="skip" attributes to many less essential changes so it will have a better chance of installing.
+ ! Base: $context['pretty'] wasn't defined in SSI.php.
+ + Base: If the database encoding isn't UTF-8 and multibyte string functions are available, try converting the text to UTF-8. (Subs-PrettyUrls.php)
+ ! Base: Halved the number of queries used to synchronise the topic URLs. (Subs-PrettyUrls.php)
+ + Base: Allow Arabic to be romanised. (QueryString.php, Subs-PrettyUrls.php, example.htaccess)
+ % ext-none: Broke up Major.xml into 3 files because it was too big for the package manager.
+
+Pretty URLs 0.3                                                 January 20, 2007
+================================================================================
+ + Base: Added some Turkish (and other) characters. (Subs-PrettyUrls.php)
+ ! ext-none: Fixed some problems in SSI.php.
+ + Base: Give new topics a pretty URL. (Subs-Post.php)
+ + TP-ext-none: Change the URLs of the front page in TP_boardNews(). (TPortal.php)
+ + ext-none: Change the URLs of Stats.php.
+ + Added a Package List. (packages.xml)
+ + Base: Added the canonicaliseUrl() function to fix relative URLs. (PackageGet.php)
+
+Pretty URLs 0.2                                                December 26, 2006
+================================================================================
+ ! Base: Don't give pretty URLs to recycled topics, and fixed '&quot;' issues. (Subs-PrettyUrls.php)
+ ! Base: Adding and changing board URLs is now done through modifyBoard(). (Subs-Boards.php)
+ ! ext-none: Fixed the Display template because a change hadn't been committed somehow.
+ ! Base: Don't add an action in .htaccess because it won't work with an invalid board URL. (QueryString.php)
+ + ext-none: Replace topic urls in SSI.php, News.php and Recent.php.
+
+Pretty URLs 0.1                                                December 13, 2006
+================================================================================
+ + Base: Added generatePrettyUrl function and $characterHash with almost all characters from latin-1. (Subs-PrettyUrls.php)
+ + Base: Generate the pretty URLs of the forum's boards. (install.php)
+ + Base: Included an example .htaccess file (example.htaccess)
+ + Base: Added 'pretty_root_url' setting, defaulting to $boardurl.
+ + ext-none: Replace the board urls in the BoardIndex and MessageIndex templates.
+ ! Base: Fixed $characterHash so '+' would never be in a URL. (Subs-PrettyUrls.php)
+ ! Base: Fixed issues with '&amp;' and removed unwanted '-'s. (Subs-PrettyUrls.php)
+ + Base: A new board deserves a new URL! (ManageBoards.php)
+ + ext-none: Replaced the board URLs in SSI.php, News.php and Recent.php.
+ ! Base: generatePrettyUrl is now simpler and hopefully more efficient. (Subs-PrettyUrls.php)
+ + Base: If numbers were used in the query string, allow the possibility of redirecting to a pretty URL. (QueryString.php)
+ + Base: Added the smf_pretty_topic_urls table and the processing to allow topic urls. (install.php, QueryString.php)
+ + Base: Created the synchroniseTopicUrls() function. (Subs-PrettyUrls.php)
+ + ext-none: Replace the topic urls in the BoardIndex, MessageIndex and Display templates.
+ ! Base: Altered the example.htaccess file so that the new topic urls would work.
