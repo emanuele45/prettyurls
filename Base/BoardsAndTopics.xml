@@ -146,13 +146,13 @@ function modifyBoard($board_id, &$boardOptions)
 		$pretty_url = generatePrettyUrl($boardOptions['pretty_url']);
 
 		//	Can't be empty, can't be a number and can't be the same as another
-		if ($pretty_url == '' || is_numeric($pretty_url) || (isset($pretty_board_lookup[$pretty_url]) && $pretty_board_lookup[$pretty_url] != $ID_BOARD))
-			//	Add suffix '-bID_BOARD' to the pretty url
-			$pretty_url .= ($pretty_url != '' ? '-b' : 'b') . $ID_BOARD;
+		if ($pretty_url == '' || is_numeric($pretty_url) || (isset($pretty_board_lookup[$pretty_url]) && $pretty_board_lookup[$pretty_url] != $board_id))
+			//	Add suffix '-bboard_id' to the pretty url
+			$pretty_url .= ($pretty_url != '' ? '-b' : 'b') . $board_id;
 
 		//	Save to the database
-		$context['pretty']['board_urls'][$ID_BOARD] = $pretty_url;
-		$pretty_board_lookup[$pretty_url] = $ID_BOARD;
+		$context['pretty']['board_urls'][$board_id] = $pretty_url;
+		$pretty_board_lookup[$pretty_url] = $board_id;
 		updateSettings(array(
 			'pretty_board_lookup' => addslashes(serialize($pretty_board_lookup)),
 			'pretty_board_urls' => addslashes(serialize($context['pretty']['board_urls'])),
