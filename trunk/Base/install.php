@@ -78,8 +78,8 @@ $prettyFilters = array(
 		),
 		'rewrite' => array(
 			'priority' => 45,
-			'rule' => 'RewriteRule ^ROOTURL([-_!~*\'()a-zA-Z0-9]+)/([-_!~*\'()a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1;topic=$2.0 [L,QSA]
-RewriteRule ^ROOTURL([-_!~*\'()a-zA-Z0-9]+)/([-_!~*\'()a-zA-Z0-9]+)/([0-9]*|msg[0-9]*|new)/?$ ./index.php?pretty;board=$1;topic=$2.$3 [L,QSA]',
+			'rule' => 'RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1;topic=$2.0 [L,QSA]
+RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*|msg[0-9]*|new)/?$ ./index.php?pretty;board=$1;topic=$2.$3 [L,QSA]',
 		),
 	),
 	'boards' => array(
@@ -90,8 +90,8 @@ RewriteRule ^ROOTURL([-_!~*\'()a-zA-Z0-9]+)/([-_!~*\'()a-zA-Z0-9]+)/([0-9]*|msg[
 		),
 		'rewrite' => array(
 			'priority' => 40,
-			'rule' => 'RewriteRule ^ROOTURL([-_!~*\'()a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1.0 [L,QSA]
-RewriteRule ^ROOTURL([-_!~*\'()a-zA-Z0-9]+)/([0-9]*)/?$ ./index.php?pretty;board=$1.$2 [L,QSA]',
+			'rule' => 'RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1.0 [L,QSA]
+RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*)/?$ ./index.php?pretty;board=$1.$2 [L,QSA]',
 		),
 	),
 );
