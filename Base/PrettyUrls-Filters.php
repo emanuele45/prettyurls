@@ -1,5 +1,5 @@
 <?php
-//	Version: 0.6; PrettyUrls-Filters
+//	Version: 0.8; PrettyUrls-Filters
 //	A file for filter extensions to be placed in
 
 if (!defined('SMF'))
@@ -10,7 +10,7 @@ function pretty_urls_topic_filter($urls)
 {
 	global $scripturl, $modSettings, $context, $db_prefix;
 
-	$pattern = '~' . $scripturl . '(.*)topic=([.a-zA-Z0-9]+)(.*)~S';
+	$pattern = '~' . $scripturl . '(.*[?;&])topic=([.a-zA-Z0-9]+)(.*)~S';
 	$query_data = array();
 	foreach ($urls as $crc => $url)
 	{
@@ -51,7 +51,7 @@ function pretty_urls_topic_filter($urls)
 		//	Build the replacement URLs
 		foreach ($urls as $crc => $url)
 		{
-			if (isset($url['topic_id']))
+			if (isset($url['topic_id']) && isset($topicData[$url['topic_id']]))
 				$urls[$crc]['replacement'] = $modSettings['pretty_root_url'] . '/' . $topicData[$url['topic_id']]['pretty_board'] . '/' . $topicData[$url['topic_id']]['pretty_url'] . '/' . $url['start'] . '/' . $url['match1'] . $url['match3'];
 		}
 	}
@@ -63,7 +63,7 @@ function pretty_urls_board_filter($urls)
 {
 	global $scripturl, $modSettings, $context;
 
-	$pattern = '~' . $scripturl . '(.*)board=([.0-9]+)(.*)~S';
+	$pattern = '~' . $scripturl . '(.*[?;&])board=([.0-9]+)(.*)~S';
 	foreach ($urls as $crc => $url)
 	{
 		//	Split out the board URLs and replace them
@@ -78,7 +78,7 @@ function pretty_urls_board_filter($urls)
 					$start = 0;
 				}
 				$board_id = (int) $board_id;
-				$urls[$crc]['replacement'] = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$board_id]) ? $context['pretty']['board_urls'][$board_id] : $board_id) . '/' . $start . '/' . $matches[1] . $matches[3];	
+				$urls[$crc]['replacement'] = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$board_id]) ? $context['pretty']['board_urls'][$board_id] : $board_id) . '/' . $start . '/' . $matches[1] . $matches[3];
 			}
 	}
 	return $urls;
