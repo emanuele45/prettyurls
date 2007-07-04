@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls</id>
-	<version>0.7</version>
+	<version>0.8</version>
 
 	<file name="$sourcedir/Display.php">
 		<operation>
@@ -12,7 +12,7 @@
 ]]></search>
 			<add><![CDATA[
 	//	301 redirects
-	if (isset($context['pretty']['oldschoolquery']) && $modSettings['pretty_enable_filters'])
+	if ((isset($context['pretty']['oldschoolquery']) || $_REQUEST['board'] != $context['pretty']['board_urls'][$board]) && $modSettings['pretty_enable_filters'])
 	{
 		$url = 'topic=' . $topic . '.' . (isset($_REQUEST['start']) ? $_REQUEST['start'] : '0') . (isset($_REQUEST['prev_next']) ? ';prev_next=' . $_REQUEST['prev_next'] : '') . (isset($_REQUEST['topicseen']) ? ';topicseen' : '') . (isset($_REQUEST['all']) ? ';all' : '') . (isset($_REQUEST['viewResults']) ? ';viewResults' : '');
 		redirectexit($url, false, true);

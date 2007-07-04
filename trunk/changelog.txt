@@ -1,4 +1,4 @@
-Changelog started November 2006; Currently at version 0.7
+Changelog started November 2006; Currently at version 0.8
 
 Legend:
 --------------------------------------------------------------------------------
@@ -9,6 +9,15 @@ Legend:
  - Feature or option removal.
  % Development flag or note, such as branching.
 
+
+Pretty URLs 0.8                                                    ??
+================================================================================
+ ! Profiles: Fixed a minor typo.
+ + wiki: Added the DatabaseChanges page.
+ ! Topics: Use 301 redirections for topics with wrong board URLs. (Display.php)
+ + Base: Romanise Modern Greek. (Subs-PrettyUrls.php)
+ ! Boards: Don't be so eager to find board URLs, targetboard doesn't count! (PrettyUrls-Filters.php)
+ ! Topics: Don't rewrite URLs for topics that don't exist. (PrettyUrls-Filters.php)
 
 Pretty URLs 0.7                                                    June 12, 2007
 ================================================================================

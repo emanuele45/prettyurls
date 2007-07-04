@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls-profiles-ext-none</id>
-	<version>0.7</version>
+	<version>0.8</version>
 
 	<file name="$sourcedir/PrettyUrls-Filters.php">
 		<operation>
@@ -36,7 +36,7 @@ function pretty_profiles_filter($urls)
 		$query = db_query("
 			SELECT ID_MEMBER, memberName
 			FROM {$db_prefix}members
-			WHERE ID_MEMBER IN (" . implode(', ', $querty_data) . ")", __FILE__, __LINE__);
+			WHERE ID_MEMBER IN (" . implode(', ', $query_data) . ")", __FILE__, __LINE__);
 		while ($row = mysql_fetch_assoc($query))
 			$memberNames[$row['ID_MEMBER']] = rawurlencode($row['memberName']);
 		mysql_free_result($query);

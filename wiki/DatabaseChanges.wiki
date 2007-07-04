@@ -1,0 +1,27 @@
+#summary Changes made to SMF's database
+
+The Pretty URLs mod needs to make several changes to the database. This is a reference in case you need to manually edit or fix something.
+
+If you ever want to completely remove the mod, you will need to remove all of these additions too.
+
+= New tables =
+
+|| *Name* || *Structure* || *Description* ||
+|| `smf_pretty_topic_urls` || `ID_TOPIC`: [http://dev.mysql.com/doc/refman/5.0/en/numeric-types.html mediumint], `pretty_url`: [http://dev.mysql.com/doc/refman/5.0/en/char.html varchar(80)] || Stores the (partial) URLs for topics. Currently the only way to change a topic's URL is to edit this table manually. ||
+|| `smf_pretty_urls_cache` || `url_crc`: [http://dev.mysql.com/doc/refman/5.0/en/numeric-types.html int], `replacement`: [http://dev.mysql.com/doc/refman/5.0/en/blob.html text], `log_time`: [http://dev.mysql.com/doc/refman/5.0/en/datetime.html timestamp] || A complete list of every URL in the forum with it's prettified replacement. The `url_crc` column indices the standard URLs by using the [http://php.net/crc32 crc32() function], which will hopefully not produce collisions. `log_time` stores the last time the URL was updated. ||
+
+= New settings =
+
+Settings are stored in the smf_settings table. Many of these settings use serialized arrays, so the following PHP functions might be useful: [http://php.net/serialize serialize()], [http://php.net/unserialize unserialize()].
+
+|| *Name* || *Description* ||
+|| `pretty_board_lookup` || A serialized array of `URL => ID_BOARD` pairs, used for processing `$_GET['board']`. There can be more than one URL for each board. ||
+|| `pretty_board_urls` || A serialized array of `ID_BOARD => URL` pairs, used for generating pretty replacement URLs. ||
+|| `pretty_enable_filters` || Sets whether to prettify anything at all. 0 for no, 1 for yes. ||
+|| `pretty_filters` || A serialized array of filter data. ||
+|| `pretty_filter_callbacks` || A serialized array of callback function names, sorted by priority. Don't manually edit this, edit the `pretty_filters` setting instead. ||
+|| `pretty_root_url` || The base URL used by the board and topic filters, which by default is the same as `$boardurl`. ||
+
+= Package server =
+
+A link to the [http://prettyurls.googlecode.com/svn/trunk/packages.xml package server] here at Google Code is added to the `smf_package_servers` table.
