@@ -18,6 +18,9 @@ Pretty URLs 0.8                                                    ??
  + Base: Romanise Modern Greek. (Subs-PrettyUrls.php)
  ! Boards: Don't be so eager to find board URLs, targetboard doesn't count! (PrettyUrls-Filters.php)
  ! Topics: Don't rewrite URLs for topics that don't exist. (PrettyUrls-Filters.php)
+ % Display database changes on (un)installing. (install.php, uninstall.php)
+ + Created a script to uninstall all database changes. (uninstall.php)
+ ! Base: Finally fixed quotes. Sure hope I won't regret saying that. (QueryString.php, Subs-PrettyUrls.php)
 
 Pretty URLs 0.7                                                    June 12, 2007
 ================================================================================

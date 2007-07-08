@@ -2,7 +2,7 @@
 
 The Pretty URLs mod needs to make several changes to the database. This is a reference in case you need to manually edit or fix something.
 
-If you ever want to completely remove the mod, you will need to remove all of these additions too.
+If you ever want to completely remove the mod, you will need to remove all of these additions too. To be super-cool, use the [http://prettyurls.googlecode.com/svn/trunk/Base/uninstall.php uninstall tool].
 
 = New tables =
 
@@ -12,7 +12,7 @@ If you ever want to completely remove the mod, you will need to remove all of th
 
 = New settings =
 
-Settings are stored in the smf_settings table. Many of these settings use serialized arrays, so the following PHP functions might be useful: [http://php.net/serialize serialize()], [http://php.net/unserialize unserialize()].
+Settings are stored in the `smf_settings` table. Many of these settings use serialized arrays, so the following PHP functions might be useful: [http://php.net/serialize serialize()], [http://php.net/unserialize unserialize()].
 
 || *Name* || *Description* ||
 || `pretty_board_lookup` || A serialized array of `URL => ID_BOARD` pairs, used for processing `$_GET['board']`. There can be more than one URL for each board. ||
