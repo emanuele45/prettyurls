@@ -6,14 +6,21 @@
 	forum's SSI.php file.
 *******************************************************************************/
 
-//	Pretty URLs - Base v0.7
+//	Pretty URLs - Base v0.8
 
 //	If SSI.php is in the same place as this file, and SMF isn't defined, this is being run standalone.
 if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
+{
 	require_once(dirname(__FILE__) . '/SSI.php');
+	$standalone = true;
+	$txt = array('package_installed_done' => '');
+}
 //	Hmm... no SSI.php and no SMF?
 elseif (!defined('SMF'))
 	die('<b>Error:</b> Cannot install - please verify you put this in the same place as SMF\'s SSI.php.');
+
+//	Start the list
+$output = '<ul>';
 
 require_once($sourcedir . '/Subs-PrettyUrls.php');
 
@@ -42,6 +49,7 @@ while ($row = mysql_fetch_assoc($query))
 	}
 }
 mysql_free_result($query);
+$output .= '<li>Generating board URLs</li>';
 
 //	Create the pretty_topic_urls table
 db_query("
@@ -50,6 +58,7 @@ db_query("
 	`pretty_url` varchar(80) NOT NULL,
 	PRIMARY KEY (`ID_TOPIC`),
 	UNIQUE (`pretty_url`))", __FILE__, __LINE__);
+$output .= '<li>Creating the pretty_topic_urls table</li>';
 
 //	Create the pretty_urls_cache table
 db_query("
@@ -58,9 +67,11 @@ db_query("
 	`replacement` TEXT NOT NULL,
 	`log_time` TIMESTAMP NOT NULL,
 	PRIMARY KEY (`url_crc`))", __FILE__, __LINE__);
+$output .= '<li>Creating the pretty_urls_cache table</li>';
 
 //	Build the table of topic URLs
 synchroniseTopicUrls();
+$output .= '<li>Building the list of topic URLs</li>';
 
 //	Add the pretty_root_url and pretty_enable_filters settings:
 db_query("
@@ -102,9 +113,11 @@ updateSettings(array(
 	'pretty_board_urls' => addslashes(serialize($pretty_board_urls)),
 	'pretty_filters' => addslashes(serialize($prettyFilters)),
 ));
+$output .= '<li>Adding some settings</li>';
 
 //	Update the filter callbacks
 updateFilters();
+$output .= '<li>Processing the installed filters</li>';
 
 //	Add the Package List if it hasn't been added already
 $query = db_query("
@@ -117,5 +130,16 @@ if (mysql_num_rows($query) == 0)
 		INSERT INTO {$db_prefix}package_servers (name, url)
 		VALUES ('Pretty URLs Package List', 'http://prettyurls.googlecode.com/svn/trunk')", __FILE__, __LINE__);
 mysql_free_result($query);
+$output .= '<li>Adding a package server</li></ul>';
+
+//	Output the list of database changes
+$txt['package_installed_done'] = $output . $txt['package_installed_done'];
+if (isset($standalone))
+{
+	echo '<title>Installing Pretty URLs - Base 0.7</title>
+<h1>Installing Pretty URLs - Base 0.7</h1>
+<h2>Database changes</h2>
+', $txt['package_installed_done'];
+}
 
 ?>

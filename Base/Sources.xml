@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls</id>
-	<version>0.7</version>
+	<version>0.8</version>
 
 	<file name="$boarddir/index.php">
 		<operation>
@@ -217,7 +217,9 @@ function ob_sessrewrite($buffer)
 				$cache_data = array();
 				foreach ($uncached_urls as $crc => $url)
 				{
-					$url['replacement'] = isset($url['replacement']) ? $url['replacement'] : $url['url'];
+					if (!isset($url['replacement']))
+						$url['replacement'] = $url['url'];
+					$url['replacement'] = str_replace(chr(18), '\'', $url['replacement']);
 					$url['replacement'] = preg_replace(array('~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('%22', ';', '?', ''), $url['replacement']);
 					$context['pretty']['cached_urls'][$crc] = $url['replacement'];
 					$cache_data[] = '(' . $crc . ', \'' . addslashes($url['replacement']) . '\')';
@@ -325,6 +327,7 @@ function redirectexit($setLocation = '', $refresh = false, $permanent = false)
 		}
 		if (isset($pretty_url[0]['replacement']))
 			$setLocation = $pretty_url[0]['replacement'];
+		$setLocation = str_replace(chr(18), '\'', $setLocation);
 		$setLocation = preg_replace(array('~;+|=;~', '~\?;~', '~\?#|;#|=#~', '~\?$|;$|#$|=$~'), array(';', '?', '#', ''), $setLocation);
 	}
 

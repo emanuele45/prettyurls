@@ -133,7 +133,7 @@ function generatePrettyUrl($text)
 		'!'	=>	array ('!'),
 		'~'	=>	array ('~'),
 		'*'	=>	array ('*'),
-		"\\'"	=>	array ("'", '"', 'ﺀ', 'ع'),
+		chr(18)	=>	array ("'", '"', 'ﺀ', 'ع'),
 		'('	=>	array ('(', '{', '['),
 		')'	=>	array (')', '}', ']'),
 		'$'	=>	array ('$'),
@@ -154,8 +154,7 @@ function generatePrettyUrl($text)
 		$text = mb_convert_encoding($text, 'UTF-8', 'auto');
 
 	//	Change the entities back to normal characters
-	$text = str_replace('&amp;', '&', $text);
-	$text = str_replace('&quot;', '"', $text);
+	$text = str_replace(array('&amp;', '&quot;'), array('&', '"'), $text);
 	$prettytext = '';
 
 	//	Split up $text into UTF-8 letters
