@@ -21,6 +21,8 @@ Pretty URLs 0.8                                                    ??
  % Display database changes on (un)installing. (install.php, uninstall.php)
  + Created a script to uninstall all database changes. (uninstall.php)
  ! Base: Finally fixed quotes. Sure hope I won't regret saying that. (QueryString.php, Subs-PrettyUrls.php)
+ % All functions now begin with 'pretty'.
+ ! Base: Process <form>s, but not <script>s. (QueryString.php)
 
 Pretty URLs 0.7                                                    June 12, 2007
 ================================================================================

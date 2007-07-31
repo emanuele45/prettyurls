@@ -41,17 +41,6 @@
 		</operation>
 	</file>
 
-	<file name="$themedir/Display.template.php">
-		<operation>
-			<search position="replace"><![CDATA[
-	var smf_template_subject_normal = \'<a href="', $scripturl, '?topic=', $context['current_topic'], '.msg%msg_id%#msg%msg_id%">%subject%</a>\';
-]]></search>
-			<add><![CDATA[
-	var smf_template_subject_normal = \'<\' + \'a href="', $scripturl, '?topic=', $context['current_topic'], '.msg%msg_id%#msg%msg_id%">%subject%</a>\';
-]]></add>
-		</operation>
-	</file>
-
 	<file name="$sourcedir/QueryString.php">
 		<operation>
 			<search position="replace"><![CDATA[
@@ -154,7 +143,7 @@ function modifyBoard($board_id, &$boardOptions)
 		//	Get the current board URLs
 		$pretty_board_lookup = unserialize($modSettings['pretty_board_lookup']);
 		//	Generate a new one
-		$pretty_url = generatePrettyUrl($boardOptions['pretty_url']);
+		$pretty_url = pretty_generate_url($boardOptions['pretty_url']);
 
 		//	Can't be empty, can't be a number and can't be the same as another
 		if ($pretty_url == '' || is_numeric($pretty_url) || (isset($pretty_board_lookup[$pretty_url]) && $pretty_board_lookup[$pretty_url] != $board_id))
@@ -209,7 +198,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 			<add><![CDATA[
 		//	Generate the pretty URL of our exciting new topic
 		require_once($sourcedir . '/Subs-PrettyUrls.php');
-		$pretty_text = substr(generatePrettyUrl($msgOptions['subject']), 0, 80);
+		$pretty_text = substr(pretty_generate_url($msgOptions['subject']), 0, 80);
 
 		//	Is the URL already there?
 		$query = db_query("

@@ -31,7 +31,7 @@ updateSettings(array('pretty_filters' => addslashes(serialize($prettyFilters))))
 output .= '<li>Removing the profiles filter</li>';
 
 //	Update everything now
-updateFilters();
+pretty_update_filters();
 $output .= '<li>Processing the installed filters</li></ul>';
 
 //	Output the list of database changes

@@ -168,8 +168,13 @@ function ob_sessrewrite($buffer)
 	//	Rewrite the buffer with Pretty URLs!
 	if ($modSettings['pretty_enable_filters'])
 	{
+		//	Remove the script tags now
+		$context['pretty']['scriptID'] = 0;
+		$context['pretty']['scripts'] = array();
+		$buffer = preg_replace_callback('~<script>.+?</script>~s', 'pretty_scripts_remove', $buffer);
+
 		//	Find all URLs in the buffer
-		$pattern = '~(<a[^>]+href=|<link[^>]+href=|<link>|<id>|<comments>|<guid>)(\"[^\"#]+|\'[^\'#]+|[^#<]+)~';
+		$pattern = '~(<a[^>]+href=|<link[^>]+href=|<form[^>]+?action=|<link>|<id>|<comments>|<guid>)(\"[^\"#]+|\'[^\'#]+|[^#<]+)~';
 		$crc_query = array();
 		$uncached_urls = array();
 		preg_match_all($pattern, $buffer, $matches, PREG_PATTERN_ORDER);
@@ -234,9 +239,12 @@ function ob_sessrewrite($buffer)
 			}
 
 			//	Put the URLs back into the buffer
-			$pattern = '~(<a[^>]+href=|<link[^>]+href=|<link>|<id>|<comments>|<guid>)(\"[^\"]+\"|\'[^\']+\'|[^<]+)~';
+			$pattern = '~(<a[^>]+href=|<link[^>]+href=|<form[^>]+?action=|<link>|<id>|<comments>|<guid>)(\"[^\"]+\"|\'[^\']+\'|[^<]+)~';
 			$buffer = preg_replace_callback($pattern, 'pretty_buffer_callback', $buffer);
 		}
+
+		//	Restore the script tags
+		$buffer = preg_replace_callback('~' . chr(20) . '([0-9]+)' . chr(20) . '~', 'pretty_scripts_restore', $buffer);
 	}
 
 	//	Update the load times
@@ -253,6 +261,16 @@ function ob_sessrewrite($buffer)
 
 	// Return the changed buffer.
 	return $buffer;
+}
+
+//	Remove and save script tags
+function pretty_scripts_remove($match)
+{
+	global $context;
+
+	$context['pretty']['scriptID']++;
+	$context['pretty']['scripts'][$context['pretty']['scriptID']] = $match[0];
+	return chr(20) . $context['pretty']['scriptID'] . chr(20);
 }
 
 //	A callback function to replace the buffer's URLs with their cached URLs
@@ -280,6 +298,14 @@ function pretty_buffer_callback($matches)
 	$replacement .= (strpos($replacement, '?') === false ? '?' : ';') . (isset($PHPSESSID[0]) ? $PHPSESSID[0] : '') . ';' . (isset($sesc[0]) ? $sesc[0] : '') . (isset($fragment[0]) ? $fragment[0] : '');
 	$replacement = preg_replace(array('~;+|=;~', '~\?;~', '~\?#|;#|=#~', '~\?$|;$|#$|=$~'), array(';', '?', '#', ''), $replacement);
 	return $matches[1] . ($isFeed === false ? '"' : '') . $replacement . ($isFeed === false ? '"' : '');
+}
+
+//	Put the script tags back
+function pretty_scripts_restore($match)
+{
+	global $context;
+
+	return $context['pretty']['scripts'][(int) $match[1]];
 }
 ]]></add>
 		</operation>

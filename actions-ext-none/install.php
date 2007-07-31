@@ -41,7 +41,7 @@ updateSettings(array('pretty_filters' => addslashes(serialize($prettyFilters))))
 $output .= '<li>Adding the actions filter</li>';
 
 //	Update everything now
-updateFilters();
+pretty_update_filters();
 $output .= '<li>Processing the installed filters</li></ul>';
 
 //	Output the list of database changes
