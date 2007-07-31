@@ -5,7 +5,7 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 //	Generate a pretty URL from a given text
-function generatePrettyUrl($text)
+function pretty_generate_url($text)
 {
 	global $modSettings;
 
@@ -178,7 +178,7 @@ function generatePrettyUrl($text)
 
 //	Build the table of pretty topic URLs
 //	This function used to do a lot more, but I kept the name the same though now it doesn't
-function synchroniseTopicUrls()
+function pretty_synchronise_topic_urls()
 {
 	global $db_prefix, $modSettings;
 
@@ -213,7 +213,7 @@ function synchroniseTopicUrls()
 		if ($row['pretty_url'] == '')
 		{
 			//	A topic in the recycle board deserves only a blank URL
-			$pretty_text = $modSettings['recycle_enable'] && $row['ID_BOARD'] == $modSettings['recycle_board'] ? '' : substr(generatePrettyUrl($row['subject']), 0, 80);
+			$pretty_text = $modSettings['recycle_enable'] && $row['ID_BOARD'] == $modSettings['recycle_board'] ? '' : substr(pretty_generate_url($row['subject']), 0, 80);
 			//	Can't be empty, can't be a number and can't be the same as another
 			if ($pretty_text == '' || is_numeric($pretty_text) || array_search($pretty_text, $oldUrls) != 0)
 				//	Add suffix '-tID_TOPIC' to the pretty url
@@ -234,7 +234,7 @@ function synchroniseTopicUrls()
 }
 
 //	Update the database based on the installed filters and build the .htaccess file
-function updateFilters()
+function pretty_update_filters()
 {
 	global $modSettings, $db_prefix, $boarddir, $boardurl;
 

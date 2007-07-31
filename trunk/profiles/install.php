@@ -41,7 +41,7 @@ updateSettings(array('pretty_filters' => addslashes(serialize($prettyFilters))))
 $output .= '<li>Adding the profiles filter</li>';
 
 //	Update everything now
-updateFilters();
+upretty_update_filters();
 $output .= '<li>Processing the installed filters</li></ul>';
 
 //	Output the list of database changes

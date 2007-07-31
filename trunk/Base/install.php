@@ -38,7 +38,7 @@ while ($row = mysql_fetch_assoc($query))
 //	Don't replace the board urls if they already exist
 	if (!isset($pretty_board_urls[$row['ID_BOARD']]) || $pretty_board_urls[$row['ID_BOARD']] == '' || array_search($row['ID_BOARD'], $pretty_board_lookup) === false)
 	{
-		$pretty_text = generatePrettyUrl($row['name']);
+		$pretty_text = pretty_generate_url($row['name']);
 		//	Can't be empty, can't be a number and can't be the same as another
 		if ($pretty_text == '' || is_numeric($pretty_text) || isset($pretty_board_lookup[$pretty_text]))
 			//	Add suffix '-bID_BOARD' to the pretty url
@@ -70,7 +70,7 @@ db_query("
 $output .= '<li>Creating the pretty_urls_cache table</li>';
 
 //	Build the table of topic URLs
-synchroniseTopicUrls();
+pretty_synchronise_topic_urls();
 $output .= '<li>Building the list of topic URLs</li>';
 
 //	Add the pretty_root_url and pretty_enable_filters settings:
@@ -116,7 +116,7 @@ updateSettings(array(
 $output .= '<li>Adding some settings</li>';
 
 //	Update the filter callbacks
-updateFilters();
+pretty_update_filters();
 $output .= '<li>Processing the installed filters</li>';
 
 //	Add the Package List if it hasn't been added already
