@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls</id>
-	<version>0.5</version>
+	<version>0.8</version>
 
 	<file name="$languagedir/Modifications.english.php" error="skip">
 		<operation>
@@ -12,6 +12,10 @@
 //	Pretty URLs mod
 $txt['pretty_root_url'] = 'Pretty URLs root URL<div class="smalltext">(Without a final slash)</div>';
 $txt['pretty_enable_filters'] = 'Enable URL filters<div class="smalltext">This may be a substantial performance hit</div>';
+$txt['pretty'] = array(
+	'url' => 'Pretty URL',
+	'url_desc' => 'A URL fragment used for boards and topics.<br /><div class="smalltext">Note: this will be processed as only a limited set of characters are allowed - other characters will be converted. Leave blank to use the board name.</div>',
+);
 ]]></add>
 		</operation>
 	</file>

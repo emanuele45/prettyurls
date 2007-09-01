@@ -10,13 +10,14 @@
 
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls</id>
-	<version>0.7</version>
+	<version>0.8</version>
 	<name>Pretty URLs - Base</name>
 	<type>modification</type>
 
 	<install for="1.1, 1.1.0-1.1.99">
 		<modification format="xml" type="file">Sources.xml</modification>
 		<modification format="xml" type="file">BoardsAndTopics.xml</modification>
+		<modification format="xml" type="file">Themes.xml</modification>
 		<modification format="xml" type="file">Languages.xml</modification>
 		<require-file name="PrettyUrls-Filters.php" destination="$sourcedir" />
 		<require-file name="Subs-PrettyUrls.php" destination="$sourcedir" />
@@ -25,6 +26,7 @@
 	<uninstall for="1.1, 1.1.0-1.1.99">
 		<modification format="xml" type="file" reverse="true">Sources.xml</modification>
 		<modification format="xml" type="file" reverse="true">BoardsAndTopics.xml</modification>
+		<modification format="xml" type="file" reverse="true">Themes.xml</modification>
 		<modification format="xml" type="file" reverse="true">Languages.xml</modification>
 		<remove-file name="$sourcedir/PrettyUrls-Filters.php" />
 		<remove-file name="$sourcedir/Subs-PrettyUrls.php" />

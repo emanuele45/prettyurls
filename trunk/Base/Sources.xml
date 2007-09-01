@@ -171,7 +171,7 @@ function ob_sessrewrite($buffer)
 		//	Remove the script tags now
 		$context['pretty']['scriptID'] = 0;
 		$context['pretty']['scripts'] = array();
-		$buffer = preg_replace_callback('~<script>.+?</script>~s', 'pretty_scripts_remove', $buffer);
+		$buffer = preg_replace_callback('~<script.+?</script>~s', 'pretty_scripts_remove', $buffer);
 
 		//	Find all URLs in the buffer
 		$pattern = '~(<a[^>]+href=|<link[^>]+href=|<form[^>]+?action=|<link>|<id>|<comments>|<guid>)(\"[^\"#]+|\'[^\'#]+|[^#<]+)~';
