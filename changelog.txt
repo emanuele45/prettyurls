@@ -23,6 +23,9 @@ Pretty URLs 0.8                                                    ??
  ! Base: Finally fixed quotes. Sure hope I won't regret saying that. (QueryString.php, Subs-PrettyUrls.php)
  % All functions now begin with 'pretty'.
  ! Base: Process <form>s, but not <script>s. (QueryString.php)
+ ! Base: Added a .htaccess fix for shared hosts.
+ * Boards: Added an interface to edit a board's URL. (ManageBoards.template.php)
+ % seo4smf: Added a package to 301 redirect SEO4SMF's URLs.
 
 Pretty URLs 0.7                                                    June 12, 2007
 ================================================================================

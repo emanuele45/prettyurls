@@ -261,7 +261,8 @@ function pretty_update_filters()
 #	http://code.google.com/p/prettyurls/
 #	.htaccess file generated automatically on: ' . date('F j, Y, G:i') . '
 
-RewriteEngine on';
+RewriteEngine on
+RewriteBase /';
 
 	ksort($rewrites);
 	foreach ($rewrites as $rule)
