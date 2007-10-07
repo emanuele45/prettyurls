@@ -103,7 +103,7 @@ function pretty_generate_url($text)
 		'so'	=>	array ('そ', 'ソ'),
 		'ss'	=>	array ('ß'),
 		'su'	=>	array ('す', 'ス'),
-		't'	=>	array ('t', 'T', 'т', 'Т', 'ت', 'ط', 'τ', 'Τ'),
+		't'	=>	array ('t', 'T', 'т', 'Т', 'ت', 'ط', 'τ', 'Τ', 'ţ', 'Ţ'),
 		'ta'	=>	array ('た', 'タ'),
 		'te'	=>	array ('て', 'テ'),
 		'th'	=>	array ('ث', 'θ', 'Θ'),

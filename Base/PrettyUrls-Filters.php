@@ -23,7 +23,7 @@ function pretty_urls_topic_filter($urls)
 				else
 				{
 					$urls[$crc]['topic_id'] = $matches[2];
-					$urls[$crc]['start'] = 0;
+					$urls[$crc]['start'] = '0';
 				}
 				$urls[$crc]['topic_id'] = (int) $urls[$crc]['topic_id'];
 				$urls[$crc]['match1'] = $matches[1];
@@ -50,10 +50,11 @@ function pretty_urls_topic_filter($urls)
 
 		//	Build the replacement URLs
 		foreach ($urls as $crc => $url)
-		{
 			if (isset($url['topic_id']) && isset($topicData[$url['topic_id']]))
-				$urls[$crc]['replacement'] = $modSettings['pretty_root_url'] . '/' . $topicData[$url['topic_id']]['pretty_board'] . '/' . $topicData[$url['topic_id']]['pretty_url'] . '/' . $url['start'] . '/' . $url['match1'] . $url['match3'];
-		}
+			{
+				$start = $url['start'] != '0' || is_numeric($topicData[$url['topic_id']]['pretty_url']) ? $url['start'] . '/' : '';
+				$urls[$crc]['replacement'] = $modSettings['pretty_root_url'] . '/' . $topicData[$url['topic_id']]['pretty_board'] . '/' . $topicData[$url['topic_id']]['pretty_url'] . '/' . $start . $url['match1'] . $url['match3'];
+			}
 	}
 	return $urls;
 }
@@ -65,7 +66,6 @@ function pretty_urls_board_filter($urls)
 
 	$pattern = '~' . $scripturl . '(.*[?;&])board=([.0-9]+)(.*)~S';
 	foreach ($urls as $crc => $url)
-	{
 		//	Split out the board URLs and replace them
 		if (!isset($url['replacement']))
 			if (preg_match($pattern, $url['url'], $matches))
@@ -75,12 +75,12 @@ function pretty_urls_board_filter($urls)
 				else
 				{
 					$board_id = $matches[2];
-					$start = 0;
+					$start = '0';
 				}
 				$board_id = (int) $board_id;
-				$urls[$crc]['replacement'] = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$board_id]) ? $context['pretty']['board_urls'][$board_id] : $board_id) . '/' . $start . '/' . $matches[1] . $matches[3];
+				$start = $start != '0' ? $start . '/' : '';
+				$urls[$crc]['replacement'] = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$board_id]) ? $context['pretty']['board_urls'][$board_id] : $board_id) . '/' . $start . $matches[1] . $matches[3];
 			}
-	}
 	return $urls;
 }
 

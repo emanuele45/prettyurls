@@ -26,6 +26,9 @@ Pretty URLs 0.8                                                    ??
  ! Base: Added a .htaccess fix for shared hosts.
  * Boards: Added an interface to edit a board's URL. (ManageBoards.template.php)
  % seo4smf: Added a package to 301 redirect SEO4SMF's URLs.
+ ! Boards/Topics: Remove page numbers from URLs unless they're actually needed. (PrettyUrls-Filters.php)
+ & Base: Include language entries for english-utf8 too.
+ ! Base: Don't require the same file 20 times. (QueryString.php, Subs.php)
 
 Pretty URLs 0.7                                                    June 12, 2007
 ================================================================================
