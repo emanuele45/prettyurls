@@ -211,12 +211,10 @@ function ob_sessrewrite($buffer)
 			if (count($uncached_urls) != 0)
 			{
 				//	Run each filter callback function on each URL
+				require_once($sourcedir . '/PrettyUrls-Filters.php');
 				$filter_callbacks = unserialize($modSettings['pretty_filter_callbacks']);
 				foreach ($filter_callbacks as $callback)
-				{
-					require_once($sourcedir . '/PrettyUrls-Filters.php');
 					$uncached_urls = call_user_func($callback, $uncached_urls);
-				}
 
 				//	Fill the cached URLs array
 				$cache_data = array();
@@ -342,11 +340,11 @@ function redirectexit($setLocation = '', $refresh = false, $permanent = false)
 	//	Redirections should be pretty too
 	if ($modSettings['pretty_enable_filters'])
 	{
+		require_once($sourcedir . '/PrettyUrls-Filters.php');
 		$url = array(0 => array('url' => $setLocation, 'crc' => 0));
 		$filter_callbacks = unserialize($modSettings['pretty_filter_callbacks']);
 		foreach ($filter_callbacks as $callback)
 		{
-			require_once($sourcedir . '/PrettyUrls-Filters.php');
 			$pretty_url = call_user_func($callback, $url);
 			if (isset($pretty_url[0]['replacement']))
 				break;

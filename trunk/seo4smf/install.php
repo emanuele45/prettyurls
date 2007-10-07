@@ -43,7 +43,7 @@ updateSettings(array('pretty_filters' => addslashes(serialize($prettyFilters))))
 $output .= '<li>Adding the seo4smf rewrite rules</li>';
 
 //	Update everything now
-upretty_update_filters();
+pretty_update_filters();
 $output .= '<li>Processing the installed filters</li></ul>';
 
 //	Output the list of database changes
