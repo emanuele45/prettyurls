@@ -28,6 +28,7 @@ require_once($sourcedir . '/Subs-PrettyUrls.php');
 $prettyFilters = unserialize($modSettings['pretty_filters']);
 $prettyFilters['actions'] = array(
 	'id' => 'actions',
+	'enabled' => 1,
 	'filter' => array(
 		'priority' => 90,
 		'callback' => 'pretty_urls_actions_filter',

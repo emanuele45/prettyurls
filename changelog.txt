@@ -29,6 +29,9 @@ Pretty URLs 0.8                                                    ??
  ! Boards/Topics: Remove page numbers from URLs unless they're actually needed. (PrettyUrls-Filters.php)
  & Base: Include language entries for english-utf8 too.
  ! Base: Don't require the same file 20 times. (QueryString.php, Subs.php)
+ ! Base: Filters can now be enabled/disabled. (Subs-PrettyUrls.template.php)
+ - Base: Don't install the package server anymore. (install.php, PackageGet.php)
+ + Base: Started working on a better interface for administration. (index.php, PrettyUrls.php, chrome.css etc)
 
 Pretty URLs 0.7                                                    June 12, 2007
 ================================================================================

@@ -22,6 +22,16 @@ $context = array('pretty' => array(
 cleanRequest();
 ]]></add>
 		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		'postsettings' => array('ManagePosts.php', 'ManagePostSettings'),
+]]></search>
+			<add><![CDATA[
+		'postsettings' => array('ManagePosts.php', 'ManagePostSettings'),
+		'pretty' => array('PrettyUrls.php', 'PrettyInterface'),
+]]></add>
+		</operation>
 	</file>
 
 	<file name="$boarddir/SSI.php">
@@ -89,47 +99,6 @@ $context = array('pretty' => array(
 	ob_start('ob_sessrewrite');
 
 	if ($xml_format == 'smf' || isset($_REQUEST['debug']))
-]]></add>
-		</operation>
-	</file>
-
-	<file name="$sourcedir/PackageGet.php">
-		<operation>
-			<search position="replace"><![CDATA[
-	if (getPackageInfo($url . $_REQUEST['package']) == false)
-]]></search>
-			<add><![CDATA[
-	if (getPackageInfo(canonicaliseUrl($url . $_REQUEST['package'])) == false)
-]]></add>
-		</operation>
-
-		<operation>
-			<search position="replace"><![CDATA[$url . $_REQUEST['package']));
-
-	// Done!  Did we get this package automatically?
-]]></search>
-			<add><![CDATA[canonicaliseUrl($url . $_REQUEST['package'])));
-
-	// Done!  Did we get this package automatically?
-]]></add>
-		</operation>
-
-		<operation>
-			<search position="end"></search>
-			<add><![CDATA[
-//	Canonicalise a url
-//	http://au.php.net/manual/en/function.realpath.php#71334
-function canonicaliseUrl($url)
-{
-	$url = explode('/', $url);
-	$keys = array_keys($url, '..');
-
-	foreach($keys AS $keypos => $key)
-		array_splice($url, $key - ($keypos * 2 + 1), 2);
-
-	$url = implode('/', $url);
-	return str_replace('./', '', $url);
-}
 ]]></add>
 		</operation>
 	</file>
@@ -360,6 +329,16 @@ function redirectexit($setLocation = '', $refresh = false, $permanent = false)
 
 	if ($permanent)
 		header('HTTP/1.1 301 Moved Permanently');
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+				'manage_themes' => '<a href="' . $scripturl . '?action=theme;sa=admin;sesc=' . $sc . '">' . $txt['theme_admin'] . '</a>',
+]]></search>
+			<add><![CDATA[
+				'manage_themes' => '<a href="' . $scripturl . '?action=theme;sa=admin;sesc=' . $sc . '">' . $txt['theme_admin'] . '</a>',
+				'pretty_admin' => '<a href="' . $scripturl . '?action=pretty">' . $txt['pretty_admin_menu'] . '</a>',
 ]]></add>
 		</operation>
 	</file>

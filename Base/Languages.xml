@@ -10,6 +10,7 @@
 			<search position="end"></search>
 			<add><![CDATA[
 //	Pretty URLs mod
+$txt['pretty_admin_menu'] = 'Pretty URLs';
 $txt['pretty_root_url'] = 'Pretty URLs root URL<div class="smalltext">(Without a final slash)</div>';
 $txt['pretty_enable_filters'] = 'Enable URL filters<div class="smalltext">This may be a substantial performance hit</div>';
 $txt['pretty'] = array(
@@ -25,6 +26,7 @@ $txt['pretty'] = array(
 			<search position="end"></search>
 			<add><![CDATA[
 //	Pretty URLs mod
+$txt['pretty_admin_menu'] = 'Pretty URLs';
 $txt['pretty_root_url'] = 'Pretty URLs root URL<div class="smalltext">(Without a final slash)</div>';
 $txt['pretty_enable_filters'] = 'Enable URL filters<div class="smalltext">This may be a substantial performance hit</div>';
 $txt['pretty'] = array(

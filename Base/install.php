@@ -83,6 +83,7 @@ db_query("
 $prettyFilters = array(
 	'topics' => array(
 		'id' => 'topics',
+		'enabled' => 1,
 		'filter' => array(
 			'priority' => 40,
 			'callback' => 'pretty_urls_topic_filter',
@@ -95,6 +96,7 @@ RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*|ms
 	),
 	'boards' => array(
 		'id' => 'boards',
+		'enabled' => 1,
 		'filter' => array(
 			'priority' => 45,
 			'callback' => 'pretty_urls_board_filter',
@@ -118,19 +120,6 @@ $output .= '<li>Adding some settings</li>';
 //	Update the filter callbacks
 pretty_update_filters();
 $output .= '<li>Processing the installed filters</li>';
-
-//	Add the Package List if it hasn't been added already
-$query = db_query("
-	SELECT url
-	FROM {$db_prefix}package_servers
-	WHERE url = 'http://prettyurls.googlecode.com/svn/trunk'
-	LIMIT 1", __FILE__, __LINE__);
-if (mysql_num_rows($query) == 0)
-	db_query("
-		INSERT INTO {$db_prefix}package_servers (name, url)
-		VALUES ('Pretty URLs Package List', 'http://prettyurls.googlecode.com/svn/trunk')", __FILE__, __LINE__);
-mysql_free_result($query);
-$output .= '<li>Adding a package server</li></ul>';
 
 //	Output the list of database changes
 $txt['package_installed_done'] = $output . $txt['package_installed_done'];
