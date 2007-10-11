@@ -36,12 +36,6 @@ db_query("
 	IN ('pretty_board_lookup', 'pretty_board_urls', 'pretty_enable_filters', 'pretty_filters', 'pretty_filter_callbacks', 'pretty_root_url')", __FILE__, __LINE__);
 $output .= '<li>Removing some settings</li>';
 
-//	Remove the Package List
-db_query("
-	DELETE FROM {$db_prefix}package_servers
-	WHERE url = 'http://prettyurls.googlecode.com/svn/trunk'", __FILE__, __LINE__);
-$output .= '<li>Removing a package server</li></ul>';
-
 //	Output the list of database changes
 if (isset($standalone))
 {

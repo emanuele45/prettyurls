@@ -28,6 +28,7 @@ require_once($sourcedir . '/Subs-PrettyUrls.php');
 $prettyFilters = unserialize($modSettings['pretty_filters']);
 $prettyFilters['seo4smf'] = array(
 	'id' => 'seo4smf',
+	'enabled' => 1,
 	'rewrite' => array(
 		'priority' => 5,
 		'rule' => 'RewriteRule ^(.*)-b([0-9]*)\.([0-9]*)/;(.*) index.php?board=$2.$3;$4 [L]

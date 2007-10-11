@@ -21,7 +21,3 @@ Settings are stored in the `smf_settings` table. Many of these settings use seri
 || `pretty_filters` || A serialized array of filter data. ||
 || `pretty_filter_callbacks` || A serialized array of callback function names, sorted by priority. Don't manually edit this, edit the `pretty_filters` setting instead. ||
 || `pretty_root_url` || The base URL used by the board and topic filters, which by default is the same as `$boardurl`. ||
-
-= Package server =
-
-A link to the [http://prettyurls.googlecode.com/svn/trunk/packages.xml package server] here at Google Code is added to the `smf_package_servers` table.

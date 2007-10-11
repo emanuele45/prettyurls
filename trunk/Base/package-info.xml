@@ -19,8 +19,12 @@
 		<modification format="xml" type="file">BoardsAndTopics.xml</modification>
 		<modification format="xml" type="file">Themes.xml</modification>
 		<modification format="xml" type="file">Languages.xml</modification>
+		<require-file name="PrettyUrls.php" destination="$sourcedir" />
 		<require-file name="PrettyUrls-Filters.php" destination="$sourcedir" />
 		<require-file name="Subs-PrettyUrls.php" destination="$sourcedir" />
+		<require-file name="PrettyUrls.template.php" destination="$themedir" />
+		<require-dir name="pretty" destination="$themedir" />
+		<require-file name="PrettyUrls.english.php" destination="$languagedir" />
 		<code type="file">install.php</code>
 	</install>
 	<uninstall for="1.1, 1.1.0-1.1.99">
@@ -28,8 +32,12 @@
 		<modification format="xml" type="file" reverse="true">BoardsAndTopics.xml</modification>
 		<modification format="xml" type="file" reverse="true">Themes.xml</modification>
 		<modification format="xml" type="file" reverse="true">Languages.xml</modification>
+		<remove-file name="$sourcedir/PrettyUrls.php" />
 		<remove-file name="$sourcedir/PrettyUrls-Filters.php" />
 		<remove-file name="$sourcedir/Subs-PrettyUrls.php" />
+		<remove-file name="$themedir/PrettyUrls.template.php" />
+		<remove-dir name="$themedir/pretty" />
+		<remove-file name="$languagedir/PrettyUrls.english.php" />
 		<code type="file">uninstall.php</code>
 	</uninstall>
 

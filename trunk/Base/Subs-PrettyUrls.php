@@ -243,26 +243,27 @@ function pretty_update_filters()
 	$filterSettings = array();
 	$rewrites = array();
 	foreach ($prettyFilters as $filter)
-	{
-		if (isset($filter['filter']))
-			$filterSettings[$filter['filter']['priority']] = $filter['filter']['callback'];
-		if (isset($filter['rewrite']))
-			$rewrites[$filter['rewrite']['priority']] = array(
-				'id' => $filter['id'],
-				'rule' => $filter['rewrite']['rule'],
-			);
-	}
+		//	Get the important data from enabled filters
+		if ($filter['enabled'])
+		{
+			if (isset($filter['filter']))
+				$filterSettings[$filter['filter']['priority']] = $filter['filter']['callback'];
+			if (isset($filter['rewrite']))
+				$rewrites[$filter['rewrite']['priority']] = array(
+					'id' => $filter['id'],
+					'rule' => $filter['rewrite']['rule'],
+				);
+		}
 
 	//	Backup the current .htaccess file
-	copy($boarddir . '/.htaccess', $boarddir . '/.htaccess.backup-' . date('Y-m-d'));
+	@copy($boarddir . '/.htaccess', $boarddir . '/.htaccess.backup-' . date('Y-m-d'));
 
 	//	Build the new .htaccess file
 	$htaccess = '#	Pretty URLs mod
 #	http://code.google.com/p/prettyurls/
 #	.htaccess file generated automatically on: ' . date('F j, Y, G:i') . '
 
-RewriteEngine on
-RewriteBase /';
+RewriteEngine on';
 
 	ksort($rewrites);
 	foreach ($rewrites as $rule)
