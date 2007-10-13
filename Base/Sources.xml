@@ -74,19 +74,6 @@ $context = array('pretty' => array(
 			//	array('check', 'queryless_urls'),
 ]]></add>
 		</operation>
-
-		<operation>
-			<search position="replace"><![CDATA[
-			array('int', 'max_image_height'),
-]]></search>
-			<add><![CDATA[
-			array('int', 'max_image_height'),
-		'',
-			//	Pretty URLs mod
-			array('text', 'pretty_root_url', 36),
-			array('check', 'pretty_enable_filters'),
-]]></add>
-		</operation>
 	</file>
 
 	<file name="$sourcedir/News.php">

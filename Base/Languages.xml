@@ -10,13 +10,20 @@
 			<search position="end"></search>
 			<add><![CDATA[
 //	Pretty URLs mod
+//	Interface texts
 $txt['pretty_admin_menu'] = 'Pretty URLs';
-$txt['pretty_root_url'] = 'Pretty URLs root URL<div class="smalltext">(Without a final slash)</div>';
-$txt['pretty_enable_filters'] = 'Enable URL filters<div class="smalltext">This may be a substantial performance hit</div>';
 $txt['pretty'] = array(
 	'url' => 'Pretty URL',
 	'url_desc' => 'A URL fragment used for boards and topics.<br /><div class="smalltext">Note: this will be processed as only a limited set of characters are allowed - other characters will be converted. Leave blank to use the board name.</div>',
 );
+
+//	Settings descriptions
+$txt['pretty_board_lookup'] = 'A serialized array of <tt>URL => ID_BOARD</tt> pairs, used for processing <tt>$_GET[\'board\']</tt>. There can be more than one URL for each board.';
+$txt['pretty_board_urls'] = 'A serialized array of <tt>ID_BOARD => URL</tt> pairs, used for generating pretty replacement URLs.';
+$txt['pretty_enable_filters'] = 'Sets whether to prettify anything at all. 0 for no, 1 for yes.';
+$txt['pretty_filters'] = 'A serialized array of filter data.';
+$txt['pretty_filter_callbacks'] = 'A serialized array of callback function names, sorted by priority. Don\'t manually edit this, edit the <tt>pretty_filters</tt> setting instead.';
+$txt['pretty_root_url'] = 'The base URL used by the board and topic filters, which by default is the same as <tt>$boardurl</tt>.';
 ]]></add>
 		</operation>
 	</file>
@@ -26,13 +33,20 @@ $txt['pretty'] = array(
 			<search position="end"></search>
 			<add><![CDATA[
 //	Pretty URLs mod
+//	Interface texts
 $txt['pretty_admin_menu'] = 'Pretty URLs';
-$txt['pretty_root_url'] = 'Pretty URLs root URL<div class="smalltext">(Without a final slash)</div>';
-$txt['pretty_enable_filters'] = 'Enable URL filters<div class="smalltext">This may be a substantial performance hit</div>';
 $txt['pretty'] = array(
 	'url' => 'Pretty URL',
 	'url_desc' => 'A URL fragment used for boards and topics.<br /><div class="smalltext">Note: this will be processed as only a limited set of characters are allowed - other characters will be converted. Leave blank to use the board name.</div>',
 );
+
+//	Settings descriptions
+$txt['pretty_board_lookup'] = 'A serialized array of <tt>URL => ID_BOARD</tt> pairs, used for processing <tt>$_GET[\'board\']</tt>. There can be more than one URL for each board.';
+$txt['pretty_board_urls'] = 'A serialized array of <tt>ID_BOARD => URL</tt> pairs, used for generating pretty replacement URLs.';
+$txt['pretty_enable_filters'] = 'Sets whether to prettify anything at all. 0 for no, 1 for yes.';
+$txt['pretty_filters'] = 'A serialized array of filter data.';
+$txt['pretty_filter_callbacks'] = 'A serialized array of callback function names, sorted by priority. Don\'t manually edit this, edit the <tt>pretty_filters</tt> setting instead.';
+$txt['pretty_root_url'] = 'The base URL used by the board and topic filters, which by default is the same as <tt>$boardurl</tt>.';
 ]]></add>
 		</operation>
 	</file>

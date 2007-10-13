@@ -32,6 +32,9 @@ Pretty URLs 0.8                                                    ??
  ! Base: Filters can now be enabled/disabled. (Subs-PrettyUrls.template.php)
  - Base: Don't install the package server anymore. (install.php, PackageGet.php)
  + Base: Started working on a better interface for administration. (index.php, PrettyUrls.php, chrome.css etc)
+ & Base: Include language strings for all settings. (ModSettings.php)
+ + Base: Enable/disable filters through the admin interface. (PrettyUrls.php, PrettyUrls.template.php)
+ % Merged the actions and profiles packages into the Base package, disabled by default.
 
 Pretty URLs 0.7                                                    June 12, 2007
 ================================================================================

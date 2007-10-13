@@ -81,21 +81,9 @@ db_query("
 
 //	Default filter settings
 $prettyFilters = array(
-	'topics' => array(
-		'id' => 'topics',
-		'enabled' => 1,
-		'filter' => array(
-			'priority' => 40,
-			'callback' => 'pretty_urls_topic_filter',
-		),
-		'rewrite' => array(
-			'priority' => 45,
-			'rule' => 'RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1;topic=$2.0 [L,QSA]
-RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*|msg[0-9]*|new)/?$ ./index.php?pretty;board=$1;topic=$2.$3 [L,QSA]',
-		),
-	),
 	'boards' => array(
 		'id' => 'boards',
+		'description' => 'Rewrite Board URLs',
 		'enabled' => 1,
 		'filter' => array(
 			'priority' => 45,
@@ -106,6 +94,54 @@ RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*|ms
 			'rule' => 'RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1.0 [L,QSA]
 RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*)/?$ ./index.php?pretty;board=$1.$2 [L,QSA]',
 		),
+		'settings' => array(
+			'pretty_root_url' => 'text',
+		),
+		'title' => 'Boards',
+	),
+	'topics' => array(
+		'id' => 'topics',
+		'description' => 'Rewrite Topic URLs',
+		'enabled' => 1,
+		'filter' => array(
+			'priority' => 40,
+			'callback' => 'pretty_urls_topic_filter',
+		),
+		'requires' => 'boards',
+		'rewrite' => array(
+			'priority' => 45,
+			'rule' => 'RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1;topic=$2.0 [L,QSA]
+RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*|msg[0-9]*|new)/?$ ./index.php?pretty;board=$1;topic=$2.$3 [L,QSA]',
+		),
+		'title' => 'Topics',
+	),
+	'actions' => array(
+		'id' => 'actions',
+		'description' => 'Rewrite Action URLs (ie, index.php?action=something)',
+		'enabled' => 0,
+		'filter' => array(
+			'priority' => 90,
+			'callback' => 'pretty_urls_actions_filter',
+		),
+		'rewrite' => array(
+			'priority' => 20,
+			'rule' => 'RewriteRule ^([a-zA-Z0-9]+)/?$ ./index.php?pretty;action=$1 [L,QSA]',
+		),
+		'title' => 'Actions',
+	),
+	'profiles' => array(
+		'id' => 'profiles',
+		'description' => 'Rewrite Profile URLs. As this uses the Username of an account rather than it\'s Display Name, it may not be desirable to your users.',
+		'enabled' => 0,
+		'filter' => array(
+			'priority' => 80,
+			'callback' => 'pretty_profiles_filter',
+		),
+		'rewrite' => array(
+			'priority' => 15,
+			'rule' => 'RewriteRule ^profile/([^/]+)/?$ ./index.php?pretty;action=profile;user=$1 [L,QSA]',
+		),
+		'title' => 'Profiles',
 	),
 );
 
@@ -125,8 +161,8 @@ $output .= '<li>Processing the installed filters</li>';
 $txt['package_installed_done'] = $output . $txt['package_installed_done'];
 if (isset($standalone))
 {
-	echo '<title>Installing Pretty URLs - Base 0.7</title>
-<h1>Installing Pretty URLs - Base 0.7</h1>
+	echo '<title>Installing Pretty URLs - Base 0.8</title>
+<h1>Installing Pretty URLs - Base 0.8</h1>
 <h2>Database changes</h2>
 ', $txt['package_installed_done'];
 }
