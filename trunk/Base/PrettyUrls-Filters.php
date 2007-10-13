@@ -5,6 +5,20 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
+//	Filter miscellaneous action urls
+function pretty_urls_actions_filter($urls)
+{
+	global $scripturl, $boardurl;
+
+	$pattern = '~' . $scripturl . '(.*)action=([^;]+)~S';
+	$replacement = $boardurl . '/$2/$1';
+	foreach ($urls as $crc => $url)
+		if (!isset($url['replacement']))
+			if (preg_match($pattern, $url['url']))
+				$urls[$crc]['replacement'] = preg_replace($pattern, $replacement, $url['url']);
+	return $urls;
+}
+
 //	Filter topic urls
 function pretty_urls_topic_filter($urls)
 {
@@ -81,6 +95,48 @@ function pretty_urls_board_filter($urls)
 				$start = $start != '0' ? $start . '/' : '';
 				$urls[$crc]['replacement'] = $modSettings['pretty_root_url'] . '/' . (isset($context['pretty']['board_urls'][$board_id]) ? $context['pretty']['board_urls'][$board_id] : $board_id) . '/' . $start . $matches[1] . $matches[3];
 			}
+	return $urls;
+}
+
+//	Filter profiles
+function pretty_profiles_filter($urls)
+{
+	global $scripturl, $boardurl, $modSettings, $db_prefix;
+
+	$pattern = '~' . $scripturl . '(.*)action=profile;u=([0-9]+)(.*)~S';
+	$query_data = array();
+	foreach ($urls as $crc => $url)
+	{
+		//	Get the profile data ready to query the database with
+		if (!isset($url['replacement']))
+			if (preg_match($pattern, $url['url'], $matches))
+			{
+				$urls[$crc]['profile_id'] = (int) $matches[2];
+				$urls[$crc]['match1'] = $matches[1];
+				$urls[$crc]['match3'] = $matches[3];
+				$query_data[] = $urls[$crc]['profile_id'];
+			}
+	}
+
+	//	Query the database with these profile IDs
+	if (count($query_data) != 0)
+	{
+		$memberNames = array();
+		$query = db_query("
+			SELECT ID_MEMBER, memberName
+			FROM {$db_prefix}members
+			WHERE ID_MEMBER IN (" . implode(', ', $query_data) . ")", __FILE__, __LINE__);
+		while ($row = mysql_fetch_assoc($query))
+			$memberNames[$row['ID_MEMBER']] = rawurlencode($row['memberName']);
+		mysql_free_result($query);
+
+		//	Build the replacement URLs
+		foreach ($urls as $crc => $url)
+		{
+			if (isset($url['profile_id']))
+				$urls[$crc]['replacement'] = $boardurl . '/profile/' . $memberNames[$url['profile_id']] . '/' . $url['match1'] . $url['match3'];
+		}
+	}
 	return $urls;
 }
 
