@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>el:prettyurls</id>
+	<version>0.8</version>
+
+	<file name="$sourcedir/Display.php">
+		<operation>
+			<search position="replace"><![CDATA[
+	// Load the proper template and/or sub template.
+]]></search>
+			<add><![CDATA[
+	//	301 redirects
+	if ((isset($context['pretty']['oldschoolquery']) || $_REQUEST['board'] != $context['pretty']['board_urls'][$board]) && $modSettings['pretty_enable_filters'])
+	{
+		$url = 'topic=' . $topic . '.' . (isset($_REQUEST['start']) ? $_REQUEST['start'] : '0') . (isset($_REQUEST['prev_next']) ? ';prev_next=' . $_REQUEST['prev_next'] : '') . (isset($_REQUEST['topicseen']) ? ';topicseen' : '') . (isset($_REQUEST['all']) ? ';all' : '') . (isset($_REQUEST['viewResults']) ? ';viewResults' : '');
+		redirectexit($url, false, true);
+	}
+
+	// Load the proper template and/or sub template.
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/MessageIndex.php">
+		<operation>
+			<search position="replace"><![CDATA[
+	if (WIRELESS)
+]]></search>
+			<add><![CDATA[
+	//	301 redirects
+	if ((isset($context['pretty']['oldschoolquery']) || $_REQUEST['board'] != $context['pretty']['board_urls'][$board]) && $modSettings['pretty_enable_filters'])
+	{
+		$url = 'board=' . $board . '.' . (isset($_REQUEST['start']) ? $_REQUEST['start'] : '0') . (isset($_REQUEST['sort']) ? ';sort=' . $_REQUEST['sort'] : '');
+		redirectexit($url, false, true);
+	}
+
+	if (WIRELESS)
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Subs-Boards.php">
+		<operation>
+			<search position="replace"><![CDATA[
+function modifyBoard($board_id, &$boardOptions)
+{
+	global $sourcedir, $cat_tree, $boards, $boardList, $modSettings, $db_prefix, $smfFunc;
+]]></search>
+			<add><![CDATA[
+function modifyBoard($board_id, &$boardOptions)
+{
+	global $sourcedir, $cat_tree, $boards, $boardList, $modSettings, $db_prefix, $smfFunc, $context;
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+	if (isset($boardOptions['move_to']))
+		reorderBoards();
+]]></search>
+			<add><![CDATA[
+	if (isset($boardOptions['move_to']))
+		reorderBoards();
+
+//	Update the pretty board URLs
+	if (isset($boardOptions['pretty_url']))
+	{
+		require_once($sourcedir . '/Subs-PrettyUrls.php');
+
+		//	Get the current board URLs
+		$pretty_board_lookup = unserialize($modSettings['pretty_board_lookup']);
+		//	Generate a new one
+		$pretty_url = pretty_generate_url($boardOptions['pretty_url']);
+
+		//	Can't be empty, can't be a number and can't be the same as another
+		if ($pretty_url == '' || is_numeric($pretty_url) || (isset($pretty_board_lookup[$pretty_url]) && $pretty_board_lookup[$pretty_url] != $board_id))
+			//	Add suffix '-bboard_id' to the pretty url
+			$pretty_url .= ($pretty_url != '' ? '-b' : 'b') . $board_id;
+
+		//	Save to the database
+		$context['pretty']['board_urls'][$board_id] = $pretty_url;
+		$pretty_board_lookup[$pretty_url] = $board_id;
+		updateSettings(array(
+			'pretty_board_lookup' => addslashes(serialize($pretty_board_lookup)),
+			'pretty_board_urls' => addslashes(serialize($context['pretty']['board_urls'])),
+		));
+
+		//	Count that query!
+		$context['pretty']['db_count']++;
+	}
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+	// Change the board according to the given specifications.
+]]></search>
+			<add><![CDATA[
+	if (!isset($boardOptions['pretty_url']))
+		$boardOptions['pretty_url'] = $boardOptions['board_name'];
+
+	// Change the board according to the given specifications.
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Subs-Post.php">
+		<operation>
+			<search position="replace"><![CDATA[
+function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
+{
+	global $db_prefix, $user_info, $txt, $modSettings, $smfFunc;
+]]></search>
+			<add><![CDATA[
+function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
+{
+	global $db_prefix, $user_info, $txt, $modSettings, $smfFunc, $context, $sourcedir;
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		// There's been a new topic AND a new post today.
+]]></search>
+			<add><![CDATA[
+		//	Generate the pretty URL of our exciting new topic
+		require_once($sourcedir . '/Subs-PrettyUrls.php');
+		$pretty_text = substr(pretty_generate_url($msgOptions['subject']), 0, 80);
+
+		//	Is the URL already there?
+		$query = $smfFunc['db_query']('', "
+			SELECT id_topic
+			FROM {$db_prefix}pretty_topic_urls
+			WHERE pretty_url = '$pretty_text'
+			LIMIT 1", __FILE__, __LINE__);
+		//	If it's not unique we need to change it
+		$notunique = mysql_num_rows($query);
+		$smfFunc['db_free_result']($query);
+
+		//	Can't be empty, can't be a number and can't be the same as another
+		if ($pretty_text == '' || is_numeric($pretty_text) || $notunique != 0)
+			//	Add suffix '-tID_TOPIC' to the pretty url
+			$pretty_text = substr($pretty_text, 0, 70) . ($pretty_text != '' ? '-t' : 't') . $topicOptions['id'];
+
+		//	Update the database
+		$smfFunc['db_query']('', "
+			REPLACE INTO {$db_prefix}pretty_topic_urls (id_topic, pretty_url) 
+			VALUES (" . $topicOptions['id'] . ', "' . $pretty_text . '")', __FILE__, __LINE__);
+
+		//	Count those queries!
+		$context['pretty']['db_count'] = $context['pretty']['db_count'] + 2;
+
+		// There's been a new topic AND a new post today.
+]]></add>
+		</operation>
+	</file>
+
+</modification>
