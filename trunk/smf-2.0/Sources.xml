@@ -1,0 +1,424 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>el:prettyurls</id>
+	<version>0.8</version>
+
+	<file name="$boarddir/index.php">
+		<operation>
+			<search position="replace"><![CDATA[
+// Clean the request variables, add slashes, etc.
+cleanRequest();
+$context = array();
+]]></search>
+			<add><![CDATA[
+// Unserialize the array of pretty board URLs
+$context = array('pretty' => array(
+	'board_urls' => unserialize($modSettings['pretty_board_urls']),
+	'db_count' => 0,
+));
+// Clean the request variables, add slashes, etc.
+cleanRequest();
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$boarddir/SSI.php">
+		<operation>
+			<search position="replace"><![CDATA[
+// Clean the request variables.
+]]></search>
+			<add><![CDATA[
+// Unserialize the array of pretty board URLs
+$context = array('pretty' => array(
+	'board_urls' => unserialize($modSettings['pretty_board_urls']),
+	'db_count' => 0,
+));
+// Clean the request variables.
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/ManageErrors.php">
+		<operation>
+			<search position="replace"><![CDATA[
+	$context['sub_template'] = 'error_log';
+]]></search>
+			<add><![CDATA[
+	$context['sub_template'] = 'error_log';
+
+	//	Don't rewrite any URLs, we need these ones to remain exact!
+	$modSettings['pretty_enable_filters'] = false;
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/ManageSettings.php">
+		<operation>
+			<search position="replace"><![CDATA[
+			array('check', 'queryless_urls'),
+]]></search>
+			<add><![CDATA[
+			//	Pretty URLs mod - disable the default queryless URLs
+			//	array('check', 'queryless_urls'),
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/News.php">
+		<operation>
+			<search position="replace"><![CDATA[
+	if ($xml_format == 'smf' || isset($_REQUEST['debug']))
+]]></search>
+			<add><![CDATA[
+	//	Pretty URLs need to be rewritten
+	ob_start('ob_sessrewrite');
+
+	if ($xml_format == 'smf' || isset($_REQUEST['debug']))
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/QueryString.php">
+		<operation>
+			<search position="replace"><![CDATA[
+function cleanRequest()
+{
+	global $board, $topic, $boardurl, $scripturl, $modSettings, $smfFunc;
+]]></search>
+			<add><![CDATA[
+function cleanRequest()
+{
+	global $board, $topic, $boardurl, $scripturl, $modSettings, $smfFunc, $context, $db_prefix;
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		// Now make absolutely sure it's a number.
+		$board = (int) $_REQUEST['board'];
+]]></search>
+			<add><![CDATA[
+		// Now make absolutely sure it's a number.
+		// Check for pretty board URLs too, and possibly redirect if oldschool queries were used.
+		if (is_numeric($_REQUEST['board']))
+		{
+			$board = (int) $_REQUEST['board'];
+			if (!isset($_REQUEST['pretty']))
+				$context['pretty']['oldschoolquery'] = true;
+		} else {
+			$_REQUEST['board'] = str_replace(array('&#039;', '\\'), array(chr(18), ''), $_REQUEST['board']);
+			$pretty_board_lookup = unserialize($modSettings['pretty_board_lookup']);
+			$board = (int) isset($pretty_board_lookup[$_REQUEST['board']]) ? $pretty_board_lookup[$_REQUEST['board']] : 0;
+		}
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		$topic = (int) $_REQUEST['topic'];
+]]></search>
+			<add><![CDATA[
+		// Check for pretty topic URLs, and possibly redirect if oldschool queries were used.
+		if (is_numeric($_REQUEST['topic']))
+		{
+			$topic = (int) $_REQUEST['topic'];
+			if (!isset($_REQUEST['pretty']))
+				$context['pretty']['oldschoolquery'] = true;
+		} else {
+			$_REQUEST['topic'] = str_replace(array('&#039;', '\\'), array(chr(18), ''), $_REQUEST['topic']);
+			//	Are we feeling lucky?
+			$query = $smfFunc['db_query']('', "
+				SELECT id_topic
+				FROM {$db_prefix}pretty_topic_urls
+				WHERE pretty_url = '$_REQUEST[topic]'
+				LIMIT 1", __FILE__, __LINE__);
+			//	No? No topic?!
+			if (mysql_num_rows($query) == 0)
+			{
+				$topic = 0;
+			} else {
+				while ($row = $smfFunc['db_fetch_assoc']($query))
+					$topic = (int) $row['id_topic'];
+			}
+			$smfFunc['db_free_result']($query);
+
+			//	That query should be counted separately
+			$context['pretty']['db_count']++;
+		}
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+function ob_sessrewrite($buffer)
+{
+	global $scripturl, $modSettings, $user_info, $context;
+]]></search>
+			<add><![CDATA[
+function ob_sessrewrite($buffer)
+{
+	global $scripturl, $modSettings, $user_info, $context, $db_prefix, $sourcedir, $txt, $time_start, $db_count, $db_show_debug, $smfFunc;
+	static $second_time_debugging = false;
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+	// This should work even in 4.2.x, just not CGI without cgi.fix_pathinfo.
+	if (!empty($modSettings['queryless_urls']) && (!$context['server']['is_cgi'] || @ini_get('cgi.fix_pathinfo') == 1) && $context['server']['is_apache'])
+	{
+		// Let's do something special for session ids!
+		if (defined('SID') && SID != '')
+			$buffer = preg_replace('/"' . preg_quote($scripturl, '/') . '\?(?:' . SID . ';)((?:board|topic)=[^#"]+?)(#[^"]*?)?"/e', "'\"' . \$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html?' . SID . '\$2\"'", $buffer);
+		else
+			$buffer = preg_replace('/"' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+?)(#[^"]*?)?"/e', "'\"' . \$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html\$2\"'", $buffer);
+	}
+
+	// Return the changed buffer.
+	return $buffer;
+}
+]]></search>
+			<add><![CDATA[
+	if (!empty($db_show_debug) && !$second_time_debugging)
+	{
+		//	We're debugging, so ob_sessrewrite will be called again. Don't replace URLs this time.
+		$second_time_debugging = true;
+		return $buffer;
+	}
+
+	//	Rewrite the buffer with Pretty URLs!
+	if ($modSettings['pretty_enable_filters'])
+	{
+		//	Remove the script tags now
+		$context['pretty']['scriptID'] = 0;
+		$context['pretty']['scripts'] = array();
+		$buffer = preg_replace_callback('~<script.+?</script>~s', 'pretty_scripts_remove', $buffer);
+
+		//	Find all URLs in the buffer
+		$insideurl = str_replace(array('.','/',':','?'), array('\.','\/','\:','\?'), $scripturl);
+		$pattern = '~(<a[^>]+href=|<link[^>]+href=|<form[^>]+?action=|<link>|<id>|<comments>|<guid>)[\"\']'.$insideurl.'([^\"#]*|[^\'#]*|[^#<]*)~';
+//		$pattern = '~(<a[^>]+href=|<link[^>]+href=|<form[^>]+?action=|<link>|<id>|<comments>|<guid>)(\"[^\"#]*|\'[^\'#]*|[^#<]*)~';
+		$crc_query = array();
+		$uncached_urls = array();
+		preg_match_all($pattern, $buffer, $matches, PREG_PATTERN_ORDER);
+		foreach ($matches[2] as $match)
+		{
+			//	Rip out everything that shouldn't be cached
+			$match = preg_replace(array('~^[\"\']|PHPSESSID=[^;]+|sesc=[^;]+~', '~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('', '%22', ';', '?', ''), $match);
+			$crc = addslashes($match);
+			$crc_query[] = $crc; 
+			$uncached_urls[$crc] = array(
+				'url' => $match,
+				'crc' => $crc
+			);
+		}
+
+		//	Procede only if there are actually URLs in the page
+		if (count($crc_query) != 0)
+		{
+			//	Retrieve cached URLs
+			$context['pretty']['cached_urls'] = array();
+			$query = $smfFunc['db_query']('', "
+				SELECT url_crc, replacement
+				FROM {$db_prefix}pretty_urls_cache
+				WHERE url_crc IN ('" . implode('\', \'', array_keys(array_flip($crc_query))) . "')
+					AND log_time > " . (time() - 86400), __FILE__, __LINE__);
+			while ($row = $smfFunc['db_fetch_assoc']($query))
+			{
+				$context['pretty']['cached_urls'][$row['url_crc']] = $row['replacement'];
+				unset($uncached_urls[$row['url_crc']]);
+			}
+			$smfFunc['db_free_result']($query);
+
+			//	If there are any uncached URLs, process them
+			if (count($uncached_urls) != 0)
+			{
+				//	Run each filter callback function on each URL
+				require_once($sourcedir . '/PrettyUrls-Filters.php');
+				$filter_callbacks = unserialize($modSettings['pretty_filter_callbacks']);
+				foreach ($filter_callbacks as $callback)
+					$uncached_urls = call_user_func($callback, $uncached_urls);
+
+				//	Fill the cached URLs array
+				$cache_data = array();
+				foreach ($uncached_urls as $crc => $url)
+				{
+					if (!isset($url['replacement']))
+						$url['replacement'] = $url['url'];
+					$url['replacement'] = str_replace(chr(18), '\'', $url['replacement']);
+					$url['replacement'] = preg_replace(array('~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('%22', ';', '?', ''), $url['replacement']);
+					$context['pretty']['cached_urls'][$crc] = $url['replacement'];
+					$cache_data[] = '(\'' . addslashes($crc) . '\', \'' . addslashes($url['replacement']) . '\')';
+				}
+
+				//	Cache these URLs in the database
+				if (count($cache_data) != 0)
+					$smfFunc['db_query']('', "
+						REPLACE INTO {$db_prefix}pretty_urls_cache
+							(url_crc, replacement)
+						VALUES " . implode(', ', $cache_data), __FILE__, __LINE__);
+			}
+
+			//	Put the URLs back into the buffer
+			$pattern = '~(<a[^>]+href=|<link[^>]+href=|<form[^>]+?action=|<link>|<id>|<comments>|<guid>)[\"\']'.$insideurl.'([^\"]*\"|[^\']*\'|[^<]*)~';
+//			$pattern = '~(<a[^>]+href=|<link[^>]+href=|<form[^>]+?action=|<link>|<id>|<comments>|<guid>)(\"[^\"]*\"|\'[^\']*\'|[^<]*)~';
+			$buffer = preg_replace_callback($pattern, 'pretty_buffer_callback', $buffer);
+		}
+
+		//	Restore the script tags
+		$buffer = preg_replace_callback('~' . chr(20) . '([0-9]+)' . chr(20) . '~', 'pretty_scripts_restore', $buffer);
+	}
+
+	//	Update the load times
+	$pattern = '~<span class="smalltext">' . $txt['page_created'] . '([.0-9]+)' . $txt['seconds_with'] . '([0-9]+)' . $txt['queries'] . '</span>~';
+	if (preg_match($pattern, $buffer, $matches))
+	{
+		$newTime = round(array_sum(explode(' ', microtime())) - array_sum(explode(' ', $time_start)), 3);
+		$timeDiff = $newTime - (float) $matches[1];
+		$queriesDiff = $db_count + $context['pretty']['db_count'] - (int) $matches[2];
+		//	Remove the link if you like, I won't enforce it like others do
+		$newLoadTime = '<span class="smalltext">' . $txt['page_created'] . $newTime . $txt['seconds_with'] . $db_count . $txt['queries'] . ' (<a href="http://code.google.com/p/prettyurls/">Pretty URLs</a> adds ' . $timeDiff . 's, ' . $queriesDiff . 'q)</span>';
+		$buffer = str_replace($matches[0], $newLoadTime, $buffer);
+	}
+
+	// Return the changed buffer.
+	return $buffer;
+}
+
+//	Remove and save script tags
+function pretty_scripts_remove($match)
+{
+	global $context;
+
+	$context['pretty']['scriptID']++;
+	$context['pretty']['scripts'][$context['pretty']['scriptID']] = $match[0];
+	return chr(20) . $context['pretty']['scriptID'] . chr(20);
+}
+
+//	A callback function to replace the buffer's URLs with their cached URLs
+function pretty_buffer_callback($matches)
+{
+	global $context;
+
+	//	Is this URL part of a feed?
+	$isFeed = strpos($matches[1], '>');
+
+	//	Remove those annoying quotes
+	$matches[2] = preg_replace('~^[\"\']|[\"\']$~', '', $matches[2]);
+
+	//	Store the parts of the URL that won't be cached so they can be inserted later
+	preg_match('~PHPSESSID=[^;#&]+~', $matches[2], $PHPSESSID);
+	preg_match('~sesc=[^;#]+~', $matches[2], $sesc);
+	preg_match('~#.*~', $matches[2], $fragment);
+
+	//	Rip out everything that won't have been cached
+	$crc = preg_replace(array('~PHPSESSID=[^;#]+|sesc=[^;#]+|#.*$~', '~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('', '%22', ';', '?', ''), $matches[2]);
+
+	//	Stich everything back together, clean it up and return
+	$replacement = isset($context['pretty']['cached_urls'][$crc]) ? $context['pretty']['cached_urls'][$crc] : $crc;
+	$replacement .= (strpos($replacement, '?') === false ? '?' : ';') . (isset($PHPSESSID[0]) ? $PHPSESSID[0] : '') . ';' . (isset($sesc[0]) ? $sesc[0] : '') . (isset($fragment[0]) ? $fragment[0] : '');
+	$replacement = preg_replace(array('~;+|=;~', '~\?;~', '~\?#|;#|=#~', '~\?$|;$|#$|=$~'), array(';', '?', '#', ''), $replacement);
+	return $matches[1] . ($isFeed === false ? '"' : '') . $replacement . ($isFeed === false ? '"' : '');
+}
+
+//	Put the script tags back
+function pretty_scripts_restore($match)
+{
+	global $context;
+
+	return $context['pretty']['scripts'][(int) $match[1]];
+}
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Subs.php">
+		<operation>
+			<search position="replace"><![CDATA[
+function redirectexit($setLocation = '', $refresh = false)
+{
+	global $scripturl, $context, $modSettings, $db_show_debug, $db_cache;
+]]></search>
+			<add><![CDATA[
+function redirectexit($setLocation = '', $refresh = false, $permanent = false)
+{
+	global $scripturl, $context, $modSettings, $db_show_debug, $db_cache, $sourcedir;
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+	if (!empty($modSettings['queryless_urls']) && (empty($context['server']['is_cgi']) || @ini_get('cgi.fix_pathinfo') == 1) && !empty($context['server']['is_apache']))
+	{
+		if (defined('SID') && SID != '')
+			$setLocation = preg_replace('/^' . preg_quote($scripturl, '/') . '\?(?:' . SID . ';)((?:board|topic)=[^#]+?)(#[^"]*?)?$/e', "\$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html\$2?' . SID", $setLocation);
+		else
+			$setLocation = preg_replace('/^' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+?)(#[^"]*?)?$/e', "\$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html\$2'", $setLocation);
+	}
+
+	if (isset($modSettings['integrate_redirect']) && function_exists($modSettings['integrate_redirect']))
+		$modSettings['integrate_redirect']($setLocation, $refresh);
+]]></search>
+			<add><![CDATA[
+	//	Redirections should be pretty too
+	if ($modSettings['pretty_enable_filters'])
+	{
+		require_once($sourcedir . '/PrettyUrls-Filters.php');
+		$url = array(0 => array('url' => $setLocation, 'crc' => 0));
+		$filter_callbacks = unserialize($modSettings['pretty_filter_callbacks']);
+		foreach ($filter_callbacks as $callback)
+		{
+			$pretty_url = call_user_func($callback, $url);
+			if (isset($pretty_url[0]['replacement']))
+				break;
+		}
+		if (isset($pretty_url[0]['replacement']))
+			$setLocation = $pretty_url[0]['replacement'];
+		$setLocation = str_replace(chr(18), '\'', $setLocation);
+		$setLocation = preg_replace(array('~;+|=;~', '~\?;~', '~\?#|;#|=#~', '~\?$|;$|#$|=$~'), array(';', '?', '#', ''), $setLocation);
+	}
+
+	if (isset($modSettings['integrate_redirect']) && function_exists($modSettings['integrate_redirect']))
+		$modSettings['integrate_redirect']($setLocation, $refresh);
+
+	if ($permanent)
+		header('HTTP/1.1 301 Moved Permanently');
+]]></add>
+		</operation>
+    </file>
+
+    <file name="$sourcedir/Admin.php">
+		<operation>
+			<search position="before"><![CDATA[
+				'theme' => array(
+					'label' => $txt['theme_admin'],
+					'file' => 'Themes.php',
+					'function' => 'ThemesMain',
+					'custom_url' => $scripturl . '?action=admin;area=theme;sa=admin',
+					'icon' => 'themes.gif',
+					'subsections' => array(
+						'admin' => array($txt['themeadmin_admin_title']),
+						'list' => array($txt['themeadmin_list_title']),
+						'reset' => array($txt['themeadmin_reset_title']),
+						'edit' => array($txt['themeadmin_edit_title']),
+					),
+				),
+]]></search>
+			<add><![CDATA[
+				'pretty' => array(
+					'label' => $txt['pretty_admin_menu'],
+					'file' => 'PrettyUrls.php',
+					'function' => 'PrettyInterface',
+					'custom_url' => $scripturl . '?action=admin;area=pretty;sa=settings',
+					'subsections' => array(
+						'settings' => array($txt['pretty_chrome_menu_settings']),
+						'maintenance' => array($txt['pretty_chrome_menu_maintenance']),
+					),
+				),
+]]></add>
+		</operation>
+	</file>
+
+</modification>
