@@ -84,6 +84,8 @@ $context = array('pretty' => array(
 			<add><![CDATA[
 	//	Pretty URLs need to be rewritten
 	ob_start('ob_sessrewrite');
+	$context['pretty']['search_patterns'][] = '~(<link>|<id>|<comments>|<guid>)([^#<]+)~';
+	$context['pretty']['replace_patterns'][] = '~(<link>|<id>|<comments>|<guid>)([^<]+)~';
 
 	if ($xml_format == 'smf' || isset($_REQUEST['debug']))
 ]]></add>
@@ -130,20 +132,22 @@ function ob_sessrewrite($buffer)
 		$buffer = preg_replace_callback('~<script.+?</script>~s', 'pretty_scripts_remove', $buffer);
 
 		//	Find all URLs in the buffer
-		$pattern = '~(<a[^>]+href=|<link[^>]+href=|<form[^>]+?action=|<link>|<id>|<comments>|<guid>)(\"[^\"#]+|\'[^\'#]+|[^#<]+)~';
+		$context['pretty']['search_patterns'][] = '~(<a[^>]+href=|<link[^>]+href=|<form[^>]+?action=)(\"[^\"#]+|\'[^\'#]+)~';
 		$crc_query = array();
 		$uncached_urls = array();
-		preg_match_all($pattern, $buffer, $matches, PREG_PATTERN_ORDER);
-		foreach ($matches[2] as $match)
-		{
-			//	Rip out everything that shouldn't be cached
-			$match = preg_replace(array('~^[\"\']|PHPSESSID=[^;]+|sesc=[^;]+~', '~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('', '%22', ';', '?', ''), $match);
-			$crc = crc32($match);
-			$crc_query[] = $crc; 
-			$uncached_urls[$crc] = array(
-				'url' => $match,
-				'crc' => $crc
-			);
+		foreach (['pretty']['search_patterns'] as $pattern)
+			preg_match_all($pattern, $buffer, $matches, PREG_PATTERN_ORDER);
+			foreach ($matches[2] as $match)
+			{
+				//	Rip out everything that shouldn't be cached
+				$match = preg_replace(array('~^[\"\']|PHPSESSID=[^;]+|sesc=[^;]+~', '~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('', '%22', ';', '?', ''), $match);
+				$crc = crc32($match);
+				$crc_query[] = $crc; 
+				$uncached_urls[$crc] = array(
+					'url' => $match,
+					'crc' => $crc
+				);
+			}
 		}
 
 		//	Procede only if there are actually URLs in the page
@@ -193,8 +197,9 @@ function ob_sessrewrite($buffer)
 			}
 
 			//	Put the URLs back into the buffer
-			$pattern = '~(<a[^>]+href=|<link[^>]+href=|<form[^>]+?action=|<link>|<id>|<comments>|<guid>)(\"[^\"]+\"|\'[^\']+\'|[^<]+)~';
-			$buffer = preg_replace_callback($pattern, 'pretty_buffer_callback', $buffer);
+			$context['pretty']['replace_patterns'][] = '~(<a[^>]+href=|<link[^>]+href=|<form[^>]+?action=)(\"[^\"]+\"|\'[^\']+\')~';
+			foreach ($context['pretty']['replace_patterns'] as $pattern)
+				$buffer = preg_replace_callback($pattern, 'pretty_buffer_callback', $buffer);
 		}
 
 		//	Restore the script tags
