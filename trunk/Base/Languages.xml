@@ -51,4 +51,27 @@ $txt['pretty_root_url'] = 'The base URL used by the board and topic filters, whi
 		</operation>
 	</file>
 
+	<file name="$languagedir/Modifications.french.php" error="skip">
+		<operation>
+			<search position="end"></search>
+			<add><![CDATA[
+//	Pretty URLs mod
+//	Interface texts
+$txt['pretty_admin_menu'] = 'Pretty URLs';
+$txt['pretty'] = array(
+	'url' => 'Pretty URL',
+	'url_desc' => 'Un fragment d\'URL utilis&eacute; pour les forums et fils de discussion.<br /><div class="smalltext">Note : ce champ sera v&eacute;rifi&eacute; pour &eacute;viter l\'utilisation de certains caract&egrave;res. Laissez vide pour utiliser le nom du forum.</div>',
+);
+
+//	Settings descriptions
+$txt['pretty_board_lookup'] = 'A serialized array of <tt>URL => ID_BOARD</tt> pairs, used for processing <tt>$_GET[\'board\']</tt>. There can be more than one URL for each board.';
+$txt['pretty_board_urls'] = 'A serialized array of <tt>ID_BOARD => URL</tt> pairs, used for generating pretty replacement URLs.';
+$txt['pretty_enable_filters'] = 'Autorise l\'embellissement d\'URL. 0 pour non, 1 pour oui.';
+$txt['pretty_filters'] = 'A serialized array of filter data.';
+$txt['pretty_filter_callbacks'] = 'A serialized array of callback function names, sorted by priority. Don\'t manually edit this, edit the <tt>pretty_filters</tt> setting instead.';
+$txt['pretty_root_url'] = 'The base URL used by the board and topic filters, which by default is the same as <tt>$boardurl</tt>.';
+]]></add>
+		</operation>
+	</file>
+
 </modification>

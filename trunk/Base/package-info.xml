@@ -15,21 +15,22 @@
 	<type>modification</type>
 
 	<install for="1.1, 1.1.0-1.1.99">
-		<modification format="xml" type="file">Sources.xml</modification>
-		<modification format="xml" type="file">BoardsAndTopics.xml</modification>
+		<modification format="xml" type="file">SMF1-1/Sources.xml</modification>
+		<modification format="xml" type="file">SMF1-1/BoardsAndTopics.xml</modification>
 		<modification format="xml" type="file">Themes.xml</modification>
 		<modification format="xml" type="file">Languages.xml</modification>
 		<require-file name="PrettyUrls.php" destination="$sourcedir" />
-		<require-file name="PrettyUrls-Filters.php" destination="$sourcedir" />
-		<require-file name="Subs-PrettyUrls.php" destination="$sourcedir" />
+		<require-file name="SMF1-1/PrettyUrls-Filters.php" destination="$sourcedir" />
+		<require-file name="SMF1-1/Subs-PrettyUrls.php" destination="$sourcedir" />
 		<require-file name="PrettyUrls.template.php" destination="$themedir" />
 		<require-dir name="pretty" destination="$themedir" />
 		<require-file name="PrettyUrls.english.php" destination="$languagedir" />
-		<code type="file">install.php</code>
+		<require-file name="PrettyUrls.french.php" destination="$languagedir" />
+		<code type="file">SMF1-1/install.php</code>
 	</install>
 	<uninstall for="1.1, 1.1.0-1.1.99">
-		<modification format="xml" type="file" reverse="true">Sources.xml</modification>
-		<modification format="xml" type="file" reverse="true">BoardsAndTopics.xml</modification>
+		<modification format="xml" type="file" reverse="true">SMF1-1/Sources.xml</modification>
+		<modification format="xml" type="file" reverse="true">SMF1-1/BoardsAndTopics.xml</modification>
 		<modification format="xml" type="file" reverse="true">Themes.xml</modification>
 		<modification format="xml" type="file" reverse="true">Languages.xml</modification>
 		<remove-file name="$sourcedir/PrettyUrls.php" />
@@ -38,6 +39,36 @@
 		<remove-file name="$themedir/PrettyUrls.template.php" />
 		<remove-dir name="$themedir/pretty" />
 		<remove-file name="$languagedir/PrettyUrls.english.php" />
+		<remove-file name="$languagedir/PrettyUrls.french.php" />
+		<code type="file">uninstall.php</code>
+	</uninstall>
+
+	<install for="2.0 Beta 1.1">
+		<modification format="xml" type="file">SMF2-0/Sources.xml</modification>
+		<modification format="xml" type="file">SMF2-0/BoardsAndTopics.xml</modification>
+		<modification format="xml" type="file">Themes.xml</modification>
+		<modification format="xml" type="file">Languages.xml</modification>
+		<require-file name="PrettyUrls.php" destination="$sourcedir" />
+		<require-file name="SMF2-0/PrettyUrls-Filters.php" destination="$sourcedir" />
+		<require-file name="SMF2-0/Subs-PrettyUrls.php" destination="$sourcedir" />
+		<require-file name="PrettyUrls.template.php" destination="$themedir" />
+		<require-dir name="pretty" destination="$themedir" />
+		<require-file name="PrettyUrls.english.php" destination="$languagedir" />
+		<require-file name="PrettyUrls.french.php" destination="$languagedir" />
+		<code type="file">SMF2-0/install.php</code>
+	</install>
+	<uninstall for="2.0 Beta 1.1">
+		<modification format="xml" type="file" reverse="true">SMF2-0/Sources.xml</modification>
+		<modification format="xml" type="file" reverse="true">SMF2-0/BoardsAndTopics.xml</modification>
+		<modification format="xml" type="file" reverse="true">Themes.xml</modification>
+		<modification format="xml" type="file" reverse="true">Languages.xml</modification>
+		<remove-file name="$sourcedir/PrettyUrls.php" />
+		<remove-file name="$sourcedir/PrettyUrls-Filters.php" />
+		<remove-file name="$sourcedir/Subs-PrettyUrls.php" />
+		<remove-file name="$themedir/PrettyUrls.template.php" />
+		<remove-dir name="$themedir/pretty" />
+		<remove-file name="$languagedir/PrettyUrls.english.php" />
+		<remove-file name="$languagedir/PrettyUrls.french.php" />
 		<code type="file">uninstall.php</code>
 	</uninstall>
 
