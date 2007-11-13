@@ -102,7 +102,7 @@ function ob_sessrewrite($buffer)
 			<add><![CDATA[
 function ob_sessrewrite($buffer)
 {
-	global $scripturl, $modSettings, $user_info, $context, $db_prefix, $sourcedir, $txt, $time_start, $db_count;
+	global $scripturl, $modSettings, $user_info, $context, $db_count, $db_prefix, $smfFunc, $sourcedir, $time_start, $txt;
 ]]></add>
 		</operation>
 
@@ -135,7 +135,8 @@ function ob_sessrewrite($buffer)
 		$context['pretty']['search_patterns'][] = '~(<a[^>]+href=|<link[^>]+href=|<form[^>]+?action=)(\"[^\"#]+|\'[^\'#]+)~';
 		$crc_query = array();
 		$uncached_urls = array();
-		foreach (['pretty']['search_patterns'] as $pattern)
+		foreach ($context['pretty']['search_patterns'] as $pattern)
+		{
 			preg_match_all($pattern, $buffer, $matches, PREG_PATTERN_ORDER);
 			foreach ($matches[2] as $match)
 			{
@@ -155,17 +156,17 @@ function ob_sessrewrite($buffer)
 		{
 			//	Retrieve cached URLs
 			$context['pretty']['cached_urls'] = array();
-			$query = db_query("
+			$smfFunc['db_query']('', "
 				SELECT url_crc, replacement
 				FROM {$db_prefix}pretty_urls_cache
 				WHERE url_crc IN (" . implode(', ', $crc_query) . ")
 					AND log_time > " . (time() - 86400), __FILE__, __LINE__);
-			while ($row = mysql_fetch_assoc($query))
+			while ($row = $smfFunc['db_fetch_assoc']($query))
 			{
 				$context['pretty']['cached_urls'][$row['url_crc']] = $row['replacement'];
 				unset($uncached_urls[$row['url_crc']]);
 			}
-			mysql_free_result($query);
+			$smfFunc['db_free_result']($query);
 
 			//	If there are any uncached URLs, process them
 			if (count($uncached_urls) != 0)
@@ -190,7 +191,7 @@ function ob_sessrewrite($buffer)
 
 				//	Cache these URLs in the database
 				if (count($cache_data) != 0)
-					db_query("
+					$smfFunc['db_query']('', "
 						REPLACE INTO {$db_prefix}pretty_urls_cache
 							(url_crc, replacement)
 						VALUES " . implode(', ', $cache_data), __FILE__, __LINE__);

@@ -36,6 +36,9 @@ Pretty URLs 0.8                                                    ??
  + Base: Enable/disable filters through the admin interface. (PrettyUrls.php, PrettyUrls.template.php)
  % Merged the actions and profiles packages into the Base package, disabled by default.
  ! Base: Allow individual actions to have specific buffer URL search patterns, used just by feeds for now. (QueryString.php, News.php)
+ % Base: Started work on 2.0 support. (/SMF2-0/*)
+ ! Base: Changed some queries in both 2.0 and 1.1 to support the 2.0 guidelines.
+ & Added French language files.
 
 Pretty URLs 0.7                                                    June 12, 2007
 ================================================================================

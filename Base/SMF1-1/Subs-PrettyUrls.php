@@ -185,9 +185,9 @@ function pretty_synchronise_topic_urls()
 	//	Get the current database pretty URLs and other stuff
 	$query = db_query("
 		SELECT t.ID_TOPIC, t.ID_BOARD, m.subject, p.pretty_url
-		FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m)
-			LEFT JOIN {$db_prefix}pretty_topic_urls AS p ON (t.ID_TOPIC = p.ID_TOPIC)
-		WHERE m.ID_MSG = t.ID_FIRST_MSG", __FILE__, __LINE__);
+		FROM {$db_prefix}topics AS t
+			INNER JOIN {$db_prefix}messages AS m ON (m.ID_MSG = t.ID_FIRST_MSG)
+			LEFT JOIN {$db_prefix}pretty_topic_urls AS p ON (t.ID_TOPIC = p.ID_TOPIC)", __FILE__, __LINE__);
 
 	$topicData = array();
 	$oldUrls = array();
