@@ -61,12 +61,13 @@ $smfFunc['db_query']('', "
 $output .= '<li>Creating the pretty_topic_urls table</li>';
 
 //	Create the pretty_urls_cache table
+$smfFunc['db_query']('', "DROP TABLE IF EXISTS {$db_prefix}pretty_urls_cache", __FILE__, __LINE__);
 $smfFunc['db_query']('', "
-	CREATE TABLE IF NOT EXISTS {$db_prefix}pretty_urls_cache (
-	`url_crc` INT NOT NULL default '0',
+	CREATE TABLE {$db_prefix}pretty_urls_cache (
+	`url_id` VARCHAR(255) NOT NULL,
 	`replacement` TEXT NOT NULL,
 	`log_time` TIMESTAMP NOT NULL,
-	PRIMARY KEY (`url_crc`))", __FILE__, __LINE__);
+	PRIMARY KEY (`url_id`))", __FILE__, __LINE__);
 $output .= '<li>Creating the pretty_urls_cache table</li>';
 
 //	Build the table of topic URLs

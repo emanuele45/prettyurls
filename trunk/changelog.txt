@@ -39,6 +39,7 @@ Pretty URLs 0.8                                                    ??
  % Base: Started work on 2.0 support. (/SMF2-0/*)
  ! Base: Changed some queries in both 2.0 and 1.1 to support the 2.0 guidelines.
  & Added French language files.
+ + Base: Use a text url_id rather than CRCs in the cache. (install.php, QueryString.php)
 
 Pretty URLs 0.7                                                    June 12, 2007
 ================================================================================
