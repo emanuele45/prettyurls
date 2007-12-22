@@ -22,16 +22,6 @@ $context = array('pretty' => array(
 cleanRequest();
 ]]></add>
 		</operation>
-
-		<operation>
-			<search position="replace"><![CDATA[
-		'postsettings' => array('ManagePosts.php', 'ManagePostSettings'),
-]]></search>
-			<add><![CDATA[
-		'postsettings' => array('ManagePosts.php', 'ManagePostSettings'),
-		'pretty' => array('PrettyUrls.php', 'PrettyInterface'),
-]]></add>
-		</operation>
 	</file>
 
 	<file name="$boarddir/SSI.php">
@@ -46,6 +36,24 @@ $context = array('pretty' => array(
 	'db_count' => 0,
 ));
 // Clean the request variables.
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Admin.php">
+		<operation>
+			<search position="replace"><![CDATA[
+		return ManageCopyright();
+]]></search>
+			<add><![CDATA[
+		return ManageCopyright();
+
+	//	Pretty URLs area hack
+	if (isset($_GET['area']) && $_GET['area'] == 'pretty')
+	{
+		require_once($sourcedir . '/PrettyUrls.php');
+		return PrettyInterface();
+	}
 ]]></add>
 		</operation>
 	</file>
@@ -143,7 +151,7 @@ function ob_sessrewrite($buffer)
 				//	Rip out everything that shouldn't be cached
 				$match = preg_replace(array('~^[\"\']|PHPSESSID=[^;]+|sesc=[^;]+~', '~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('', '%22', ';', '?', ''), $match);
 				$url_id = str_replace(array($scripturl . '?board=', $scripturl . '?topic=', $scripturl . '?action=', $scripturl), array('`B', '`T', '`A', '`S'), $match);
-				$urls_query[] = '\'' . $url_id . '\'';
+				$urls_query[] = '\'' . addslashes($url_id) . '\'';
 				$uncached_urls[$url_id] = array(
 					'url' => $match,
 					'url_id' => $url_id
@@ -186,8 +194,8 @@ function ob_sessrewrite($buffer)
 					$url['replacement'] = str_replace(chr(18), '\'', $url['replacement']);
 					$url['replacement'] = preg_replace(array('~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('%22', ';', '?', ''), $url['replacement']);
 					$context['pretty']['cached_urls'][$url_id] = $url['replacement'];
-					if (strlen($url_id) < 256)
-						$cache_data[] = '(\'' . $url_id . '\', \'' . addslashes($url['replacement']) . '\')';
+					if (strlen($url_id) < 256 && strlen($url['replacement']) < 256)
+						$cache_data[] = '(\'' . addslashes($url_id) . '\', \'' . addslashes($url['replacement']) . '\')';
 				}
 
 				//	Cache these URLs in the database
@@ -254,7 +262,7 @@ function pretty_buffer_callback($matches)
 	$cacheableurl = preg_replace(array('~PHPSESSID=[^;#]+|sesc=[^;#]+|#.*$~', '~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('', '%22', ';', '?', ''), $matches[2]);
 	$url_id = str_replace(array($scripturl . '?board=', $scripturl . '?topic=', $scripturl . '?action=', $scripturl), array('`B', '`T', '`A', '`S'), $cacheableurl);
 
-	//	Stich everything back together, clean it up and return
+	//	Stitch everything back together, clean it up and return
 	$replacement = isset($context['pretty']['cached_urls'][$url_id]) ? $context['pretty']['cached_urls'][$url_id] : $cacheableurl;
 	$replacement .= (strpos($replacement, '?') === false ? '?' : ';') . (isset($PHPSESSID[0]) ? $PHPSESSID[0] : '') . ';' . (isset($sesc[0]) ? $sesc[0] : '') . (isset($fragment[0]) ? $fragment[0] : '');
 	$replacement = preg_replace(array('~;+|=;~', '~\?;~', '~\?#|;#|=#~', '~\?$|;$|#$|=$~'), array(';', '?', '#', ''), $replacement);
@@ -332,7 +340,7 @@ function redirectexit($setLocation = '', $refresh = false, $permanent = false)
 ]]></search>
 			<add><![CDATA[
 				'manage_themes' => '<a href="' . $scripturl . '?action=theme;sa=admin;sesc=' . $sc . '">' . $txt['theme_admin'] . '</a>',
-				'pretty_admin' => '<a href="' . $scripturl . '?action=pretty">' . $txt['pretty_admin_menu'] . '</a>',
+				'pretty_admin' => '<a href="' . $scripturl . '?action=admin;area=pretty">' . $txt['pretty_admin_menu'] . '</a>',
 ]]></add>
 		</operation>
 	</file>

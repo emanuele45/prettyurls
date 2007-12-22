@@ -18,18 +18,17 @@ function PrettyInterface()
 		loadLanguage('PrettyUrls', 'english');
 
 	//	Shiny chrome interface
-	adminIndex('config');
 	$context['template_layers'][] = 'pretty_chrome';
 	$context['html_headers'] .= '
 	<link rel="stylesheet" type="text/css" href="' . $settings['default_theme_url'] . '/pretty/chrome.css" media="screen,projection" />';
 	$context['pretty']['chrome'] = array(
 		'menu' => array(
 			'settings' => array(
-				'href' => $scripturl . '?action=pretty',
+				'href' => $scripturl . '?action=admin;area=pretty',
 				'title' => $txt['pretty_chrome_menu_settings'],
 			),
 			'maintenance' => array(
-				'href' => $scripturl . '?action=pretty;sa=maintenance',
+				'href' => $scripturl . '?action=admin;area=pretty;sa=maintenance',
 				'title' => $txt['pretty_chrome_menu_maintenance'],
 			),
 		),
@@ -79,7 +78,7 @@ function pretty_manage_settings()
 		require_once($sourcedir . '/Subs-PrettyUrls.php');
 		pretty_update_filters();
 
-		redirectexit('action=pretty');
+		redirectexit('action=admin;area=pretty');
 	}
 
 	//	Action-specific chrome

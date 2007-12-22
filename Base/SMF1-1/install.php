@@ -65,7 +65,7 @@ db_query("DROP TABLE IF EXISTS {$db_prefix}pretty_urls_cache", __FILE__, __LINE_
 db_query("
 	CREATE TABLE {$db_prefix}pretty_urls_cache (
 	`url_id` VARCHAR(255) NOT NULL,
-	`replacement` TEXT NOT NULL,
+	`replacement` VARCHAR(255) NOT NULL,
 	`log_time` TIMESTAMP NOT NULL,
 	PRIMARY KEY (`url_id`))", __FILE__, __LINE__);
 $output .= '<li>Creating the pretty_urls_cache table</li>';

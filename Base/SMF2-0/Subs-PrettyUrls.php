@@ -183,7 +183,7 @@ function pretty_synchronise_topic_urls()
 	global $db_prefix, $modSettings, $smfFunc;
 
 	//	Get the current database pretty URLs and other stuff
-	$smfFunc['db_query']('', "
+	$query = $smfFunc['db_query']('', "
 		SELECT t.ID_TOPIC, t.ID_BOARD, m.subject, p.pretty_url
 		FROM {$db_prefix}topics AS t
 			INNER JOIN {$db_prefix}messages AS m ON (m.ID_MSG = t.ID_FIRST_MSG)
@@ -236,7 +236,7 @@ function pretty_synchronise_topic_urls()
 //	Update the database based on the installed filters and build the .htaccess file
 function pretty_update_filters()
 {
-	global $boarddir, $db_prefix, $modSettings, $smfFunc;
+	global $boarddir, $boardurl, $db_prefix, $modSettings, $smfFunc;
 
 	//	Get the settings
 	$prettyFilters = unserialize($modSettings['pretty_filters']);
