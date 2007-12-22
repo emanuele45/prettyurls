@@ -36,7 +36,7 @@ function template_pretty_settings()
 	global $context, $scripturl, $txt;
 
 	echo '
-		<form id="adminsearch" action="', $scripturl, '?action=pretty;save" method="post" accept-charset="', $context['character_set'], '">
+		<form id="adminsearch" action="', $scripturl, '?action=admin;area=pretty;save" method="post" accept-charset="', $context['character_set'], '">
 			<fieldset>
 				<legend>', $txt['pretty_core_settings'], '</legend>
 				<label for="pretty_enable">', $txt['pretty_enable'], '</label>

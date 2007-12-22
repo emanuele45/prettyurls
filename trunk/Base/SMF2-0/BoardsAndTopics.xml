@@ -46,12 +46,12 @@
 			<search position="replace"><![CDATA[
 function cleanRequest()
 {
-	global $board, $topic, $boardurl, $scripturl, $modSettings;
+	global $board, $topic, $boardurl, $scripturl, $modSettings, $smfFunc;
 ]]></search>
 			<add><![CDATA[
 function cleanRequest()
 {
-	global $board, $topic, $boardurl, $scripturl, $modSettings, $context, $db_prefix, $smfFunc;
+	global $board, $topic, $boardurl, $scripturl, $modSettings, $smfFunc, $context, $db_prefix;
 ]]></add>
 		</operation>
 
@@ -90,7 +90,7 @@ function cleanRequest()
 		} else {
 			$_REQUEST['topic'] = str_replace(array('&#039;', '\\'), array(chr(18), ''), $_REQUEST['topic']);
 			//	Are we feeling lucky?
-			$smfFunc['db_query']('', "
+			$query = $smfFunc['db_query']('', "
 				SELECT ID_TOPIC
 				FROM {$db_prefix}pretty_topic_urls
 				WHERE pretty_url = '$_REQUEST[topic]'
@@ -118,12 +118,12 @@ function cleanRequest()
 			<search position="replace"><![CDATA[
 function modifyBoard($board_id, &$boardOptions)
 {
-	global $sourcedir, $cat_tree, $boards, $boardList, $modSettings, $db_prefix;
+	global $sourcedir, $cat_tree, $boards, $boardList, $modSettings, $db_prefix, $smfFunc;
 ]]></search>
 			<add><![CDATA[
 function modifyBoard($board_id, &$boardOptions)
 {
-	global $sourcedir, $cat_tree, $boards, $boardList, $modSettings, $db_prefix, $context;
+	global $sourcedir, $cat_tree, $boards, $boardList, $modSettings, $db_prefix, $smfFunc, $context;
 ]]></add>
 		</operation>
 
@@ -183,12 +183,12 @@ function modifyBoard($board_id, &$boardOptions)
 			<search position="replace"><![CDATA[
 function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 {
-	global $db_prefix, $user_info, $ID_MEMBER, $txt, $modSettings;
+	global $db_prefix, $user_info, $txt, $modSettings, $smfFunc;
 ]]></search>
 			<add><![CDATA[
 function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 {
-	global $db_prefix, $user_info, $ID_MEMBER, $txt, $modSettings, $context, $smfFunc, $sourcedir;
+	global $db_prefix, $user_info, $txt, $modSettings, $smfFunc, $context, $sourcedir;
 ]]></add>
 		</operation>
 

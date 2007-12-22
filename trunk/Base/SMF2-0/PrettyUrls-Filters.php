@@ -50,7 +50,7 @@ function pretty_urls_topic_filter($urls)
 	if (count($query_data) != 0)
 	{
 		$topicData = array();
-		$smfFunc['db_query']('', "
+		$query = $smfFunc['db_query']('', "
 			SELECT t.ID_TOPIC, t.ID_BOARD, p.pretty_url
 			FROM {$db_prefix}topics AS t
 				LEFT JOIN {$db_prefix}pretty_topic_urls AS p ON (t.ID_TOPIC = p.ID_TOPIC)
