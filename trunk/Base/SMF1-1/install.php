@@ -70,10 +70,6 @@ db_query("
 	PRIMARY KEY (`url_id`))", __FILE__, __LINE__);
 $output .= '<li>Creating the pretty_urls_cache table</li>';
 
-//	Build the table of topic URLs
-pretty_synchronise_topic_urls();
-$output .= '<li>Building the list of topic URLs</li>';
-
 //	Add the pretty_root_url and pretty_enable_filters settings:
 db_query("
 	INSERT IGNORE INTO {$db_prefix}settings (variable, value)

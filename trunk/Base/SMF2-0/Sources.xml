@@ -223,7 +223,8 @@ function ob_sessrewrite($buffer)
 		}
 
 		//	Restore the script tags
-		$buffer = preg_replace_callback('~' . chr(20) . '([0-9]+)' . chr(20) . '~', 'pretty_scripts_restore', $buffer);
+		if ($context['pretty']['scriptID'] > 0)
+			$buffer = preg_replace_callback('~' . chr(20) . '([0-9]+)' . chr(20) . '~', 'pretty_scripts_restore', $buffer);
 	}
 
 	//	Update the load times

@@ -176,63 +176,6 @@ function pretty_generate_url($text)
 	return $prettytext;
 }
 
-//	Build the table of pretty topic URLs
-//	This function used to do a lot more, but I kept the name the same though now it doesn't
-function pretty_synchronise_topic_urls()
-{
-	global $db_prefix, $modSettings;
-
-	//	Get the current database pretty URLs and other stuff
-	$query = db_query("
-		SELECT t.ID_TOPIC, t.ID_BOARD, m.subject, p.pretty_url
-		FROM {$db_prefix}topics AS t
-			INNER JOIN {$db_prefix}messages AS m ON (m.ID_MSG = t.ID_FIRST_MSG)
-			LEFT JOIN {$db_prefix}pretty_topic_urls AS p ON (t.ID_TOPIC = p.ID_TOPIC)", __FILE__, __LINE__);
-
-	$topicData = array();
-	$oldUrls = array();
-	$tablePretty = array();
-
-	//	Fill the $topicData array
-	while ($row = mysql_fetch_assoc($query))
-	{
-		$topicData[] = array(
-			'ID_TOPIC' => $row['ID_TOPIC'],
-			'ID_BOARD' => $row['ID_BOARD'],
-			'pretty_url' => isset($row['pretty_url']) ? $row['pretty_url'] : '',
-			'subject' => $row['subject']
-		);
-		$oldUrls[] = $row['pretty_url'];
-	}
-	mysql_free_result($query);
-
-	//	Go through the $topicData array and fix anything that needs fixing
-	foreach ($topicData as $row)
-	{
-		//	No pretty URL? That's ghastly!
-		if ($row['pretty_url'] == '')
-		{
-			//	A topic in the recycle board deserves only a blank URL
-			$pretty_text = $modSettings['recycle_enable'] && $row['ID_BOARD'] == $modSettings['recycle_board'] ? '' : substr(pretty_generate_url($row['subject']), 0, 80);
-			//	Can't be empty, can't be a number and can't be the same as another
-			if ($pretty_text == '' || is_numeric($pretty_text) || array_search($pretty_text, $oldUrls) != 0)
-				//	Add suffix '-tID_TOPIC' to the pretty url
-				$pretty_text = substr($pretty_text, 0, 70) . ($pretty_text != '' ? '-t' : 't') . $row['ID_TOPIC'];
-
-			//	Update the arrays
-			$tablePretty[] = '(' . $row['ID_TOPIC'] . ', "' . $pretty_text . '")';
-			$oldUrls[] = $pretty_text;
-		}
-	}
-
-	//	Update the database
-	if (count($tablePretty) > 0)
-		db_query("
-			REPLACE INTO {$db_prefix}pretty_topic_urls
-				(ID_TOPIC, pretty_url)
-			VALUES " . implode(', ', $tablePretty), __FILE__, __LINE__);
-}
-
 //	Update the database based on the installed filters and build the .htaccess file
 function pretty_update_filters()
 {
