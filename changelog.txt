@@ -40,6 +40,11 @@ Pretty URLs 0.8                                                    ??
  ! Base: Changed some queries in both 2.0 and 1.1 to support the 2.0 guidelines.
  & Added French language files.
  + Base: Use a text url_id rather than CRCs in the cache. (install.php, QueryString.php)
+ ! Base: Replacement URLs are now cached with VARCHAR(255). (install.php)
+ ! Base: Many changes required for 2.0.
+ + Base: Admin CP is now accessed through action=admin;area=pretty, even in 1.1. (Admin.php, PrettyUrls.php)
+ + Topics: Topic URLs are now generated as needed. (PrettyUrls-Filters.php)
+ - Base: Removed the code that generates topic URLs in other places. (Subs-Post.php, Subs-PrettyUrls.php)
 
 Pretty URLs 0.7                                                    June 12, 2007
 ================================================================================
