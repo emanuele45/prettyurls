@@ -22,35 +22,6 @@ elseif (!defined('SMF'))
 //	Start the list
 $output = '<ul>';
 
-require_once($sourcedir . '/Subs-PrettyUrls.php');
-
-//	Get the current pretty board urls, or make new arrays if there are none
-$pretty_board_urls = isset($modSettings['pretty_board_urls']) ? unserialize($modSettings['pretty_board_urls']) : array();
-$pretty_board_lookup = isset($modSettings['pretty_board_lookup']) ? unserialize($modSettings['pretty_board_lookup']) : array();
-
-//	Get the board names
-$query = $smfFunc['db_query']('', "
-	SELECT ID_BOARD, name
-	FROM {$db_prefix}boards", __FILE__, __LINE__);
-
-while ($row = $smfFunc['db_fetch_assoc']($query))
-{
-//	Don't replace the board urls if they already exist
-	if (!isset($pretty_board_urls[$row['ID_BOARD']]) || $pretty_board_urls[$row['ID_BOARD']] == '' || array_search($row['ID_BOARD'], $pretty_board_lookup) === false)
-	{
-		$pretty_text = pretty_generate_url($row['name']);
-		//	Can't be empty, can't be a number and can't be the same as another
-		if ($pretty_text == '' || is_numeric($pretty_text) || isset($pretty_board_lookup[$pretty_text]))
-			//	Add suffix '-bID_BOARD' to the pretty url
-			$pretty_text .= ($pretty_text != '' ? '-b' : 'b') . $row['ID_BOARD'];
-		//	Update the arrays
-		$pretty_board_urls[$row['ID_BOARD']] = $pretty_text;
-		$pretty_board_lookup[$pretty_text] = $row['ID_BOARD'];
-	}
-}
-$smfFunc['db_free_result']($query);
-$output .= '<li>Generating board URLs</li>';
-
 //	Create the pretty_topic_urls table
 $smfFunc['db_query']('', "
 	CREATE TABLE IF NOT EXISTS {$db_prefix}pretty_topic_urls (
@@ -59,6 +30,11 @@ $smfFunc['db_query']('', "
 	PRIMARY KEY (`ID_TOPIC`),
 	UNIQUE (`pretty_url`))", __FILE__, __LINE__);
 $output .= '<li>Creating the pretty_topic_urls table</li>';
+
+//	Fix old topics by replacing ' with chr(18)
+$smfFunc['db_query']('', "
+	UPDATE {$db_prefix}pretty_topic_urls
+	SET pretty_url = REPLACE(pretty_url, '\\'', '" . chr(18) . "')", __FILE__, __LINE__);
 
 //	Create the pretty_urls_cache table
 $smfFunc['db_query']('', "DROP TABLE IF EXISTS {$db_prefix}pretty_urls_cache", __FILE__, __LINE__);
@@ -69,12 +45,6 @@ $smfFunc['db_query']('', "
 	`log_time` TIMESTAMP NOT NULL,
 	PRIMARY KEY (`url_id`))", __FILE__, __LINE__);
 $output .= '<li>Creating the pretty_urls_cache table</li>';
-
-//	Add the pretty_root_url and pretty_enable_filters settings:
-$smfFunc['db_query']('', "
-	INSERT IGNORE INTO {$db_prefix}settings (variable, value)
-	VALUES ('pretty_root_url', '$boardurl'),
-		('pretty_enable_filters', '0')", __FILE__, __LINE__);
 
 //	Default filter settings
 $prettyFilters = array(
@@ -115,14 +85,14 @@ RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*|ms
 	'actions' => array(
 		'id' => 'actions',
 		'description' => 'Rewrite Action URLs (ie, index.php?action=something)',
-		'enabled' => 0,
+		'enabled' => 1,
 		'filter' => array(
 			'priority' => 90,
 			'callback' => 'pretty_urls_actions_filter',
 		),
 		'rewrite' => array(
 			'priority' => 20,
-			'rule' => 'RewriteRule ^([a-zA-Z0-9]+)/?$ ./index.php?pretty;action=$1 [L,QSA]',
+			'rule' => '#ACTIONS',	//	To be replaced in pretty_update_filters()
 		),
 		'title' => 'Actions',
 	),
@@ -142,17 +112,22 @@ RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*|ms
 	),
 );
 
+//	Add the pretty_root_url and pretty_enable_filters settings:
+$pretty_root_url = isset($modSettings['pretty_root_url']) ? $modSettings['pretty_root_url'] : $boardurl;
+$pretty_enable_filters = isset($modSettings['pretty_enable_filters']) ? $modSettings['pretty_enable_filters'] : '0';
+
 //	Update the settings table
 updateSettings(array(
-	'pretty_board_lookup' => addslashes(serialize($pretty_board_lookup)),
-	'pretty_board_urls' => addslashes(serialize($pretty_board_urls)),
+	'pretty_enable_filters' => $pretty_enable_filters,
 	'pretty_filters' => addslashes(serialize($prettyFilters)),
+	'pretty_root_url' => $pretty_root_url,
 ));
 $output .= '<li>Adding some settings</li>';
 
-//	Update the filter callbacks
-pretty_update_filters();
-$output .= '<li>Processing the installed filters</li>';
+//	Run maintenance
+require_once($sourcedir . '/Subs-PrettyUrls.php');
+pretty_run_maintenance();
+$output .= '<li>Running maintenance</li>';
 
 //	Output the list of database changes
 $txt['package_installed_done'] = $output . $txt['package_installed_done'];

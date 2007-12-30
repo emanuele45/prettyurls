@@ -44,7 +44,10 @@ Pretty URLs 0.8                                                    ??
  ! Base: Many changes required for 2.0.
  + Base: Admin CP is now accessed through action=admin;area=pretty, even in 1.1. (Admin.php, PrettyUrls.php)
  + Topics: Topic URLs are now generated as needed. (PrettyUrls-Filters.php)
- - Base: Removed the code that generates topic URLs in other places. (Subs-Post.php, Subs-PrettyUrls.php)
+ - Topics: Removed the code that generates topic URLs in other places. (Subs-Post.php, Subs-PrettyUrls.php)
+ ! Boards/Topics: Fix old URLs by replacing ' with chr(18). (install.php, Subs-PrettyUrls.php)
+ + Actions: Only rewrite URLs with an action in $actionArray. (PrettyUrls-Filters.php, Subs-PrettyUrls.php)
+ % And as a result, the actions filter can now be enabled by default.
 
 Pretty URLs 0.7                                                    June 12, 2007
 ================================================================================
