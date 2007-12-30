@@ -8,14 +8,15 @@ if (!defined('SMF'))
 //	Filter miscellaneous action urls
 function pretty_urls_actions_filter($urls)
 {
-	global $scripturl, $boardurl;
+	global $boardurl, $context, $scripturl;
 
 	$pattern = '~' . $scripturl . '(.*)action=([^;]+)~S';
 	$replacement = $boardurl . '/$2/$1';
 	foreach ($urls as $url_id => $url)
 		if (!isset($url['replacement']))
-			if (preg_match($pattern, $url['url']))
-				$urls[$url_id]['replacement'] = preg_replace($pattern, $replacement, $url['url']);
+			if (preg_match($pattern, $url['url'], $matches))
+				if (in_array($matches[2], $context['pretty']['action_array']))
+					$urls[$url_id]['replacement'] = preg_replace($pattern, $replacement, $url['url']);
 	return $urls;
 }
 

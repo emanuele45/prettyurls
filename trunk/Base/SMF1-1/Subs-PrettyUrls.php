@@ -176,10 +176,70 @@ function pretty_generate_url($text)
 	return $prettytext;
 }
 
+//	URL maintenance
+function pretty_run_maintenance()
+{
+	global $boarddir, $context, $db_prefix, $modSettings;
+
+	//	Get the array of actions
+	$indexphp = file_get_contents($boarddir . '/index.php');
+	preg_match('~actionArray\\s*=\\s*array[^;]+~', $indexphp, $actionArrayText);
+	preg_match_all('~\'([^\']+)\'\\s*=>~', $actionArrayText[0], $actionArray, PREG_PATTERN_ORDER);
+	$context['pretty']['action_array'] = $actionArray[1];
+
+	//	Update the list of boards
+	//	Get the current pretty board urls, or make new arrays if there are none
+	$pretty_board_urls = isset($modSettings['pretty_board_urls']) ? unserialize($modSettings['pretty_board_urls']) : array();
+	$pretty_board_lookup_old = isset($modSettings['pretty_board_lookup']) ? unserialize($modSettings['pretty_board_lookup']) : array();
+
+	//	Fix old boards by replacing ' with chr(18)
+	$pretty_board_urls = str_replace("'", chr(18), $pretty_board_urls);
+	$pretty_board_lookup = array();
+	foreach ($pretty_board_lookup_old as $board => $id)
+		$pretty_board_lookup[str_replace("'", chr(18), $board)] = $id;
+
+	//	Get the board names
+	$query = db_query("
+		SELECT ID_BOARD, name
+		FROM {$db_prefix}boards", __FILE__, __LINE__);
+
+	//	Process each board
+	while ($row = mysql_fetch_assoc($query))
+	{
+		//	Don't replace the board urls if they already exist
+		if (!isset($pretty_board_urls[$row['ID_BOARD']]) || $pretty_board_urls[$row['ID_BOARD']] == '' || in_array($row['ID_BOARD'], $pretty_board_lookup) === false)
+		{
+			$pretty_text = pretty_generate_url($row['name']);
+			//	We need to have something to refer to this board by...
+			if ($pretty_text == '')
+				//	... so use 'bID_BOARD'
+				$pretty_text = 'b' . $row['ID_BOARD'];
+			//	Numerical or duplicate URLs aren't allowed!
+			if (is_numeric($pretty_text) || isset($pretty_board_lookup[$pretty_text]) || in_array($pretty_text, $context['pretty']['action_array']))
+				//	Add suffix '-bID_BOARD' to the pretty url
+				$pretty_text .= ($pretty_text != '' ? '-b' : 'b') . $row['ID_BOARD'];
+			//	Update the arrays
+			$pretty_board_urls[$row['ID_BOARD']] = $pretty_text;
+			$pretty_board_lookup[$pretty_text] = $row['ID_BOARD'];
+		}
+	}
+	mysql_free_result($query);
+
+	//	Update the database
+	updateSettings(array(
+		'pretty_action_array' => addslashes(serialize($context['pretty']['action_array'])),
+		'pretty_board_lookup' => addslashes(serialize($pretty_board_lookup)),
+		'pretty_board_urls' => addslashes(serialize($pretty_board_urls)),
+	));
+
+	//	Update the filter callbacks
+	pretty_update_filters();
+}
+
 //	Update the database based on the installed filters and build the .htaccess file
 function pretty_update_filters()
 {
-	global $modSettings, $db_prefix, $boarddir, $boardurl;
+	global $boarddir, $boardurl, $context, $db_prefix, $modSettings;
 
 	//	Get the settings
 	$prettyFilters = unserialize($modSettings['pretty_filters']);
@@ -220,6 +280,20 @@ RewriteEngine on';
 		$htaccess = str_replace('ROOTURL', $match[1] . '/', $htaccess);
 	else
 		$htaccess = str_replace('ROOTURL', '', $htaccess);
+
+	//	Actions
+	if (strpos($htaccess, '#ACTIONS') !== false)
+	{
+		//	Put them in groups of 8
+		$action_array = str_replace('.', '\\.', $context['pretty']['action_array']);
+		$groups = array_chunk($action_array, 8);
+		//	Construct the rewrite rules
+		$lines = array();
+		foreach ($groups as $group)
+			$lines[] = 'RewriteRule ^('. implode('|', $group) .')/?$ ./index.php?pretty;action=$1 [L,QSA]';
+		$actions_rewrite = implode("\n", $lines);
+		$htaccess = str_replace('#ACTIONS', $actions_rewrite, $htaccess);
+	}
 
 	//	Output the file
 	$handle = fopen($boarddir . '/.htaccess', 'w');
