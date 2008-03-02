@@ -222,6 +222,13 @@ function pretty_run_maintenance()
 			$pretty_board_urls[$row['ID_BOARD']] = $pretty_text;
 			$pretty_board_lookup[$pretty_text] = $row['ID_BOARD'];
 		}
+		//	Current board URL is the same as an action
+		elseif (in_array($pretty_board_urls[$row['ID_BOARD']], $context['pretty']['action_array']))
+		{
+			$pretty_text = $pretty_board_urls[$row['ID_BOARD']] . '-b' . $row['ID_BOARD'];
+			$pretty_board_urls[$row['ID_BOARD']] = $pretty_text;
+			$pretty_board_lookup[$pretty_text] = $row['ID_BOARD'];
+		}
 	}
 	mysql_free_result($query);
 
@@ -245,7 +252,7 @@ function pretty_update_filters()
 	$prettyFilters = unserialize($modSettings['pretty_filters']);
 	$filterSettings = array();
 	$rewrites = array();
-	foreach ($prettyFilters as $filter)
+	foreach ($prettyFilters as $id => $filter)
 		//	Get the important data from enabled filters
 		if ($filter['enabled'])
 		{
@@ -253,7 +260,7 @@ function pretty_update_filters()
 				$filterSettings[$filter['filter']['priority']] = $filter['filter']['callback'];
 			if (isset($filter['rewrite']))
 				$rewrites[$filter['rewrite']['priority']] = array(
-					'id' => $filter['id'],
+					'id' => $id,
 					'rule' => $filter['rewrite']['rule'],
 				);
 		}

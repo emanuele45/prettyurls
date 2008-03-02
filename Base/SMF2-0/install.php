@@ -49,7 +49,6 @@ $output .= '<li>Creating the pretty_urls_cache table</li>';
 //	Default filter settings
 $prettyFilters = array(
 	'boards' => array(
-		'id' => 'boards',
 		'description' => 'Rewrite Board URLs',
 		'enabled' => 1,
 		'filter' => array(
@@ -67,7 +66,6 @@ RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*)/?$ ./index.php?pretty;boar
 		'title' => 'Boards',
 	),
 	'topics' => array(
-		'id' => 'topics',
 		'description' => 'Rewrite Topic URLs',
 		'enabled' => 1,
 		'filter' => array(
@@ -83,7 +81,6 @@ RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*|ms
 		'title' => 'Topics',
 	),
 	'actions' => array(
-		'id' => 'actions',
 		'description' => 'Rewrite Action URLs (ie, index.php?action=something)',
 		'enabled' => 1,
 		'filter' => array(
@@ -97,7 +94,6 @@ RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*|ms
 		'title' => 'Actions',
 	),
 	'profiles' => array(
-		'id' => 'profiles',
 		'description' => 'Rewrite Profile URLs. As this uses the Username of an account rather than it\'s Display Name, it may not be desirable to your users.',
 		'enabled' => 0,
 		'filter' => array(

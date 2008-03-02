@@ -14,8 +14,12 @@
 	//	301 redirects
 	if ((isset($context['pretty']['oldschoolquery']) || $_REQUEST['board'] != $context['pretty']['board_urls'][$board]) && $modSettings['pretty_enable_filters'])
 	{
-		$url = 'topic=' . $topic . '.' . (isset($_REQUEST['start']) ? $_REQUEST['start'] : '0') . (isset($_REQUEST['prev_next']) ? ';prev_next=' . $_REQUEST['prev_next'] : '') . (isset($_REQUEST['topicseen']) ? ';topicseen' : '') . (isset($_REQUEST['all']) ? ';all' : '') . (isset($_REQUEST['viewResults']) ? ';viewResults' : '');
-		redirectexit($url, false, true);
+		$filterData = unserialize($modSettings['pretty_filters']);
+		if ($filterData['topics']['enabled'])
+		{
+			$url = 'topic=' . $topic . '.' . (isset($_REQUEST['start']) ? $_REQUEST['start'] : '0') . (isset($_REQUEST['prev_next']) ? ';prev_next=' . $_REQUEST['prev_next'] : '') . (isset($_REQUEST['topicseen']) ? ';topicseen' : '') . (isset($_REQUEST['all']) ? ';all' : '') . (isset($_REQUEST['viewResults']) ? ';viewResults' : '');
+			redirectexit($url, false, true);
+		}
 	}
 
 	// Load the proper template and/or sub template.
@@ -32,8 +36,12 @@
 	//	301 redirects
 	if ((isset($context['pretty']['oldschoolquery']) || $_REQUEST['board'] != $context['pretty']['board_urls'][$board]) && $modSettings['pretty_enable_filters'])
 	{
-		$url = 'board=' . $board . '.' . (isset($_REQUEST['start']) ? $_REQUEST['start'] : '0') . (isset($_REQUEST['sort']) ? ';sort=' . $_REQUEST['sort'] : '');
-		redirectexit($url, false, true);
+		$filterData = unserialize($modSettings['pretty_filters']);
+		if ($filterData['boards']['enabled'])
+		{
+			$url = 'board=' . $board . '.' . (isset($_REQUEST['start']) ? $_REQUEST['start'] : '0') . (isset($_REQUEST['sort']) ? ';sort=' . $_REQUEST['sort'] : '');
+			redirectexit($url, false, true);
+		}
 	}
 
 	if (WIRELESS)

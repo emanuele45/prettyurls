@@ -36,7 +36,8 @@ function PrettyInterface()
 
 	//	What can we do today?
 	$subActions = array(
-		'settings' => 'pretty_manage_settings'
+		'maintenance' => 'pretty_maintenance',
+		'settings' => 'pretty_manage_settings',
 	);
 	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]))
 		call_user_func($subActions[$_REQUEST['sa']]);
@@ -89,6 +90,25 @@ function pretty_manage_settings()
 
 	//	Load the settings up
 	$context['pretty']['settings']['enable'] = $modSettings['pretty_enable_filters'];
+}
+
+//	Interface for URL maintenance
+function pretty_maintenance()
+{
+	global $context, $sourcedir, $txt;
+
+	//	Run the maintenance tasks
+	if (isset($_REQUEST['run']))
+	{
+		require_once($sourcedir . '/Subs-PrettyUrls.php');
+		pretty_run_maintenance();
+	}
+
+	//	Action-specific chrome
+	$context['page_title'] = $txt['pretty_chrome_title_settings'];
+	$context['sub_template'] = 'pretty_settings';
+	$context['pretty']['chrome']['title'] = $txt['pretty_chrome_menu_settings'];
+	$context['pretty']['chrome']['caption'] = $txt['pretty_chrome_caption_settings'];
 }
 
 ?>

@@ -48,6 +48,10 @@ Pretty URLs 0.8                                                    ??
  ! Boards/Topics: Fix old URLs by replacing ' with chr(18). (install.php, Subs-PrettyUrls.php)
  + Actions: Only rewrite URLs with an action in $actionArray. (PrettyUrls-Filters.php, Subs-PrettyUrls.php)
  % And as a result, the actions filter can now be enabled by default.
+ ! Boards: Current board URLs that are the same as an action must be changed. (Subs-PrettyUrls.php)
+ ! Boards/Topics: Don't make infinite redirects if the individual filters are disabled. (Display.php, MessageIndex.php)
+ + Base: Added an action for URL maintenence. (index.php, PrettyUrls.php, PrettyUrls.template.php, PrettyUrls.english.php)
+ ! Base: Remove redundant id entries from pretty_filters. (install.php, Subs-PrettyUrls.php)
 
 Pretty URLs 0.7                                                    June 12, 2007
 ================================================================================

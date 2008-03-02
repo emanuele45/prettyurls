@@ -222,6 +222,13 @@ function pretty_run_maintenance()
 			$pretty_board_urls[$row['ID_BOARD']] = $pretty_text;
 			$pretty_board_lookup[$pretty_text] = $row['ID_BOARD'];
 		}
+		//	Current board URL is the same as an action
+		elseif (in_array($pretty_board_urls[$row['ID_BOARD']], $context['pretty']['action_array']))
+		{
+			$pretty_text = $pretty_board_urls[$row['ID_BOARD']] . '-b' . $row['ID_BOARD'];
+			$pretty_board_urls[$row['ID_BOARD']] = $pretty_text;
+			$pretty_board_lookup[$pretty_text] = $row['ID_BOARD'];
+		}
 	}
 	$smfFunc['db_free_result']($query);
 
