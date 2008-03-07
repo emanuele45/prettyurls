@@ -17,7 +17,7 @@
 	<install for="1.1, 1.1.0-1.1.99">
 		<modification format="xml" type="file">SMF1-1/Sources.xml</modification>
 		<modification format="xml" type="file">SMF1-1/BoardsAndTopics.xml</modification>
-		<modification format="xml" type="file">SMF1-1/Themes.xml</modification>
+		<!--<modification format="xml" type="file">SMF1-1/Themes.xml</modification>-->
 		<modification format="xml" type="file">Languages.xml</modification>
 		<require-file name="SMF1-1/PrettyUrls.php" destination="$sourcedir" />
 		<require-file name="SMF1-1/PrettyUrls-Filters.php" destination="$sourcedir" />
@@ -31,7 +31,7 @@
 	<uninstall for="1.1, 1.1.0-1.1.99">
 		<modification format="xml" type="file" reverse="true">SMF1-1/Sources.xml</modification>
 		<modification format="xml" type="file" reverse="true">SMF1-1/BoardsAndTopics.xml</modification>
-		<modification format="xml" type="file" reverse="true">SMF1-1/Themes.xml</modification>
+		<!--<modification format="xml" type="file" reverse="true">SMF1-1/Themes.xml</modification>-->
 		<modification format="xml" type="file" reverse="true">Languages.xml</modification>
 		<remove-file name="$sourcedir/PrettyUrls.php" />
 		<remove-file name="$sourcedir/PrettyUrls-Filters.php" />
@@ -46,7 +46,7 @@
 	<install for="2.0 Beta 1.1">
 		<modification format="xml" type="file">SMF2-0/Sources.xml</modification>
 		<modification format="xml" type="file">SMF2-0/BoardsAndTopics.xml</modification>
-		<modification format="xml" type="file">SMF2-0/Themes.xml</modification>
+		<!--<modification format="xml" type="file">SMF2-0/Themes.xml</modification>-->
 		<modification format="xml" type="file">Languages.xml</modification>
 		<require-file name="SMF2-0/PrettyUrls.php" destination="$sourcedir" />
 		<require-file name="SMF2-0/PrettyUrls-Filters.php" destination="$sourcedir" />
@@ -60,7 +60,7 @@
 	<uninstall for="2.0 Beta 1.1">
 		<modification format="xml" type="file" reverse="true">SMF2-0/Sources.xml</modification>
 		<modification format="xml" type="file" reverse="true">SMF2-0/BoardsAndTopics.xml</modification>
-		<modification format="xml" type="file" reverse="true">SMF2-0/Themes.xml</modification>
+		<!--<modification format="xml" type="file" reverse="true">SMF2-0/Themes.xml</modification>-->
 		<modification format="xml" type="file" reverse="true">Languages.xml</modification>
 		<remove-file name="$sourcedir/PrettyUrls.php" />
 		<remove-file name="$sourcedir/PrettyUrls-Filters.php" />

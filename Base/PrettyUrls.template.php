@@ -47,11 +47,11 @@ function template_pretty_settings()
 				<legend>', $txt['pretty_filters'], '</legend>';
 
 	//	Display the filters
-	foreach ($context['pretty']['filters'] as $filter)
+	foreach ($context['pretty']['filters'] as $id => $filter)
 		echo '
 				<div>
-					<input type="checkbox" name="pretty_filter_', $filter['id'], '" id="pretty_filter_', $filter['id'], '"', ($filter['enabled'] ? ' checked="checked"' : ''), ' />
-					<label for="pretty_filter_', $filter['id'], '">', $filter['title'], '</label>
+					<input type="checkbox" name="pretty_filter_', $id, '" id="pretty_filter_', $id, '"', ($filter['enabled'] ? ' checked="checked"' : ''), ' />
+					<label for="pretty_filter_', $id, '">', $filter['title'], '</label>
 					<p>', $filter['description'], '</p>
 				</div>';
 
@@ -61,6 +61,26 @@ function template_pretty_settings()
 				<input type="submit" value="', $txt['pretty_save'], '">
 			</fieldset>
 		</form>';
+}
+
+//	Forum out of whack?
+function template_pretty_maintenance()
+{
+	global $context, $scripturl, $txt;
+
+	if (isset($context['pretty']['maintenance_tasks']))
+	{
+		echo '
+		<ul>';
+		foreach ($context['pretty']['maintenance_tasks'] as $task)
+			echo '
+			<li>', $task, '</li>';
+		echo '
+		</ul>';
+	}
+	else
+		echo '
+		<p><a href="', $scripturl, '?action=admin;area=pretty;sa=maintenance;run">', $txt['pretty_run_maintenance'], '</a></p>';
 }
 
 ?>

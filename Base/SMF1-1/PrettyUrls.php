@@ -67,8 +67,8 @@ function pretty_manage_settings()
 	//	Are we saving settings now?
 	if (isset($_REQUEST['save']))
 	{
-		foreach ($context['pretty']['filters'] as $filter)
-			$context['pretty']['filters'][$filter['id']]['enabled'] = isset($_POST['pretty_filter_' . $filter['id']]) ? 1 : 0;
+		foreach ($context['pretty']['filters'] as $id => $filter)
+			$context['pretty']['filters'][$id]['enabled'] = isset($_POST['pretty_filter_' . $id]) ? 1 : 0;
 
 		$pretty_settings = array(
 			'pretty_enable_filters' => $_POST['pretty_enable'],
@@ -106,10 +106,10 @@ function pretty_maintenance()
 	}
 
 	//	Action-specific chrome
-	$context['page_title'] = $txt['pretty_chrome_title_settings'];
-	$context['sub_template'] = 'pretty_settings';
-	$context['pretty']['chrome']['title'] = $txt['pretty_chrome_menu_settings'];
-	$context['pretty']['chrome']['caption'] = $txt['pretty_chrome_caption_settings'];
+	$context['page_title'] = $txt['pretty_chrome_title_maintenance'];
+	$context['sub_template'] = 'pretty_maintenance';
+	$context['pretty']['chrome']['title'] = $txt['pretty_chrome_menu_maintenance'];
+	$context['pretty']['chrome']['caption'] = $txt['pretty_chrome_caption_maintenance'];
 }
 
 ?>

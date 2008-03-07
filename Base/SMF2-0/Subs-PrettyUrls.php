@@ -181,11 +181,14 @@ function pretty_run_maintenance()
 {
 	global $boarddir, $context, $db_prefix, $modSettings, $smfFunc;
 
+	$context['pretty']['maintenance_tasks'] = array();
+
 	//	Get the array of actions
 	$indexphp = file_get_contents($boarddir . '/index.php');
 	preg_match('~actionArray\\s*=\\s*array[^;]+~', $indexphp, $actionArrayText);
 	preg_match_all('~\'([^\']+)\'\\s*=>~', $actionArrayText[0], $actionArray, PREG_PATTERN_ORDER);
 	$context['pretty']['action_array'] = $actionArray[1];
+	$context['pretty']['maintenance_tasks'][] = 'Updating the array of actions';
 
 	//	Update the list of boards
 	//	Get the current pretty board urls, or make new arrays if there are none
@@ -197,6 +200,7 @@ function pretty_run_maintenance()
 	$pretty_board_lookup = array();
 	foreach ($pretty_board_lookup_old as $board => $id)
 		$pretty_board_lookup[str_replace("'", chr(18), $board)] = $id;
+	$context['pretty']['maintenance_tasks'][] = 'Fix old boards which have broken quotes';
 
 	//	Get the board names
 	$query = $smfFunc['db_query']('', "
@@ -231,6 +235,7 @@ function pretty_run_maintenance()
 		}
 	}
 	$smfFunc['db_free_result']($query);
+	$context['pretty']['maintenance_tasks'][] = 'Update board URLs';
 
 	//	Update the database
 	updateSettings(array(
@@ -241,6 +246,7 @@ function pretty_run_maintenance()
 
 	//	Update the filter callbacks
 	pretty_update_filters();
+	$context['pretty']['maintenance_tasks'][] = 'Update the filters';
 }
 
 //	Update the database based on the installed filters and build the .htaccess file
