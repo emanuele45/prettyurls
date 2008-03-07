@@ -1,6 +1,8 @@
 <?php
 //	Version: 0.8; PrettyUrls
 
+require_once(dirname(__FILE__) . '/PrettyUrls.english.php');
+
 //	Admin chrome
 $txt['pretty_chrome_title'] = 'Administration de Pretty URLs';
 $txt['pretty_chrome_menu_settings'] = 'Param&egrave;tres';

@@ -14,4 +14,9 @@ $txt['pretty_enable'] = 'Enable URL rewriting';
 $txt['pretty_filters'] = 'URL rewriting filters';
 $txt['pretty_save'] = 'Save changes';
 
+//	Maintenance page
+$txt['pretty_chrome_caption_maintenance'] = 'Run some maintenance tasks';
+$txt['pretty_chrome_title_maintenance'] = 'Pretty URLs Maintenance';
+$txt['pretty_run_maintenance'] = 'Run maintenance tasks';
+
 ?>

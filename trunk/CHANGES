@@ -10,7 +10,7 @@ Legend:
  % Development flag or note, such as branching.
 
 
-Pretty URLs 0.8                                                    ??
+Pretty URLs 0.8                                                    7 March, 2008
 ================================================================================
  ! Profiles: Fixed a minor typo.
  + wiki: Added the DatabaseChanges page.
@@ -52,6 +52,8 @@ Pretty URLs 0.8                                                    ??
  ! Boards/Topics: Don't make infinite redirects if the individual filters are disabled. (Display.php, MessageIndex.php)
  + Base: Added an action for URL maintenence. (index.php, PrettyUrls.php, PrettyUrls.template.php, PrettyUrls.english.php)
  ! Base: Remove redundant id entries from pretty_filters. (install.php, Subs-PrettyUrls.php)
+ ! Boards: Don't edit the ManageBoards template until it works.
+ + Base: The maintenance interface now works. (PrettyUrls.php, Subs-PrettyUrls.php, PrettyURls.template.php)
 
 Pretty URLs 0.7                                                    June 12, 2007
 ================================================================================
