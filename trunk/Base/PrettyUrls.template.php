@@ -1,5 +1,5 @@
 <?php
-//	Version: 0.8; PrettyUrls
+//	Version: 0.9; PrettyUrls
 
 //	Pretty URLs chrome
 function template_pretty_chrome_above()
@@ -16,10 +16,18 @@ function template_pretty_chrome_above()
 		echo '
 		<li><a href="', $item['href'], '" class="', $id, '" title="', $item['title'], '"><span>', $item['title'], '</span></a></li>';
 
+	//	Title and caption
 	echo '
 	</ul>
 	<h2>', $context['pretty']['chrome']['title'], '</h2>
-	<p id="chrome_caption">', $context['pretty']['chrome']['caption'], '</p>
+	<p id="chrome_caption">', $context['pretty']['chrome']['caption'], '</p>';
+
+	//	Any notices?
+	if (isset($context['pretty']['chrome']['notice']))
+		echo '
+	<p id="chrome_notice">', $context['pretty']['chrome']['notice'], '</p>';
+
+	echo '
 	<div id="chrome_main">';
 }
 
@@ -36,7 +44,7 @@ function template_pretty_settings()
 	global $context, $scripturl, $txt;
 
 	echo '
-		<form id="adminsearch" action="', $scripturl, '?action=admin;area=pretty;save" method="post" accept-charset="', $context['character_set'], '">
+		<form action="', $scripturl, '?action=admin;area=pretty;save" method="post" accept-charset="', $context['character_set'], '">
 			<fieldset>
 				<legend>', $txt['pretty_core_settings'], '</legend>
 				<label for="pretty_enable">', $txt['pretty_enable'], '</label>
@@ -58,7 +66,7 @@ function template_pretty_settings()
 	echo '
 			</fieldset>
 			<fieldset>
-				<input type="submit" value="', $txt['pretty_save'], '">
+				<input type="submit" value="', $txt['pretty_save'], '" />
 			</fieldset>
 		</form>';
 }
@@ -81,6 +89,18 @@ function template_pretty_maintenance()
 	else
 		echo '
 		<p><a href="', $scripturl, '?action=admin;area=pretty;sa=maintenance;run">', $txt['pretty_run_maintenance'], '</a></p>';
+}
+
+//	To make it easier to edit that nasty filters array
+function template_pretty_filters()
+{
+	global $context, $scripturl, $txt;
+
+	echo '
+		<form action="', $scripturl, '?action=admin;area=pretty;sa=filters;save" method="post" accept-charset="', $context['character_set'], '">
+			<textarea id="pretty_json_filters" name="pretty_json_filters" rows="20">', $context['pretty']['json_filters'], '</textarea>
+			<input type="submit" value="', $txt['pretty_save'], '" />
+		</form>';
 }
 
 ?>

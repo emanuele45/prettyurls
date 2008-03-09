@@ -10,6 +10,11 @@ Legend:
  % Development flag or note, such as branching.
 
 
+Pretty URLs 0.9                                                    ??
+================================================================================
+ + Base: Added a hidden tool to edit the filters array at sa=filters. (PrettyUrls.php, Subs-PrettyUrls.php, PrettyURls.template.php)
+ ! Base: Added a place for notices to be displayed in the admin interface. (PrettyUrls.php, PrettyUrls.template.php)
+
 Pretty URLs 0.8                                                    7 March, 2008
 ================================================================================
  ! Profiles: Fixed a minor typo.

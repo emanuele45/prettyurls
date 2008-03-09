@@ -1,5 +1,5 @@
 <?php
-//	Version: 0.8; PrettyUrls
+//	Version: 0.9; PrettyUrls
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -18,7 +18,7 @@ function PrettyInterface()
 		loadLanguage('PrettyUrls', 'english');
 
 	//	Shiny chrome interface
-	$context['template_layers'][] = 'pretty_chrome';
+	$context['template_layers']['pretty_chrome'] = 'pretty_chrome';
 	$context['html_headers'] .= '
 	<link rel="stylesheet" type="text/css" href="' . $settings['default_theme_url'] . '/pretty/chrome.css" media="screen,projection" />';
 	$context['pretty']['chrome'] = array(
@@ -36,6 +36,7 @@ function PrettyInterface()
 
 	//	What can we do today?
 	$subActions = array(
+		'filters' => 'pretty_edit_filters',
 		'maintenance' => 'pretty_maintenance',
 		'settings' => 'pretty_manage_settings',
 	);
@@ -66,6 +67,7 @@ function pretty_manage_settings()
 	//	Are we saving settings now?
 	if (isset($_REQUEST['save']))
 	{
+		//	Get each filter from the form and save them
 		foreach ($context['pretty']['filters'] as $id => $filter)
 			$context['pretty']['filters'][$id]['enabled'] = isset($_POST['pretty_filter_' . $id]) ? 1 : 0;
 
@@ -79,17 +81,26 @@ function pretty_manage_settings()
 		require_once($sourcedir . '/Subs-PrettyUrls.php');
 		pretty_update_filters();
 
+		//	All finished now!
+		$_SESSION['pretty']['notice'] = 'Settings saved';
 		redirectexit('action=admin;area=pretty');
 	}
 
 	//	Action-specific chrome
-	$context['page_title'] = $txt['pretty_chrome_title_settings'];
+	$context['page_title'] = $txt['pretty_chrome_page_title_settings'];
 	$context['sub_template'] = 'pretty_settings';
 	$context['pretty']['chrome']['title'] = $txt['pretty_chrome_menu_settings'];
 	$context['pretty']['chrome']['caption'] = $txt['pretty_chrome_caption_settings'];
 
 	//	Load the settings up
 	$context['pretty']['settings']['enable'] = $modSettings['pretty_enable_filters'];
+
+	//	Any notices?
+	if (isset($_SESSION['pretty']['notice']))
+	{
+		$context['pretty']['chrome']['notice'] = $_SESSION['pretty']['notice'];
+		unset($_SESSION['pretty']['notice']);
+	}
 }
 
 //	Interface for URL maintenance
@@ -105,10 +116,76 @@ function pretty_maintenance()
 	}
 
 	//	Action-specific chrome
-	$context['page_title'] = $txt['pretty_chrome_title_maintenance'];
+	$context['page_title'] = $txt['pretty_chrome_page_title_maintenance'];
 	$context['sub_template'] = 'pretty_maintenance';
 	$context['pretty']['chrome']['title'] = $txt['pretty_chrome_menu_maintenance'];
 	$context['pretty']['chrome']['caption'] = $txt['pretty_chrome_caption_maintenance'];
+}
+
+//	Interface to edit the filters array
+function pretty_edit_filters()
+{
+	global $context, $modSettings, $sourcedir, $txt;
+
+	//	Check the JSON extension is installed
+	if (!function_exists('json_encode'))
+	{
+		unset($context['template_layers']['pretty_chrome']);
+		fatal_lang_error('pretty_no_json', false);
+	}
+
+	//	Save the filters array
+	if (isset($_REQUEST['save']))
+	{
+		//	Try to process the edited JSON array
+		$json_filters = (isset($_POST['pretty_json_filters'])) ? $_POST['pretty_json_filters'] : '';
+		$json_filters = stripslashes($json_filters);
+		$filters_array = json_decode($json_filters, true);
+
+		//	Was that successful or not?
+		if ($filters_array == NULL)
+		{
+			$_SESSION['pretty']['notice'] = 'There was an error with the JSON array you submitted';
+			$_SESSION['pretty']['json_filters'] = $json_filters;
+		}
+		else
+		{
+			require_once($sourcedir . '/Subs-PrettyUrls.php');
+			updateSettings(array('pretty_filters' => addslashes(serialize($filters_array))));
+			pretty_update_filters();
+			$_SESSION['pretty']['notice'] = 'Filters saved and updated';
+		}
+
+		redirectexit('action=admin;area=pretty;sa=filters');
+	}
+
+	//	Action-specific chrome
+	$context['page_title'] = $txt['pretty_chrome_page_title_filters'];
+	$context['sub_template'] = 'pretty_filters';
+	$context['pretty']['chrome']['title'] = $txt['pretty_chrome_title_filters'];
+	$context['pretty']['chrome']['caption'] = $txt['pretty_chrome_caption_filters'];
+
+	if (isset($_SESSION['pretty']['json_filters']))
+	{
+		//	We're working on something already
+		$context['pretty']['json_filters'] = $_SESSION['pretty']['json_filters'];
+		unset($_SESSION['pretty']['json_filters']);
+	}
+	else
+	{
+		//	Convert the filters array to JSON and format it nicely
+		require_once($sourcedir . '/Subs-PrettyUrls.php');
+		$context['pretty']['json_filters'] = json_encode(unserialize($modSettings['pretty_filters']));
+		$context['pretty']['json_filters'] = pretty_json($context['pretty']['json_filters']);
+		$context['pretty']['json_filters'] = str_replace('\/', '/', $context['pretty']['json_filters']);
+	}
+
+	//	Any new notices?
+	if (isset($_SESSION['pretty']['notice']))
+	{
+		$context['pretty']['chrome']['notice'] = $_SESSION['pretty']['notice'];
+		unset($_SESSION['pretty']['notice']);
+	}
 }
 
 ?>

@@ -1,5 +1,5 @@
-//	Pretty URLs Chrome (Admin Interface)
-//	Version: 0.8
+/*	Pretty URLs Chrome (Admin Interface)
+	Version: 0.9	*/
 
 div#chrome
 {
@@ -13,7 +13,7 @@ div#chrome
 	width: 80%;
 }
 
-div#chrome h1, div#chrome h2, ul#chrome_menu, #chrome_caption
+div#chrome h1, div#chrome h2, ul#chrome_menu, #chrome_caption, p#chrome_notice
 {
 	margin: 0;
 	padding: 0;
@@ -28,7 +28,26 @@ div#chrome h1
 	padding: 0 0.25em;
 }
 
-//	The menu...
+div#chrome h2
+{
+	background: #ebebeb url('./chrome-h2.png') repeat-x;
+	font-size: 1.5em;
+	line-height: 2em;
+}
+
+p#chrome_caption
+{
+	background: #CCC;
+	padding: 0.5em;
+}
+
+p#chrome_notice
+{
+	color: red;
+	padding: 0.5em;
+}
+
+/*	The menu...	*/
 ul#chrome_menu
 {
 	float: left;
@@ -75,15 +94,11 @@ ul#chrome_menu a.maintenance
 	background: url('./icon-maintenance.png') 50% 50% no-repeat;
 }
 
-div#chrome h2
+/*	Filters tool	*/
+textarea#pretty_json_filters
 {
-	background: #ebebeb url('./chrome-h2.png') repeat-x;
-	font-size: 1.5em;
-	line-height: 2em;
-}
-
-#chrome_caption
-{
-	background: #CCC;
-	padding: 0.5em;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	font-family: monospace;
+	width: 100%;
 }
