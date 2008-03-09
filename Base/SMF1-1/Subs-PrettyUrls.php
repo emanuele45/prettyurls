@@ -1,5 +1,5 @@
 <?php
-//	Version: 0.8; Subs-PrettyUrls
+//	Version: 0.9; Subs-PrettyUrls
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -323,6 +323,48 @@ RewriteEngine on';
 
 	//	Don't rewrite anything for this page
 	$modSettings['pretty_enable_filters'] = false;
+}
+
+//	Format a JSON string
+//	From http://au2.php.net/manual/en/function.json-encode.php#80339
+function pretty_json($json)
+{
+	$tab = "    ";
+	$new_json = "";
+	$indent_level = 0;
+	$in_string = false;
+	$len = strlen($json);
+
+	for($c = 0; $c < $len; $c++)
+	{
+		$char = $json[$c];
+		if ($char == '"')
+		{
+			if($c > 0 && $json[$c - 1] != '\\')
+				$in_string = !$in_string;
+			$new_json .= $char;
+		}
+		else if ($in_string)
+			$new_json .= $char;
+		else if ($char == '{' || $char == '[')
+		{
+			$indent_level++;
+			$new_json .= $char . "\n" . str_repeat($tab, $indent_level);
+		}
+		else if ($char == '}' || $char == ']')
+		{
+			$indent_level--;
+			$new_json .= "\n" . str_repeat($tab, $indent_level) . $char;
+		}
+		else if ($char == ',')
+			$new_json .= ",\n" . str_repeat($tab, $indent_level);
+		else if ($char == ':')
+			$new_json .= ": ";
+		else
+			$new_json .= $char;
+	}
+
+	return $new_json;
 }
 
 ?>
