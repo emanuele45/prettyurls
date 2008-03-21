@@ -1,26 +1,29 @@
 <?php
 
-/*******************************************************************************	ATTENTION: If you are trying to install this manually, you should try
+/*******************************************************************************
+	ATTENTION: If you are trying to install this manually, you should try
 	the package manager. If that does not work, you can run this file by
 	accessing it by url. Please ensure it is in the same location as your
 	forum's SSI.php file.
 *******************************************************************************/
 
-//	Pretty URLs - Base v0.8
+//	Pretty URLs - Base v0.8.1
 
 //	If SSI.php is in the same place as this file, and SMF isn't defined, this is being run standalone.
 if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 {
 	require_once(dirname(__FILE__) . '/SSI.php');
 	$standalone = true;
-	$txt = array('package_installed_done' => '');
 }
 //	Hmm... no SSI.php and no SMF?
 elseif (!defined('SMF'))
 	die('<b>Error:</b> Cannot install - please verify you put this in the same place as SMF\'s SSI.php.');
 
-//	Start the list
-$output = '<ul>';
+//	Get the list of tasks ready
+$tasks = array(
+	'db' => 'Database modifications',
+	'dbchanges' => array(),
+);
 
 //	Create the pretty_topic_urls table
 db_query("
@@ -29,12 +32,13 @@ db_query("
 	`pretty_url` varchar(80) NOT NULL,
 	PRIMARY KEY (`ID_TOPIC`),
 	UNIQUE (`pretty_url`))", __FILE__, __LINE__);
-$output .= '<li>Creating the pretty_topic_urls table</li>';
+$tasks['dbchanges'][] = 'Creating the pretty_topic_urls table';
 
 //	Fix old topics by replacing ' with chr(18)
 db_query("
 	UPDATE {$db_prefix}pretty_topic_urls
 	SET pretty_url = REPLACE(pretty_url, '\\'', '" . chr(18) . "')", __FILE__, __LINE__);
+$tasks['dbchanges'][] = 'Fixing any old topics with broken quotes';
 
 //	Create the pretty_urls_cache table
 db_query("DROP TABLE IF EXISTS {$db_prefix}pretty_urls_cache", __FILE__, __LINE__);
@@ -44,7 +48,7 @@ db_query("
 	`replacement` VARCHAR(255) NOT NULL,
 	`log_time` TIMESTAMP NOT NULL,
 	PRIMARY KEY (`url_id`))", __FILE__, __LINE__);
-$output .= '<li>Creating the pretty_urls_cache table</li>';
+$tasks['dbchanges'][] = 'Creating the pretty_urls_cache table';
 
 //	Default filter settings
 $prettyFilters = array(
@@ -60,9 +64,6 @@ $prettyFilters = array(
 			'rule' => 'RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1.0 [L,QSA]
 RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*)/?$ ./index.php?pretty;board=$1.$2 [L,QSA]',
 		),
-		'settings' => array(
-			'pretty_root_url' => 'text',
-		),
 		'title' => 'Boards',
 	),
 	'topics' => array(
@@ -72,7 +73,6 @@ RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*)/?$ ./index.php?pretty;boar
 			'priority' => 40,
 			'callback' => 'pretty_urls_topic_filter',
 		),
-		'requires' => 'boards',
 		'rewrite' => array(
 			'priority' => 45,
 			'rule' => 'RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1;topic=$2.0 [L,QSA]
@@ -107,6 +107,7 @@ RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*|ms
 		'title' => 'Profiles',
 	),
 );
+$tasks[] = 'Adding the default filters';
 
 //	Add the pretty_root_url and pretty_enable_filters settings:
 $pretty_root_url = isset($modSettings['pretty_root_url']) ? $modSettings['pretty_root_url'] : $boardurl;
@@ -118,21 +119,44 @@ updateSettings(array(
 	'pretty_filters' => addslashes(serialize($prettyFilters)),
 	'pretty_root_url' => $pretty_root_url,
 ));
-$output .= '<li>Adding some settings</li>';
+$tasks[] = 'Adding some settings';
 
 //	Run maintenance
 require_once($sourcedir . '/Subs-PrettyUrls.php');
 pretty_run_maintenance();
-$output .= '<li>Running maintenance</li>';
+$tasks[] = 'Running maintenance tasks';
+$tasks[] = $context['pretty']['maintenance_tasks'];
+
+//	Format the tasks list
+$first = true;
+$task_list = '<ul>';
+foreach ($tasks as $task)
+	if (is_array($task))
+	{
+		$task_list .= '<ul>';
+		foreach ($task as $subtask)
+			$task_list .= '<li>' . $subtask . '</li>';
+		$task_list .= '</ul>';
+	}
+	else
+	{
+		if ($first = true)
+			$first = false;
+		else
+			$task_list .= '</li>';
+		$task_list .= '<li>' . $task;
+	}
+$task_list .= '</li></ul>';
 
 //	Output the list of database changes
-$txt['package_installed_done'] = $output . $txt['package_installed_done'];
 if (isset($standalone))
 {
-	echo '<title>Installing Pretty URLs - Base 0.8</title>
-<h1>Installing Pretty URLs - Base 0.8</h1>
+	echo '<title>Installing Pretty URLs - Base 0.9</title>
+<h1>Installing Pretty URLs - Base 0.9</h1>
 <h2>Database changes</h2>
-', $txt['package_installed_done'];
+', $task_list ;
 }
+else
+	$txt['package_installed_done'] = $task_list . $txt['package_installed_done'];
 
 ?>

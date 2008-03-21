@@ -73,7 +73,7 @@ function pretty_manage_settings()
 
 		$pretty_settings = array(
 			'pretty_enable_filters' => $_POST['pretty_enable'],
-			'pretty_filters' => addslashes(serialize($context['pretty']['filters'])),
+			'pretty_filters' => serialize($context['pretty']['filters']),
 		);
 		updateSettings($pretty_settings);
 
@@ -151,7 +151,7 @@ function pretty_edit_filters()
 		else
 		{
 			require_once($sourcedir . '/Subs-PrettyUrls.php');
-			updateSettings(array('pretty_filters' => addslashes(serialize($filters_array))));
+			updateSettings(array('pretty_filters' => serialize($filters_array)));
 			pretty_update_filters();
 			$_SESSION['pretty']['notice'] = 'Filters saved and updated';
 		}

@@ -179,7 +179,7 @@ function pretty_generate_url($text)
 //	URL maintenance
 function pretty_run_maintenance()
 {
-	global $boarddir, $context, $db_prefix, $modSettings, $smfFunc;
+	global $boarddir, $context, $modSettings, $smcFunc;
 
 	$context['pretty']['maintenance_tasks'] = array();
 
@@ -203,45 +203,45 @@ function pretty_run_maintenance()
 	$context['pretty']['maintenance_tasks'][] = 'Fix old boards which have broken quotes';
 
 	//	Get the board names
-	$query = $smfFunc['db_query']('', "
-		SELECT ID_BOARD, name
-		FROM {$db_prefix}boards", __FILE__, __LINE__);
+	$query = $smcFunc['db_query']('', "
+		SELECT id_board, name
+		FROM {db_prefix}boards");
 
 	//	Process each board
-	while ($row = $smfFunc['db_fetch_assoc']($query))
+	while ($row = $smcFunc['db_fetch_assoc']($query))
 	{
 		//	Don't replace the board urls if they already exist
-		if (!isset($pretty_board_urls[$row['ID_BOARD']]) || $pretty_board_urls[$row['ID_BOARD']] == '' || in_array($row['ID_BOARD'], $pretty_board_lookup) === false)
+		if (!isset($pretty_board_urls[$row['id_board']]) || $pretty_board_urls[$row['id_board']] == '' || in_array($row['id_board'], $pretty_board_lookup) === false)
 		{
 			$pretty_text = pretty_generate_url($row['name']);
 			//	We need to have something to refer to this board by...
 			if ($pretty_text == '')
 				//	... so use 'bID_BOARD'
-				$pretty_text = 'b' . $row['ID_BOARD'];
+				$pretty_text = 'b' . $row['id_board'];
 			//	Numerical or duplicate URLs aren't allowed!
 			if (is_numeric($pretty_text) || isset($pretty_board_lookup[$pretty_text]) || in_array($pretty_text, $context['pretty']['action_array']))
 				//	Add suffix '-bID_BOARD' to the pretty url
-				$pretty_text .= ($pretty_text != '' ? '-b' : 'b') . $row['ID_BOARD'];
+				$pretty_text .= ($pretty_text != '' ? '-b' : 'b') . $row['id_board'];
 			//	Update the arrays
-			$pretty_board_urls[$row['ID_BOARD']] = $pretty_text;
-			$pretty_board_lookup[$pretty_text] = $row['ID_BOARD'];
+			$pretty_board_urls[$row['id_board']] = $pretty_text;
+			$pretty_board_lookup[$pretty_text] = $row['id_board'];
 		}
 		//	Current board URL is the same as an action
-		elseif (in_array($pretty_board_urls[$row['ID_BOARD']], $context['pretty']['action_array']))
+		elseif (in_array($pretty_board_urls[$row['id_board']], $context['pretty']['action_array']))
 		{
-			$pretty_text = $pretty_board_urls[$row['ID_BOARD']] . '-b' . $row['ID_BOARD'];
-			$pretty_board_urls[$row['ID_BOARD']] = $pretty_text;
-			$pretty_board_lookup[$pretty_text] = $row['ID_BOARD'];
+			$pretty_text = $pretty_board_urls[$row['id_board']] . '-b' . $row['id_board'];
+			$pretty_board_urls[$row['id_board']] = $pretty_text;
+			$pretty_board_lookup[$pretty_text] = $row['id_board'];
 		}
 	}
-	$smfFunc['db_free_result']($query);
+	$smcFunc['db_free_result']($query);
 	$context['pretty']['maintenance_tasks'][] = 'Update board URLs';
 
 	//	Update the database
 	updateSettings(array(
-		'pretty_action_array' => addslashes(serialize($context['pretty']['action_array'])),
-		'pretty_board_lookup' => addslashes(serialize($pretty_board_lookup)),
-		'pretty_board_urls' => addslashes(serialize($pretty_board_urls)),
+		'pretty_action_array' => serialize($context['pretty']['action_array']),
+		'pretty_board_lookup' => serialize($pretty_board_lookup),
+		'pretty_board_urls' => serialize($pretty_board_urls),
 	));
 
 	//	Update the filter callbacks
@@ -252,7 +252,7 @@ function pretty_run_maintenance()
 //	Update the database based on the installed filters and build the .htaccess file
 function pretty_update_filters()
 {
-	global $boarddir, $boardurl, $context, $db_prefix, $modSettings, $smfFunc;
+	global $boarddir, $boardurl, $context, $modSettings, $smcFunc;
 
 	//	Get the settings
 	$prettyFilters = unserialize($modSettings['pretty_filters']);
@@ -318,8 +318,8 @@ RewriteEngine on';
 	updateSettings(array('pretty_filter_callbacks' => serialize($filterSettings)));
 
 	//	Clear the URLs cache
-	$smfFunc['db_query']('', "
-		TRUNCATE TABLE {$db_prefix}pretty_urls_cache", __FILE__, __LINE__);
+	$smcFunc['db_query']('truncate_table', "
+		TRUNCATE {db_prefix}pretty_urls_cache");
 
 	//	Don't rewrite anything for this page
 	$modSettings['pretty_enable_filters'] = false;

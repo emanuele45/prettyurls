@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls</id>
-	<version>0.8</version>
+	<version>0.8.1</version>
 
 	<file name="$sourcedir/Display.php">
 		<operation>
@@ -54,12 +54,12 @@
 			<search position="replace"><![CDATA[
 function cleanRequest()
 {
-	global $board, $topic, $boardurl, $scripturl, $modSettings, $smfFunc;
+	global $board, $topic, $boardurl, $scripturl, $modSettings, $smcFunc;
 ]]></search>
 			<add><![CDATA[
 function cleanRequest()
 {
-	global $board, $topic, $boardurl, $scripturl, $modSettings, $smfFunc, $context, $db_prefix;
+	global $board, $topic, $boardurl, $scripturl, $modSettings, $smcFunc, $context, $db_prefix;
 ]]></add>
 		</operation>
 
@@ -98,20 +98,20 @@ function cleanRequest()
 		} else {
 			$_REQUEST['topic'] = str_replace(array('&#039;', '\\'), array(chr(18), ''), $_REQUEST['topic']);
 			//	Are we feeling lucky?
-			$query = $smfFunc['db_query']('', "
-				SELECT ID_TOPIC
-				FROM {$db_prefix}pretty_topic_urls
-				WHERE pretty_url = '$_REQUEST[topic]'
-				LIMIT 1", __FILE__, __LINE__);
+			$query = $smcFunc['db_query']('', "
+				SELECT id_topic
+				FROM {db_prefix}pretty_topic_urls
+				WHERE pretty_url = {string:topic}",
+			array('topic' => $_REQUEST['topic']));
 			//	No? No topic?!
-			if ($smfFunc['db_num_rows']($query) == 0)
+			if ($smcFunc['db_num_rows']($query) == 0)
 			{
 				$topic = 0;
 			} else {
-				while ($row = $smfFunc['db_fetch_assoc']($query))
-					$topic = (int) $row['ID_TOPIC'];
+				while ($row = $smcFunc['db_fetch_assoc']($query))
+					$topic = (int) $row['id_topic'];
 			}
-			$smfFunc['db_free_result']($query);
+			$smcFunc['db_free_result']($query);
 
 			//	That query should be counted separately
 			$context['pretty']['db_count']++;
@@ -125,12 +125,12 @@ function cleanRequest()
 			<search position="replace"><![CDATA[
 function modifyBoard($board_id, &$boardOptions)
 {
-	global $sourcedir, $cat_tree, $boards, $boardList, $modSettings, $db_prefix, $smfFunc;
+	global $sourcedir, $cat_tree, $boards, $boardList, $modSettings, $smcFunc;
 ]]></search>
 			<add><![CDATA[
 function modifyBoard($board_id, &$boardOptions)
 {
-	global $sourcedir, $cat_tree, $boards, $boardList, $modSettings, $db_prefix, $smfFunc, $context;
+	global $sourcedir, $cat_tree, $boards, $boardList, $modSettings, $smcFunc, $context;
 ]]></add>
 		</operation>
 
@@ -162,8 +162,8 @@ function modifyBoard($board_id, &$boardOptions)
 		$context['pretty']['board_urls'][$board_id] = $pretty_url;
 		$pretty_board_lookup[$pretty_url] = $board_id;
 		updateSettings(array(
-			'pretty_board_lookup' => addslashes(serialize($pretty_board_lookup)),
-			'pretty_board_urls' => addslashes(serialize($context['pretty']['board_urls'])),
+			'pretty_board_lookup' => serialize($pretty_board_lookup),
+			'pretty_board_urls' => serialize($context['pretty']['board_urls']),
 		));
 
 		//	Count that query!

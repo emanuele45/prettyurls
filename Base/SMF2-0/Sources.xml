@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls</id>
-	<version>0.8</version>
+	<version>0.8.1</version>
 
 	<file name="$boarddir/index.php">
 		<operation>
@@ -122,7 +122,7 @@ function ob_sessrewrite($buffer)
 			<add><![CDATA[
 function ob_sessrewrite($buffer)
 {
-	global $scripturl, $modSettings, $user_info, $context, $db_count, $db_prefix, $smfFunc, $sourcedir, $time_start, $txt;
+	global $scripturl, $modSettings, $user_info, $context, $db_count, $smcFunc, $sourcedir, $time_start, $txt;
 ]]></add>
 		</operation>
 
@@ -177,16 +177,16 @@ function ob_sessrewrite($buffer)
 			$urls_query = array_keys(array_flip($urls_query));
 			//	Retrieve cached URLs
 			$context['pretty']['cached_urls'] = array();
-			$query = $smfFunc['db_query']('', "
+			$query = $smcFunc['db_query']('', "
 				SELECT url_id, replacement
-				FROM {$db_prefix}pretty_urls_cache
-				WHERE url_id IN (" . implode(', ', $urls_query) . ')', __FILE__, __LINE__);
-			while ($row = $smfFunc['db_fetch_assoc']($query))
+				FROM {db_prefix}pretty_urls_cache
+				WHERE url_id IN (" . implode(', ', $urls_query) . ')');
+			while ($row = $smcFunc['db_fetch_assoc']($query))
 			{
 				$context['pretty']['cached_urls'][$row['url_id']] = $row['replacement'];
 				unset($uncached_urls[$row['url_id']]);
 			}
-			$smfFunc['db_free_result']($query);
+			$smcFunc['db_free_result']($query);
 
 			//	If there are any uncached URLs, process them
 			if (count($uncached_urls) != 0)
@@ -212,10 +212,11 @@ function ob_sessrewrite($buffer)
 
 				//	Cache these URLs in the database
 				if (count($cache_data) != 0)
-					$smfFunc['db_query']('', "
-						REPLACE INTO {$db_prefix}pretty_urls_cache
+					$smcFunc['db_query']('', "
+						REPLACE INTO {db_prefix}pretty_urls_cache
 							(url_id, replacement)
-						VALUES " . implode(', ', $cache_data), __FILE__, __LINE__);
+						VALUES " . implode(', ', $cache_data),
+					array('db_error_skip' => true));
 			}
 
 			//	Put the URLs back into the buffer

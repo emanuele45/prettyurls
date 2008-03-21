@@ -1,50 +1,61 @@
 <?php
 
-/*******************************************************************************	ATTENTION: If you are trying to install this manually, you should try
+/*******************************************************************************
+	ATTENTION: If you are trying to install this manually, you should try
 	the package manager. If that does not work, you can run this file by
 	accessing it by url. Please ensure it is in the same location as your
 	forum's SSI.php file.
 *******************************************************************************/
 
-//	Pretty URLs - Base v0.8
+//	Pretty URLs - Base v0.8.1
 
 //	If SSI.php is in the same place as this file, and SMF isn't defined, this is being run standalone.
 if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 {
 	require_once(dirname(__FILE__) . '/SSI.php');
 	$standalone = true;
-	$txt = array('package_installed_done' => '');
 }
 //	Hmm... no SSI.php and no SMF?
 elseif (!defined('SMF'))
 	die('<b>Error:</b> Cannot install - please verify you put this in the same place as SMF\'s SSI.php.');
 
-//	Start the list
-$output = '<ul>';
+//	Get the list of tasks ready
+$tasks = array(
+	'db' => 'Database modifications',
+	'dbchanges' => array(),
+);
 
 //	Create the pretty_topic_urls table
-$smfFunc['db_query']('', "
-	CREATE TABLE IF NOT EXISTS {$db_prefix}pretty_topic_urls (
-	`ID_TOPIC` mediumint(8) NOT NULL default '0',
-	`pretty_url` varchar(80) NOT NULL,
-	PRIMARY KEY (`ID_TOPIC`),
-	UNIQUE (`pretty_url`))", __FILE__, __LINE__);
-$output .= '<li>Creating the pretty_topic_urls table</li>';
+$smcFunc['db_create_table']('pretty_topic_urls', array(
+	array('name' => 'id_topic', 'type' => 'mediumint'),
+	array('name' => 'pretty_url', 'type' => 'varchar', 'size' => 80),
+), array(
+	array('type' => 'primary', 'columns' => array('id_topic')),
+	array('type' => 'unique', 'columns' => array('pretty_url')),
+));
+$tasks['dbchanges'][] .= 'Creating the pretty_topic_urls table';
 
+/*	Doesn't work in SQLite yet
 //	Fix old topics by replacing ' with chr(18)
-$smfFunc['db_query']('', "
-	UPDATE {$db_prefix}pretty_topic_urls
-	SET pretty_url = REPLACE(pretty_url, '\\'', '" . chr(18) . "')", __FILE__, __LINE__);
+$smcFunc['db_query']('', "
+	UPDATE {db_prefix}pretty_topic_urls
+	SET pretty_url = REPLACE(pretty_url, {string:old_quote}, {string:new_quote})",
+array(
+	'old_quote' => "'",
+	'new_quote' => chr(18),
+));
+$tasks['dbchanges'][] = 'Fixing any old topics with broken quotes';
+*/
 
 //	Create the pretty_urls_cache table
-$smfFunc['db_query']('', "DROP TABLE IF EXISTS {$db_prefix}pretty_urls_cache", __FILE__, __LINE__);
-$smfFunc['db_query']('', "
-	CREATE TABLE {$db_prefix}pretty_urls_cache (
-	`url_id` VARCHAR(255) NOT NULL,
-	`replacement` VARCHAR(255) NOT NULL,
-	`log_time` TIMESTAMP NOT NULL,
-	PRIMARY KEY (`url_id`))", __FILE__, __LINE__);
-$output .= '<li>Creating the pretty_urls_cache table</li>';
+$smcFunc['db_create_table']('pretty_urls_cache', array(
+	array('name' => 'url_id', 'type' => 'varchar', 'size' => 255),
+	array('name' => 'replacement', 'type' => 'varchar', 'size' => 255),
+	array('name' => 'log_time', 'type' => 'int', 'size' => 10),
+), array(
+	array('type' => 'primary', 'columns' => array('url_id')),
+), NULL, 'overwrite');
+$tasks['dbchanges'][] .= 'Creating the pretty_urls_cache table';
 
 //	Default filter settings
 $prettyFilters = array(
@@ -60,9 +71,6 @@ $prettyFilters = array(
 			'rule' => 'RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1.0 [L,QSA]
 RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*)/?$ ./index.php?pretty;board=$1.$2 [L,QSA]',
 		),
-		'settings' => array(
-			'pretty_root_url' => 'text',
-		),
 		'title' => 'Boards',
 	),
 	'topics' => array(
@@ -72,7 +80,6 @@ RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*)/?$ ./index.php?pretty;boar
 			'priority' => 40,
 			'callback' => 'pretty_urls_topic_filter',
 		),
-		'requires' => 'boards',
 		'rewrite' => array(
 			'priority' => 45,
 			'rule' => 'RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1;topic=$2.0 [L,QSA]
@@ -107,32 +114,56 @@ RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*|ms
 		'title' => 'Profiles',
 	),
 );
+$tasks[] = 'Adding the default filters';
 
 //	Add the pretty_root_url and pretty_enable_filters settings:
 $pretty_root_url = isset($modSettings['pretty_root_url']) ? $modSettings['pretty_root_url'] : $boardurl;
-$pretty_enable_filters = isset($modSettings['pretty_enable_filters']) ? $modSettings['pretty_enable_filters'] : '0';
+$pretty_enable_filters = isset($modSettings['pretty_enable_filters']) ? $modSettings['pretty_enable_filters'] : 0;
 
 //	Update the settings table
 updateSettings(array(
 	'pretty_enable_filters' => $pretty_enable_filters,
-	'pretty_filters' => addslashes(serialize($prettyFilters)),
+	'pretty_filters' => serialize($prettyFilters),
 	'pretty_root_url' => $pretty_root_url,
 ));
-$output .= '<li>Adding some settings</li>';
+$tasks[] = 'Adding some settings';
 
 //	Run maintenance
 require_once($sourcedir . '/Subs-PrettyUrls.php');
 pretty_run_maintenance();
-$output .= '<li>Running maintenance</li>';
+$tasks[] = 'Running maintenance tasks';
+$tasks[] = $context['pretty']['maintenance_tasks'];
+
+//	Format the tasks list
+$first = true;
+$task_list = '<ul>';
+foreach ($tasks as $task)
+	if (is_array($task))
+	{
+		$task_list .= '<ul>';
+		foreach ($task as $subtask)
+			$task_list .= '<li>' . $subtask . '</li>';
+		$task_list .= '</ul>';
+	}
+	else
+	{
+		if ($first = true)
+			$first = false;
+		else
+			$task_list .= '</li>';
+		$task_list .= '<li>' . $task;
+	}
+$task_list .= '</li></ul>';
 
 //	Output the list of database changes
-$txt['package_installed_done'] = $output . $txt['package_installed_done'];
 if (isset($standalone))
 {
-	echo '<title>Installing Pretty URLs - Base 0.8</title>
-<h1>Installing Pretty URLs - Base 0.8</h1>
+	echo '<title>Installing Pretty URLs - Base 0.8.1</title>
+<h1>Installing Pretty URLs - Base 0.8.1</h1>
 <h2>Database changes</h2>
-', $txt['package_installed_done'];
+', $task_list ;
 }
+else
+	$txt['package_installed_done'] = $task_list . $txt['package_installed_done'];
 
 ?>
