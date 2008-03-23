@@ -1,5 +1,5 @@
 <?php
-//	Version: 0.9; PrettyUrls-Filters
+//	Version: 0.8; PrettyUrls-Filters
 //	A file for filter extensions to be placed in
 
 if (!defined('SMF'))
@@ -23,7 +23,7 @@ function pretty_urls_actions_filter($urls)
 //	Filter topic urls
 function pretty_urls_topic_filter($urls)
 {
-	global $context, $modSettings, $scripturl, $smcFunc, $sourcedir;
+	global $context, $db_prefix, $modSettings, $scripturl, $sourcedir;
 
 	$pattern = '~' . $scripturl . '(.*[?;&])topic=([.a-zA-Z0-9]+)(.*)~S';
 	$query_data = array();
@@ -54,23 +54,20 @@ function pretty_urls_topic_filter($urls)
 		$query_data = array_keys(array_flip($query_data));
 		$topicData = array();
 		$unpretty_topics = array();
-
-		$query = $smcFunc['db_query']('', '
-			SELECT t.id_topic, t.id_board, p.pretty_url
-			FROM {db_prefix}topics AS t
-				LEFT JOIN {db_prefix}pretty_topic_urls AS p ON (t.id_topic = p.id_topic)
-			WHERE t.id_topic IN ({array_int:topic_ids})',
-			array('topic_ids' => $query_data));
-
-		while ($row = $smcFunc['db_fetch_assoc']($query))
+		$query = db_query("
+			SELECT t.ID_TOPIC, t.ID_BOARD, p.pretty_url
+			FROM {$db_prefix}topics AS t
+				LEFT JOIN {$db_prefix}pretty_topic_urls AS p ON (t.ID_TOPIC = p.ID_TOPIC)
+			WHERE t.ID_TOPIC IN (" . implode(', ', $query_data) . ")", __FILE__, __LINE__);
+		while ($row = mysql_fetch_assoc($query))
 			if (isset($row['pretty_url']))
-				$topicData[$row['id_topic']] = array(
-					'pretty_board' => (isset($context['pretty']['board_urls'][$row['id_board']]) ? $context['pretty']['board_urls'][$row['id_board']] : $row['id_board']),
+				$topicData[$row['ID_TOPIC']] = array(
+					'pretty_board' => (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']),
 					'pretty_url' => $row['pretty_url'],
 				);
 			else
-				$unpretty_topics[] = $row['id_topic'];
-		$smcFunc['db_free_result']($query);
+				$unpretty_topics[] = $row['ID_TOPIC'];
+		mysql_free_result($query);
 
 		//	Generate new topic URLs if required
 		if (count($unpretty_topics) != 0)
@@ -83,68 +80,63 @@ function pretty_urls_topic_filter($urls)
 			$query_check = array();
 			$existing_urls = array();
 			$add_new = array();
-
-			$query = $smcFunc['db_query']('', '
-				SELECT t.id_topic, t.id_board, m.subject
-				FROM {db_prefix}topics AS t
-					INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
-				WHERE t.id_topic IN ({array_int:topic_ids})',
-				array('topic_ids' => $unpretty_topics));
-
-			while ($row = $smcFunc['db_fetch_assoc']($query))
+			$query = db_query("
+				SELECT t.ID_TOPIC, t.ID_BOARD, m.subject
+				FROM {$db_prefix}topics AS t
+					INNER JOIN {$db_prefix}messages AS m ON (m.ID_MSG = t.ID_FIRST_MSG)
+				WHERE t.ID_TOPIC IN (" . implode(', ', $unpretty_topics) . ')', __FILE__, __LINE__);
+			while ($row = mysql_fetch_assoc($query))
 				$new_topics[] = array(
-					'id_topic' => $row['id_topic'],
-					'id_board' => $row['id_board'],
+					'ID_TOPIC' => $row['ID_TOPIC'],
+					'ID_BOARD' => $row['ID_BOARD'],
 					'subject' => $row['subject'],
 				);
-			$smcFunc['db_free_result']($query);
+			mysql_free_result($query);
 
 			//	Generate URLs for each new topic
 			foreach ($new_topics as $row)
 			{
 				$pretty_text = substr(pretty_generate_url($row['subject']), 0, 80);
 				//	A topic in the recycle board doesn't deserve a proper URL
-				if (($modSettings['recycle_enable'] && $row['id_board'] == $modSettings['recycle_board']) || $pretty_text == '')
+				if (($modSettings['recycle_enable'] && $row['ID_BOARD'] == $modSettings['recycle_board']) || $pretty_text == '')
 					//	Use 'tID_TOPIC' as a pretty url
-					$pretty_text = 't' . $row['id_topic'];
+					$pretty_text = 't' . $row['ID_TOPIC'];
 				//	No duplicates and no numerical URLs - that would just confuse everyone!
 				if (in_array($pretty_text, $new_urls) || is_numeric($pretty_text))
 					//	Add suffix '-tID_TOPIC' to the pretty url
-					$pretty_text = substr($pretty_text, 0, 70) . '-t' . $row['id_topic'];
-				$query_check[] = $pretty_text;
-				$new_urls[$row['id_topic']] = $pretty_text;
+					$pretty_text = substr($pretty_text, 0, 70) . '-t' . $row['ID_TOPIC'];
+				$query_check[] = '\'' . addslashes($pretty_text) . '\'';
+				$new_urls[$row['ID_TOPIC']] = $pretty_text;
 			}
 
 			//	Find any duplicates of existing URLs
-			$query = $smcFunc['db_query']('', '
+			$query = db_query("
 				SELECT pretty_url
-				FROM {db_prefix}pretty_topic_urls
-				WHERE pretty_url IN ({array_string:new_urls})',
-				array('new_urls' => $query_check));
-			while ($row = $smcFunc['db_fetch_assoc']($query))
+				FROM {$db_prefix}pretty_topic_urls
+				WHERE pretty_url IN (" . implode(', ', $query_check) . ')', __FILE__, __LINE__);
+			while ($row = mysql_fetch_assoc($query))
 				$existing_urls[] = $row['pretty_url'];
-			$smcFunc['db_free_result']($query);
+			mysql_free_result($query);
 
 			//	Finalise the new URLs ...
 			foreach ($new_topics as $row)
 			{
-				$pretty_text = $new_urls[$row['id_topic']];
+				$pretty_text = $new_urls[$row['ID_TOPIC']];
 				//	Check if the new URL is already in use
 				if (in_array($pretty_text, $existing_urls))
-					$pretty_text = substr($pretty_text, 0, 70) . '-t' . $row['id_topic'];
-				$add_new[] = array($row['id_topic'], $pretty_text);
+					$pretty_text = substr($pretty_text, 0, 70) . '-t' . $row['ID_TOPIC'];
+				$add_new[] = '(' . $row['ID_TOPIC'] . ', "' . addslashes($pretty_text) . '")';
 				//	Add to the original array of topic URLs
-				$topicData[$row['id_topic']] = array(
-					'pretty_board' => (isset($context['pretty']['board_urls'][$row['id_board']]) ? $context['pretty']['board_urls'][$row['id_board']] : $row['id_board']),
+				$topicData[$row['ID_TOPIC']] = array(
+					'pretty_board' => (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']),
 					'pretty_url' => $pretty_text,
 				);
 			}
 			//	... and add them to the database!
-			$smcFunc['db_insert']('',
-				'{db_prefix}pretty_topic_urls',
-				array('id_topic' => 'int', 'pretty_url' => 'string'),
-				$add_new,
-				array());
+			db_query("
+				INSERT INTO {$db_prefix}pretty_topic_urls
+					(ID_TOPIC, pretty_url)
+				VALUES " . implode(', ', $add_new), __FILE__, __LINE__);
 		}
 
 		//	Build the replacement URLs
@@ -186,7 +178,7 @@ function pretty_urls_board_filter($urls)
 //	Filter profiles
 function pretty_profiles_filter($urls)
 {
-	global $boardurl, $modSettings, $scripturl, $smcFunc;
+	global $scripturl, $boardurl, $modSettings, $db_prefix;
 
 	$pattern = '~' . $scripturl . '(.*)action=profile;u=([0-9]+)(.*)~S';
 	$query_data = array();
@@ -206,16 +198,14 @@ function pretty_profiles_filter($urls)
 	//	Query the database with these profile IDs
 	if (count($query_data) != 0)
 	{
-		$query = $smcFunc['db_query']('', '
-			SELECT id_member, member_name
-			FROM {db_prefix}members
-			WHERE id_member IN ({array_int:member_ids})',
-			array('member_ids' => $query_data));
-
 		$memberNames = array();
-		while ($row = $smcFunc['db_fetch_assoc']($query))
-			$memberNames[$row['id_member']] = rawurlencode($row['member_name']);
-		$smcFunc['db_free_result']($query);
+		$query = db_query("
+			SELECT ID_MEMBER, memberName
+			FROM {$db_prefix}members
+			WHERE ID_MEMBER IN (" . implode(', ', $query_data) . ")", __FILE__, __LINE__);
+		while ($row = mysql_fetch_assoc($query))
+			$memberNames[$row['ID_MEMBER']] = rawurlencode($row['memberName']);
+		mysql_free_result($query);
 
 		//	Build the replacement URLs
 		foreach ($urls as $url_id => $url)

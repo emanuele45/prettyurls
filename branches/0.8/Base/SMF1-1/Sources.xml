@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls</id>
-	<version>0.9</version>
+	<version>0.8</version>
 
 	<file name="$boarddir/index.php">
 		<operation>
@@ -44,28 +44,18 @@ $context = array('pretty' => array(
 
 	<file name="$sourcedir/Admin.php">
 		<operation>
-			<search position="before"><![CDATA[
-				'theme' => array(
-					'label' => $txt['theme_admin'],
-					'file' => 'Themes.php',
-					'function' => 'ThemesMain',
-					'custom_url' => $scripturl . '?action=admin;area=theme;sa=admin',
-					'icon' => 'themes.gif',
-					'subsections' => array(
-						'admin' => array($txt['themeadmin_admin_title']),
-						'list' => array($txt['themeadmin_list_title']),
-						'reset' => array($txt['themeadmin_reset_title']),
-						'edit' => array($txt['themeadmin_edit_title']),
-					),
-				),
+			<search position="replace"><![CDATA[
+		return ManageCopyright();
 ]]></search>
 			<add><![CDATA[
-				'pretty' => array(
-					'label' => $txt['pretty_admin_menu'],
-					'file' => 'PrettyUrls.php',
-					'function' => 'PrettyInterface',
-					'custom_url' => $scripturl . '?action=admin;area=pretty',
-				),
+		return ManageCopyright();
+
+	//	Pretty URLs area hack
+	if (isset($_GET['area']) && $_GET['area'] == 'pretty')
+	{
+		require_once($sourcedir . '/PrettyUrls.php');
+		return PrettyInterface();
+	}
 ]]></add>
 		</operation>
 	</file>
@@ -84,7 +74,7 @@ $context = array('pretty' => array(
 		</operation>
 	</file>
 
-	<file name="$sourcedir/ManageSettings.php">
+	<file name="$sourcedir/ModSettings.php">
 		<operation>
 			<search position="replace"><![CDATA[
 			array('check', 'queryless_urls'),
@@ -122,7 +112,7 @@ function ob_sessrewrite($buffer)
 			<add><![CDATA[
 function ob_sessrewrite($buffer)
 {
-	global $scripturl, $modSettings, $user_info, $context, $db_count, $smcFunc, $sourcedir, $time_start, $txt;
+	global $scripturl, $modSettings, $user_info, $context, $db_prefix, $sourcedir, $txt, $time_start, $db_count;
 ]]></add>
 		</operation>
 
@@ -163,7 +153,7 @@ function ob_sessrewrite($buffer)
 				//	Rip out everything that shouldn't be cached
 				$match = preg_replace(array('~^[\"\']|PHPSESSID=[^;]+|sesc=[^;]+~', '~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('', '%22', ';', '?', ''), $match);
 				$url_id = str_replace(array($scripturl . '?board=', $scripturl . '?topic=', $scripturl . '?action=', $scripturl), array('`B', '`T', '`A', '`S'), $match);
-				$urls_query[] = $url_id;
+				$urls_query[] = '\'' . addslashes($url_id) . '\'';
 				$uncached_urls[$url_id] = array(
 					'url' => $match,
 					'url_id' => $url_id
@@ -177,17 +167,16 @@ function ob_sessrewrite($buffer)
 			$urls_query = array_keys(array_flip($urls_query));
 			//	Retrieve cached URLs
 			$context['pretty']['cached_urls'] = array();
-			$query = $smcFunc['db_query']('', '
+			$query = db_query("
 				SELECT url_id, replacement
-				FROM {db_prefix}pretty_urls_cache
-				WHERE url_id IN ({array_string:urls})',
-				array('urls' => $urls_query));
-			while ($row = $smcFunc['db_fetch_assoc']($query))
+				FROM {$db_prefix}pretty_urls_cache
+				WHERE url_id IN (" . implode(', ', $urls_query) . ')', __FILE__, __LINE__);
+			while ($row = mysql_fetch_assoc($query))
 			{
 				$context['pretty']['cached_urls'][$row['url_id']] = $row['replacement'];
 				unset($uncached_urls[$row['url_id']]);
 			}
-			$smcFunc['db_free_result']($query);
+			mysql_free_result($query);
 
 			//	If there are any uncached URLs, process them
 			if (count($uncached_urls) != 0)
@@ -208,16 +197,15 @@ function ob_sessrewrite($buffer)
 					$url['replacement'] = preg_replace(array('~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('%22', ';', '?', ''), $url['replacement']);
 					$context['pretty']['cached_urls'][$url_id] = $url['replacement'];
 					if (strlen($url_id) < 256 && strlen($url['replacement']) < 256)
-						$cache_data[] = array($url_id, $url['replacement']);
+						$cache_data[] = '(\'' . addslashes($url_id) . '\', \'' . addslashes($url['replacement']) . '\')';
 				}
 
 				//	Cache these URLs in the database
 				if (count($cache_data) != 0)
-					$smcFunc['db_insert']('',
-						'{db_prefix}pretty_urls_cache',
-						array('url_id' => 'string', 'replacement' => 'string'),
-						$cache_data,
-						array());
+					db_query("
+						REPLACE INTO {$db_prefix}pretty_urls_cache
+							(url_id, replacement)
+						VALUES " . implode(', ', $cache_data), __FILE__, __LINE__);
 			}
 
 			//	Put the URLs back into the buffer
@@ -232,14 +220,14 @@ function ob_sessrewrite($buffer)
 	}
 
 	//	Update the load times
-	$pattern = '~<span class="smalltext">' . $txt['page_created'] . '([.0-9]+)' . $txt['seconds_with'] . '([0-9]+)' . $txt['queries'] . '</span>~';
+	$pattern = '~<span class="smalltext">' . $txt['smf301'] . '([.0-9]+)' . $txt['smf302'] . '([0-9]+)' . $txt['smf302b'] . '</span>~';
 	if (preg_match($pattern, $buffer, $matches))
 	{
 		$newTime = round(array_sum(explode(' ', microtime())) - array_sum(explode(' ', $time_start)), 3);
 		$timeDiff = $newTime - (float) $matches[1];
 		$queriesDiff = $db_count + $context['pretty']['db_count'] - (int) $matches[2];
 		//	Remove the link if you like, I won't enforce it like others do
-		$newLoadTime = '<span class="smalltext">' . $txt['page_created'] . $newTime . $txt['seconds_with'] . $db_count . $txt['queries'] . ' (<a href="http://code.google.com/p/prettyurls/">Pretty URLs</a> adds ' . $timeDiff . 's, ' . $queriesDiff . 'q)</span>';
+		$newLoadTime = '<span class="smalltext">' . $txt['smf301'] . $newTime . $txt['smf302'] . $db_count . $txt['smf302b'] . ' (<a href="http://code.google.com/p/prettyurls/">Pretty URLs</a> adds ' . $timeDiff . 's, ' . $queriesDiff . 'q)</span>';
 		$buffer = str_replace($matches[0], $newLoadTime, $buffer);
 	}
 
@@ -300,12 +288,12 @@ function pretty_scripts_restore($match)
 			<search position="replace"><![CDATA[
 function redirectexit($setLocation = '', $refresh = false)
 {
-	global $scripturl, $context, $modSettings, $db_show_debug, $db_cache;
+	global $scripturl, $context, $modSettings, $db_show_debug;
 ]]></search>
 			<add><![CDATA[
 function redirectexit($setLocation = '', $refresh = false, $permanent = false)
 {
-	global $scripturl, $context, $modSettings, $db_show_debug, $db_cache, $sourcedir;
+	global $scripturl, $context, $modSettings, $db_show_debug, $sourcedir;
 ]]></add>
 		</operation>
 
@@ -346,6 +334,16 @@ function redirectexit($setLocation = '', $refresh = false, $permanent = false)
 
 	if ($permanent)
 		header('HTTP/1.1 301 Moved Permanently');
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+				'manage_themes' => '<a href="' . $scripturl . '?action=theme;sa=admin;sesc=' . $sc . '">' . $txt['theme_admin'] . '</a>',
+]]></search>
+			<add><![CDATA[
+				'manage_themes' => '<a href="' . $scripturl . '?action=theme;sa=admin;sesc=' . $sc . '">' . $txt['theme_admin'] . '</a>',
+				'pretty_admin' => '<a href="' . $scripturl . '?action=admin;area=pretty">' . $txt['pretty_admin_menu'] . '</a>',
 ]]></add>
 		</operation>
 	</file>

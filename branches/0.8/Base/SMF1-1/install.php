@@ -7,7 +7,7 @@
 	forum's SSI.php file.
 *******************************************************************************/
 
-//	Pretty URLs - Base v0.9
+//	Pretty URLs - Base v0.8.2
 
 //	If SSI.php is in the same place as this file, and SMF isn't defined, this is being run standalone.
 if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
@@ -26,37 +26,28 @@ $tasks = array(
 );
 
 //	Create the pretty_topic_urls table
-$smcFunc['db_create_table']('pretty_topic_urls', array(
-	array('name' => 'id_topic', 'type' => 'mediumint'),
-	array('name' => 'pretty_url', 'type' => 'varchar', 'size' => 80),
-), array(
-	array('type' => 'primary', 'columns' => array('id_topic')),
-	array('type' => 'unique', 'columns' => array('pretty_url')),
-));
-$tasks['dbchanges'][] .= 'Creating the pretty_topic_urls table';
+db_query("
+	CREATE TABLE IF NOT EXISTS {$db_prefix}pretty_topic_urls (
+	`ID_TOPIC` mediumint(8) NOT NULL default '0',
+	`pretty_url` varchar(80) NOT NULL,
+	PRIMARY KEY (`ID_TOPIC`),
+	UNIQUE (`pretty_url`))", __FILE__, __LINE__);
+$tasks['dbchanges'][] = 'Creating the pretty_topic_urls table';
 
-/*
 //	Fix old topics by replacing ' with chr(18)
-$smcFunc['db_query']('', '
-	UPDATE {db_prefix}pretty_topic_urls
-	SET pretty_url = REPLACE(pretty_url, {string:old_quote}, {string:new_quote})',
-array(
-	'old_quote' => "'",
-	'new_quote' => chr(18),
-),
-array('db_error_skip' => true));
+db_query("
+	UPDATE {$db_prefix}pretty_topic_urls
+	SET pretty_url = REPLACE(pretty_url, '\\'', '" . chr(18) . "')", __FILE__, __LINE__);
 $tasks['dbchanges'][] = 'Fixing any old topics with broken quotes';
-*/
 
 //	Create the pretty_urls_cache table
-$smcFunc['db_drop_table']('pretty_urls_cache');
-$smcFunc['db_create_table']('pretty_urls_cache', array(
-	array('name' => 'url_id', 'type' => 'varchar', 'size' => 255),
-	array('name' => 'replacement', 'type' => 'varchar', 'size' => 255),
-), array(
-	array('type' => 'primary', 'columns' => array('url_id')),
-), array(), 'overwrite');
-$tasks['dbchanges'][] .= 'Creating the pretty_urls_cache table';
+db_query("DROP TABLE IF EXISTS {$db_prefix}pretty_urls_cache", __FILE__, __LINE__);
+db_query("
+	CREATE TABLE {$db_prefix}pretty_urls_cache (
+	`url_id` VARCHAR(255) NOT NULL,
+	`replacement` VARCHAR(255) NOT NULL,
+	PRIMARY KEY (`url_id`))", __FILE__, __LINE__);
+$tasks['dbchanges'][] = 'Creating the pretty_urls_cache table';
 
 //	Default filter settings
 $prettyFilters = array(
@@ -119,12 +110,12 @@ $tasks[] = 'Adding the default filters';
 
 //	Add the pretty_root_url and pretty_enable_filters settings:
 $pretty_root_url = isset($modSettings['pretty_root_url']) ? $modSettings['pretty_root_url'] : $boardurl;
-$pretty_enable_filters = isset($modSettings['pretty_enable_filters']) ? $modSettings['pretty_enable_filters'] : 0;
+$pretty_enable_filters = isset($modSettings['pretty_enable_filters']) ? $modSettings['pretty_enable_filters'] : '0';
 
 //	Update the settings table
 updateSettings(array(
 	'pretty_enable_filters' => $pretty_enable_filters,
-	'pretty_filters' => serialize($prettyFilters),
+	'pretty_filters' => addslashes(serialize($prettyFilters)),
 	'pretty_root_url' => $pretty_root_url,
 ));
 $tasks[] = 'Adding some settings';
