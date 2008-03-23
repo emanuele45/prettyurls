@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls</id>
-	<version>0.8.1</version>
+	<version>0.9</version>
 
 	<file name="$boarddir/index.php">
 		<operation>
@@ -163,7 +163,7 @@ function ob_sessrewrite($buffer)
 				//	Rip out everything that shouldn't be cached
 				$match = preg_replace(array('~^[\"\']|PHPSESSID=[^;]+|sesc=[^;]+~', '~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('', '%22', ';', '?', ''), $match);
 				$url_id = str_replace(array($scripturl . '?board=', $scripturl . '?topic=', $scripturl . '?action=', $scripturl), array('`B', '`T', '`A', '`S'), $match);
-				$urls_query[] = '\'' . addslashes($url_id) . '\'';
+				$urls_query[] = $url_id;
 				$uncached_urls[$url_id] = array(
 					'url' => $match,
 					'url_id' => $url_id
@@ -177,10 +177,11 @@ function ob_sessrewrite($buffer)
 			$urls_query = array_keys(array_flip($urls_query));
 			//	Retrieve cached URLs
 			$context['pretty']['cached_urls'] = array();
-			$query = $smcFunc['db_query']('', "
+			$query = $smcFunc['db_query']('', '
 				SELECT url_id, replacement
 				FROM {db_prefix}pretty_urls_cache
-				WHERE url_id IN (" . implode(', ', $urls_query) . ')');
+				WHERE url_id IN ({array_string:urls})',
+				array('urls' => $urls_query));
 			while ($row = $smcFunc['db_fetch_assoc']($query))
 			{
 				$context['pretty']['cached_urls'][$row['url_id']] = $row['replacement'];
@@ -207,16 +208,16 @@ function ob_sessrewrite($buffer)
 					$url['replacement'] = preg_replace(array('~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('%22', ';', '?', ''), $url['replacement']);
 					$context['pretty']['cached_urls'][$url_id] = $url['replacement'];
 					if (strlen($url_id) < 256 && strlen($url['replacement']) < 256)
-						$cache_data[] = '(\'' . addslashes($url_id) . '\', \'' . addslashes($url['replacement']) . '\')';
+						$cache_data[] = array($url_id, $url['replacement']);
 				}
 
 				//	Cache these URLs in the database
 				if (count($cache_data) != 0)
-					$smcFunc['db_query']('', "
-						REPLACE INTO {db_prefix}pretty_urls_cache
-							(url_id, replacement)
-						VALUES " . implode(', ', $cache_data),
-					array('db_error_skip' => true));
+					$smcFunc['db_insert']('',
+						'{db_prefix}pretty_urls_cache',
+						array('url_id' => 'string', 'replacement' => 'string'),
+						$cache_data,
+						array());
 			}
 
 			//	Put the URLs back into the buffer

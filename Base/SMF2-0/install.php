@@ -7,7 +7,7 @@
 	forum's SSI.php file.
 *******************************************************************************/
 
-//	Pretty URLs - Base v0.8.1
+//	Pretty URLs - Base v0.9
 
 //	If SSI.php is in the same place as this file, and SMF isn't defined, this is being run standalone.
 if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
@@ -35,26 +35,27 @@ $smcFunc['db_create_table']('pretty_topic_urls', array(
 ));
 $tasks['dbchanges'][] .= 'Creating the pretty_topic_urls table';
 
-/*	Doesn't work in SQLite yet
+/*
 //	Fix old topics by replacing ' with chr(18)
-$smcFunc['db_query']('', "
+$smcFunc['db_query']('', '
 	UPDATE {db_prefix}pretty_topic_urls
-	SET pretty_url = REPLACE(pretty_url, {string:old_quote}, {string:new_quote})",
+	SET pretty_url = REPLACE(pretty_url, {string:old_quote}, {string:new_quote})',
 array(
 	'old_quote' => "'",
 	'new_quote' => chr(18),
-));
+),
+array('db_error_skip' => true));
 $tasks['dbchanges'][] = 'Fixing any old topics with broken quotes';
 */
 
 //	Create the pretty_urls_cache table
+$smcFunc['db_drop_table']('pretty_urls_cache');
 $smcFunc['db_create_table']('pretty_urls_cache', array(
 	array('name' => 'url_id', 'type' => 'varchar', 'size' => 255),
 	array('name' => 'replacement', 'type' => 'varchar', 'size' => 255),
-	array('name' => 'log_time', 'type' => 'int', 'size' => 10),
 ), array(
 	array('type' => 'primary', 'columns' => array('url_id')),
-), NULL, 'overwrite');
+), array(), 'overwrite');
 $tasks['dbchanges'][] .= 'Creating the pretty_urls_cache table';
 
 //	Default filter settings
@@ -158,8 +159,8 @@ $task_list .= '</li></ul>';
 //	Output the list of database changes
 if (isset($standalone))
 {
-	echo '<title>Installing Pretty URLs - Base 0.8.1</title>
-<h1>Installing Pretty URLs - Base 0.8.1</h1>
+	echo '<title>Installing Pretty URLs - Base 0.9</title>
+<h1>Installing Pretty URLs - Base 0.9</h1>
 <h2>Database changes</h2>
 ', $task_list ;
 }

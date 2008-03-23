@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls</id>
-	<version>0.8.1</version>
+	<version>0.9</version>
 
 	<file name="$sourcedir/Display.php">
 		<operation>
@@ -59,7 +59,7 @@ function cleanRequest()
 			<add><![CDATA[
 function cleanRequest()
 {
-	global $board, $topic, $boardurl, $scripturl, $modSettings, $smcFunc, $context, $db_prefix;
+	global $board, $topic, $boardurl, $scripturl, $modSettings, $smcFunc, $context;
 ]]></add>
 		</operation>
 
@@ -105,11 +105,11 @@ function cleanRequest()
 			array('topic' => $_REQUEST['topic']));
 			//	No? No topic?!
 			if ($smcFunc['db_num_rows']($query) == 0)
-			{
 				$topic = 0;
-			} else {
-				while ($row = $smcFunc['db_fetch_assoc']($query))
-					$topic = (int) $row['id_topic'];
+			else
+			{
+				$row = $smcFunc['db_fetch_row']($query);
+				$topic = (int) $row[0];
 			}
 			$smcFunc['db_free_result']($query);
 

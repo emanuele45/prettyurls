@@ -3,6 +3,7 @@
 
 div#chrome
 {
+	background: #eee;
 	border: 2px solid #064279;
 	color: #000;
 	font-size: 12px;
@@ -17,6 +18,11 @@ div#chrome h1, div#chrome h2, ul#chrome_menu, #chrome_caption, p#chrome_notice
 {
 	margin: 0;
 	padding: 0;
+}
+
+div#chrome a
+{
+	color: #d00;
 }
 
 div#chrome h1

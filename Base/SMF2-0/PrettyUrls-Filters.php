@@ -1,5 +1,5 @@
 <?php
-//	Version: 0.8.1; PrettyUrls-Filters
+//	Version: 0.9; PrettyUrls-Filters
 //	A file for filter extensions to be placed in
 
 if (!defined('SMF'))
@@ -54,11 +54,14 @@ function pretty_urls_topic_filter($urls)
 		$query_data = array_keys(array_flip($query_data));
 		$topicData = array();
 		$unpretty_topics = array();
-		$query = $smcFunc['db_query']('', "
+
+		$query = $smcFunc['db_query']('', '
 			SELECT t.id_topic, t.id_board, p.pretty_url
 			FROM {db_prefix}topics AS t
 				LEFT JOIN {db_prefix}pretty_topic_urls AS p ON (t.id_topic = p.id_topic)
-			WHERE t.id_topic IN (" . implode(', ', $query_data) . ')');
+			WHERE t.id_topic IN ({array_int:topic_ids})',
+			array('topic_ids' => $query_data));
+
 		while ($row = $smcFunc['db_fetch_assoc']($query))
 			if (isset($row['pretty_url']))
 				$topicData[$row['id_topic']] = array(
@@ -80,11 +83,14 @@ function pretty_urls_topic_filter($urls)
 			$query_check = array();
 			$existing_urls = array();
 			$add_new = array();
-			$query = $smcFunc['db_query']('', "
+
+			$query = $smcFunc['db_query']('', '
 				SELECT t.id_topic, t.id_board, m.subject
 				FROM {db_prefix}topics AS t
 					INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
-				WHERE t.id_topic IN (" . implode(', ', $unpretty_topics) . ')');
+				WHERE t.id_topic IN ({array_int:topic_ids})',
+				array('topic_ids' => $unpretty_topics));
+
 			while ($row = $smcFunc['db_fetch_assoc']($query))
 				$new_topics[] = array(
 					'id_topic' => $row['id_topic'],
@@ -105,15 +111,16 @@ function pretty_urls_topic_filter($urls)
 				if (in_array($pretty_text, $new_urls) || is_numeric($pretty_text))
 					//	Add suffix '-tID_TOPIC' to the pretty url
 					$pretty_text = substr($pretty_text, 0, 70) . '-t' . $row['id_topic'];
-				$query_check[] = '\'' . addslashes($pretty_text) . '\'';
+				$query_check[] = $pretty_text;
 				$new_urls[$row['id_topic']] = $pretty_text;
 			}
 
 			//	Find any duplicates of existing URLs
-			$query = $smcFunc['db_query']('', "
+			$query = $smcFunc['db_query']('', '
 				SELECT pretty_url
 				FROM {db_prefix}pretty_topic_urls
-				WHERE pretty_url IN (" . implode(', ', $query_check) . ')');
+				WHERE pretty_url IN ({array_string:new_urls})',
+				array('new_urls' => $query_check));
 			while ($row = $smcFunc['db_fetch_assoc']($query))
 				$existing_urls[] = $row['pretty_url'];
 			$smcFunc['db_free_result']($query);
@@ -125,7 +132,7 @@ function pretty_urls_topic_filter($urls)
 				//	Check if the new URL is already in use
 				if (in_array($pretty_text, $existing_urls))
 					$pretty_text = substr($pretty_text, 0, 70) . '-t' . $row['id_topic'];
-				$add_new[] = '(' . $row['id_topic'] . ', "' . addslashes($pretty_text) . '")';
+				$add_new[] = array($row['id_topic'], $pretty_text);
 				//	Add to the original array of topic URLs
 				$topicData[$row['id_topic']] = array(
 					'pretty_board' => (isset($context['pretty']['board_urls'][$row['id_board']]) ? $context['pretty']['board_urls'][$row['id_board']] : $row['id_board']),
@@ -133,10 +140,11 @@ function pretty_urls_topic_filter($urls)
 				);
 			}
 			//	... and add them to the database!
-			$smcFunc['db_query']('', "
-				INSERT INTO {db_prefix}pretty_topic_urls
-					(id_topic, pretty_url)
-				VALUES " . implode(', ', $add_new));
+			$smcFunc['db_insert']('',
+				'{db_prefix}pretty_topic_urls',
+				array('id_topic' => 'int', 'pretty_url' => 'string'),
+				$add_new,
+				array());
 		}
 
 		//	Build the replacement URLs
@@ -198,11 +206,13 @@ function pretty_profiles_filter($urls)
 	//	Query the database with these profile IDs
 	if (count($query_data) != 0)
 	{
-		$memberNames = array();
-		$query = $smcFunc['db_query']('', "
+		$query = $smcFunc['db_query']('', '
 			SELECT id_member, member_name
 			FROM {db_prefix}members
-			WHERE id_member IN (" . implode(', ', $query_data) . ')');
+			WHERE id_member IN ({array_int:member_ids})',
+			array('member_ids' => $query_data));
+
+		$memberNames = array();
 		while ($row = $smcFunc['db_fetch_assoc']($query))
 			$memberNames[$row['id_member']] = rawurlencode($row['member_name']);
 		$smcFunc['db_free_result']($query);
