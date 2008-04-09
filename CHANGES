@@ -10,7 +10,7 @@ Legend:
  % Development flag or note, such as branching.
 
 
-Pretty URLs 0.8.2                                                 ??
+Pretty URLs 0.8.2                                                  9 April, 2008
 ================================================================================
  % Branched off 0.8 so that changes for 2.0 support won't get confused with everything else.
  ! Base: Some colour changes were needed for dark themes. (chrome.css)
