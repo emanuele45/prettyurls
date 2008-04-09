@@ -9,7 +9,7 @@ If you ever want to completely remove the mod, you will need to remove all of th
 
 || *Name* || *Structure* || *Description* ||
 || `smf_pretty_topic_urls` || `id_topic`: [http://dev.mysql.com/doc/refman/5.0/en/numeric-types.html mediumint], `pretty_url`: [http://dev.mysql.com/doc/refman/5.0/en/char.html varchar(80)] || Stores the (partial) URLs for topics. Currently the only way to change a topic's URL is to edit this table manually. ||
-|| `smf_pretty_urls_cache` || `url_id`: [http://dev.mysql.com/doc/refman/5.0/en/char.html varchar(255)], `replacement`: [http://dev.mysql.com/doc/refman/5.0/en/char.html varchar(255)], `log_time`: [http://dev.mysql.com/doc/refman/5.0/en/datetime.html timestamp] || A complete list of every URL in the forum with its prettified replacement. The `url_id` column stores the original URL, with `$scripturl` and other common URLs shortened. `log_time` stores the time the URL was added. ||
+|| `smf_pretty_urls_cache` || `url_id`: [http://dev.mysql.com/doc/refman/5.0/en/char.html varchar(255)], `replacement`: [http://dev.mysql.com/doc/refman/5.0/en/char.html varchar(255)] || A complete list of every URL in the forum with its prettified replacement. The `url_id` column stores the original URL, with `$scripturl` and other common URLs shortened. ||
 
 = New settings =
 
