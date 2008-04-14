@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls</id>
-	<version>0.8.2</version>
+	<version>0.8.3</version>
 
 	<file name="$sourcedir/Display.php">
 		<operation>
@@ -74,8 +74,11 @@ function cleanRequest()
 		if (is_numeric($_REQUEST['board']))
 		{
 			$board = (int) $_REQUEST['board'];
-			if (!isset($_REQUEST['pretty']))
+			if (!isset($_GET['pretty']))
+			{
 				$context['pretty']['oldschoolquery'] = true;
+				unset($_GET['pretty']);
+			}
 		} else {
 			$_REQUEST['board'] = str_replace(array('&#039;', '\\'), array(chr(18), ''), $_REQUEST['board']);
 			$pretty_board_lookup = unserialize($modSettings['pretty_board_lookup']);
@@ -93,8 +96,11 @@ function cleanRequest()
 		if (is_numeric($_REQUEST['topic']))
 		{
 			$topic = (int) $_REQUEST['topic'];
-			if (!isset($_REQUEST['pretty']))
+			if (!isset($_GET['pretty']))
+			{
 				$context['pretty']['oldschoolquery'] = true;
+				unset($_GET['pretty']);
+			}
 		} else {
 			$_REQUEST['topic'] = str_replace(array('&#039;', '\\'), array(chr(18), ''), $_REQUEST['topic']);
 			//	Are we feeling lucky?

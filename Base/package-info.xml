@@ -10,7 +10,7 @@
 
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls</id>
-	<version>0.8.2</version>
+	<version>0.8.3</version>
 	<name>Pretty URLs - Base</name>
 	<type>modification</type>
 
