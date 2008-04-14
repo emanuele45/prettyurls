@@ -110,7 +110,7 @@ $tasks[] = 'Adding the default filters';
 
 //	Add the pretty_root_url and pretty_enable_filters settings:
 $pretty_root_url = isset($modSettings['pretty_root_url']) ? $modSettings['pretty_root_url'] : $boardurl;
-$pretty_enable_filters = isset($modSettings['pretty_enable_filters']) ? $modSettings['pretty_enable_filters'] : '0';
+$pretty_enable_filters = isset($modSettings['pretty_enable_filters']) ? $modSettings['pretty_enable_filters'] : 0;
 
 //	Update the settings table
 updateSettings(array(

@@ -16,6 +16,9 @@ Pretty URLs 0.9                                                 ??
  ! Base: Some colour changes were needed for dark themes. (chrome.css)
  - Base: Removed the cache table's log_time column as it's not used anymore.
  ! Base: Some futher changes for 2.0 Beta 3 support were required.
+ % Base: Move the buffer rewriting code out of QueryString.php into it's own function in PrettyUrls-Filters.php.
+ + Base: Started reworking the URL generator. (Subs-PrettyUrls.php)
+ ! Boards/Topics: $_GET['pretty'] needs to be unset with the new SEO changes in SMF 2. (QueryString.php)
 
 Pretty URLs 0.8.1                                                 22 March, 2008
 ================================================================================
