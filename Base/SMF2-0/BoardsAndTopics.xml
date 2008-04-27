@@ -12,7 +12,7 @@
 ]]></search>
 			<add><![CDATA[
 	//	301 redirects
-	if ((isset($context['pretty']['oldschoolquery']) || $_REQUEST['board'] != $context['pretty']['board_urls'][$board]) && $modSettings['pretty_enable_filters'])
+	if ((isset($context['pretty']['oldschoolquery']) || $context['pretty']['query_string']['board'] != $context['pretty']['board_urls'][$board]) && $modSettings['pretty_enable_filters'])
 	{
 		$filterData = unserialize($modSettings['pretty_filters']);
 		if ($filterData['topics']['enabled'])
@@ -34,7 +34,7 @@
 ]]></search>
 			<add><![CDATA[
 	//	301 redirects
-	if ((isset($context['pretty']['oldschoolquery']) || $_REQUEST['board'] != $context['pretty']['board_urls'][$board]) && $modSettings['pretty_enable_filters'])
+	if ((isset($context['pretty']['oldschoolquery']) || $context['pretty']['query_string']['board'] != $context['pretty']['board_urls'][$board]) && $modSettings['pretty_enable_filters'])
 	{
 		$filterData = unserialize($modSettings['pretty_filters']);
 		if ($filterData['boards']['enabled'])
@@ -80,9 +80,14 @@ function cleanRequest()
 				unset($_GET['pretty']);
 			}
 		} else {
-			$_REQUEST['board'] = str_replace(array('&#039;', '\\'), array(chr(18), ''), $_REQUEST['board']);
+			$_REQUEST['board'] = str_replace(array('&#039;', '\\'), array("\x12", ''), $_REQUEST['board']);
 			$pretty_board_lookup = unserialize($modSettings['pretty_board_lookup']);
 			$board = (int) isset($pretty_board_lookup[$_REQUEST['board']]) ? $pretty_board_lookup[$_REQUEST['board']] : 0;
+
+			//	Fix $_REQUEST for silly mods that don't check $board
+			$context['pretty']['query_string']['board'] = $_REQUEST['board'];
+			$_GET['board'] = $board;
+			$_REQUEST['board'] = $board;
 		}
 ]]></add>
 		</operation>
@@ -102,7 +107,7 @@ function cleanRequest()
 				unset($_GET['pretty']);
 			}
 		} else {
-			$_REQUEST['topic'] = str_replace(array('&#039;', '\\'), array(chr(18), ''), $_REQUEST['topic']);
+			$_REQUEST['topic'] = str_replace(array('&#039;', '\\'), array("\x12", ''), $_REQUEST['topic']);
 			//	Are we feeling lucky?
 			$query = $smcFunc['db_query']('', "
 				SELECT id_topic
@@ -118,6 +123,11 @@ function cleanRequest()
 				$topic = (int) $row[0];
 			}
 			$smcFunc['db_free_result']($query);
+
+			//	Fix $_REQUEST for silly mods that don't check $topic
+			$context['pretty']['query_string']['topic'] = $_REQUEST['topic'];
+			$_GET['topic'] = $topic;
+			$_REQUEST['topic'] = $topic;
 
 			//	That query should be counted separately
 			$context['pretty']['db_count']++;
@@ -161,8 +171,8 @@ function modifyBoard($board_id, &$boardOptions)
 
 		//	Can't be empty, can't be a number and can't be the same as another
 		if ($pretty_url == '' || is_numeric($pretty_url) || (isset($pretty_board_lookup[$pretty_url]) && $pretty_board_lookup[$pretty_url] != $board_id))
-			//	Add suffix '-bboard_id' to the pretty url
-			$pretty_url .= ($pretty_url != '' ? '-b' : 'b') . $board_id;
+			//	Add suffix '-board_id' to the pretty url
+			$pretty_url .= ($pretty_url != '' ? '-' : 'b') . $board_id;
 
 		//	Save to the database
 		$context['pretty']['board_urls'][$board_id] = $pretty_url;

@@ -33,18 +33,7 @@ $smcFunc['db_create_table']('pretty_topic_urls', array(
 	array('type' => 'primary', 'columns' => array('id_topic')),
 	array('type' => 'unique', 'columns' => array('pretty_url')),
 ));
-$tasks['dbchanges'][] .= 'Creating the pretty_topic_urls table';
-
-//	Fix old topics by replacing ' with chr(18)
-$smcFunc['db_query']('', '
-	UPDATE {db_prefix}pretty_topic_urls
-	SET pretty_url = REPLACE(pretty_url, {string:old_quote}, {string:new_quote})',
-array(
-	'old_quote' => "'",
-	'new_quote' => chr(18),
-	'db_error_skip' => true,
-));
-$tasks['dbchanges'][] = 'Fixing any old topics with broken quotes';
+$tasks['dbchanges'][] = 'Creating the pretty_topic_urls table';
 
 //	Create the pretty_urls_cache table
 $smcFunc['db_drop_table']('pretty_urls_cache');
@@ -54,7 +43,7 @@ $smcFunc['db_create_table']('pretty_urls_cache', array(
 ), array(
 	array('type' => 'primary', 'columns' => array('url_id')),
 ), array(), 'overwrite');
-$tasks['dbchanges'][] .= 'Creating the pretty_urls_cache table';
+$tasks['dbchanges'][] = 'Creating the pretty_urls_cache table';
 
 //	Default filter settings
 $prettyFilters = array(

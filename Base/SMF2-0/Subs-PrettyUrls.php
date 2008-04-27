@@ -44,7 +44,7 @@ function pretty_generate_url($text)
 		'!'	=>	array ('!'),
 		'~'	=>	array ('~'),
 		'*'	=>	array ('*'),
-		chr(18)	=>	array ("'", '"'),
+		"\x12"	=>	array ("'", '"'),
 		'('	=>	array ('(', '{', '['),
 		')'	=>	array (')', '}', ']'),
 		'$'	=>	array ('$'),
@@ -78,6 +78,12 @@ function pretty_generate_url($text)
 	//	Or maybe we can convert with iconv
 	else if ($encoding != 'UTF-8' && function_exists('iconv'))
 		$text = iconv($encoding, 'UTF-8', $text);
+	//	Fix Turkish
+	else if ($encoding == 'ISO-8859-9')
+	{
+		$text = str_replace(array("\xD0", "\xDD", "\xDE", "\xF0", "\xFD", "\xFE"), array('g', 'i', 's', 'g', 'i', 's'), $text);
+		$text = utf8_encode($text);
+	}
 	//	Latin-1 can be converted easily
 	else if ($encoding == 'ISO-8859-1')
 		$text = utf8_encode($text);
@@ -124,12 +130,22 @@ function pretty_run_maintenance()
 	$pretty_board_urls = isset($modSettings['pretty_board_urls']) ? unserialize($modSettings['pretty_board_urls']) : array();
 	$pretty_board_lookup_old = isset($modSettings['pretty_board_lookup']) ? unserialize($modSettings['pretty_board_lookup']) : array();
 
-	//	Fix old boards by replacing ' with chr(18)
-	$pretty_board_urls = str_replace("'", chr(18), $pretty_board_urls);
+	//	Fix old boards by replacing ' with \x12
+	$pretty_board_urls = str_replace("'", "\x12", $pretty_board_urls);
 	$pretty_board_lookup = array();
 	foreach ($pretty_board_lookup_old as $board => $id)
-		$pretty_board_lookup[str_replace("'", chr(18), $board)] = $id;
-	$context['pretty']['maintenance_tasks'][] = 'Fix old boards which have broken quotes';
+		$pretty_board_lookup[str_replace("'", "\x12", $board)] = $id;
+
+	//	Fix old topics too
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}pretty_topic_urls
+		SET pretty_url = REPLACE(pretty_url, {string:old_quote}, {string:new_quote})',
+	array(
+		'old_quote' => "'",
+		'new_quote' => "\x12",
+		'db_error_skip' => true,
+	));
+	$context['pretty']['maintenance_tasks'][] = 'Fixing any old boards and topics with broken quotes';
 
 	//	Get the board names
 	$query = $smcFunc['db_query']('', "
@@ -149,8 +165,8 @@ function pretty_run_maintenance()
 				$pretty_text = 'b' . $row['id_board'];
 			//	Numerical or duplicate URLs aren't allowed!
 			if (is_numeric($pretty_text) || isset($pretty_board_lookup[$pretty_text]) || in_array($pretty_text, $context['pretty']['action_array']))
-				//	Add suffix '-bID_BOARD' to the pretty url
-				$pretty_text .= ($pretty_text != '' ? '-b' : 'b') . $row['id_board'];
+				//	Add suffix '-ID_BOARD' to the pretty url
+				$pretty_text .= ($pretty_text != '' ? '-' : 'b') . $row['id_board'];
 			//	Update the arrays
 			$pretty_board_urls[$row['id_board']] = $pretty_text;
 			$pretty_board_lookup[$pretty_text] = $row['id_board'];
@@ -158,13 +174,13 @@ function pretty_run_maintenance()
 		//	Current board URL is the same as an action
 		elseif (in_array($pretty_board_urls[$row['id_board']], $context['pretty']['action_array']))
 		{
-			$pretty_text = $pretty_board_urls[$row['id_board']] . '-b' . $row['id_board'];
+			$pretty_text = $pretty_board_urls[$row['id_board']] . '-' . $row['id_board'];
 			$pretty_board_urls[$row['id_board']] = $pretty_text;
 			$pretty_board_lookup[$pretty_text] = $row['id_board'];
 		}
 	}
 	$smcFunc['db_free_result']($query);
-	$context['pretty']['maintenance_tasks'][] = 'Update board URLs';
+	$context['pretty']['maintenance_tasks'][] = 'Updating board URLs';
 
 	//	Update the database
 	updateSettings(array(

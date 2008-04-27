@@ -19,6 +19,10 @@ Pretty URLs 0.9                                                 ??
  % Base: Move the buffer rewriting code out of QueryString.php into it's own function in PrettyUrls-Filters.php.
  + Base: Started reworking the URL generator. (Subs-PrettyUrls.php)
  ! Boards/Topics: $_GET['pretty'] needs to be unset with the new SEO changes in SMF 2. (QueryString.php)
+ ! Boards/Topics: Don't add a 'b' or 't' before IDs unless it's really needed. (PrettyUrls-Filters.php, QueryString.php, Subs-PrettyUrls.php)
+ ! Topics: Fix broken quotes during maintenance rather than installation. (Subs-PrettyUrls.php)
+ + Base: Turkish ISO-8859-9 encoding is hopefully supported now. (Subs-PrettyUrls.php)
+ ! Boards/Topics: Fix $_REQUEST for silly mods that don't check $board/$topic. (Display.php, MessageIndex.php, QueryString.php
 
 Pretty URLs 0.8.1                                                 22 March, 2008
 ================================================================================
