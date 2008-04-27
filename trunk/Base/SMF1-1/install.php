@@ -34,12 +34,6 @@ db_query("
 	UNIQUE (`pretty_url`))", __FILE__, __LINE__);
 $tasks['dbchanges'][] = 'Creating the pretty_topic_urls table';
 
-//	Fix old topics by replacing ' with chr(18)
-db_query("
-	UPDATE {$db_prefix}pretty_topic_urls
-	SET pretty_url = REPLACE(pretty_url, '\\'', '" . chr(18) . "')", __FILE__, __LINE__);
-$tasks['dbchanges'][] = 'Fixing any old topics with broken quotes';
-
 //	Create the pretty_urls_cache table
 db_query("DROP TABLE IF EXISTS {$db_prefix}pretty_urls_cache", __FILE__, __LINE__);
 db_query("

@@ -67,7 +67,7 @@ function pretty_rewrite_buffer($buffer)
 			{
 				if (!isset($url['replacement']))
 					$url['replacement'] = $url['url'];
-				$url['replacement'] = str_replace(chr(18), '\'', $url['replacement']);
+				$url['replacement'] = str_replace("\x12", '\'', $url['replacement']);
 				$url['replacement'] = preg_replace(array('~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('%22', ';', '?', ''), $url['replacement']);
 				$context['pretty']['cached_urls'][$url_id] = $url['replacement'];
 				if (strlen($url_id) < 256 && strlen($url['replacement']) < 256)
@@ -91,7 +91,7 @@ function pretty_rewrite_buffer($buffer)
 
 	//	Restore the script tags
 	if ($context['pretty']['scriptID'] > 0)
-		$buffer = preg_replace_callback('~' . chr(20) . '([0-9]+)' . chr(20) . '~', 'pretty_scripts_restore', $buffer);
+		$buffer = preg_replace_callback("~\x14([0-9]+)\x14~", 'pretty_scripts_restore', $buffer);
 
 	// Return the changed buffer.
 	return $buffer;
@@ -104,7 +104,7 @@ function pretty_scripts_remove($match)
 
 	$context['pretty']['scriptID']++;
 	$context['pretty']['scripts'][$context['pretty']['scriptID']] = $match[0];
-	return chr(20) . $context['pretty']['scriptID'] . chr(20);
+	return "\x14" . $context['pretty']['scriptID'] . "\x14";
 }
 
 //	A callback function to replace the buffer's URLs with their cached URLs
@@ -246,8 +246,8 @@ function pretty_urls_topic_filter($urls)
 					$pretty_text = 't' . $row['id_topic'];
 				//	No duplicates and no numerical URLs - that would just confuse everyone!
 				if (in_array($pretty_text, $new_urls) || is_numeric($pretty_text))
-					//	Add suffix '-tID_TOPIC' to the pretty url
-					$pretty_text = substr($pretty_text, 0, 70) . '-t' . $row['id_topic'];
+					//	Add suffix '-ID_TOPIC' to the pretty url
+					$pretty_text = substr($pretty_text, 0, 70) . '-' . $row['id_topic'];
 				$query_check[] = $pretty_text;
 				$new_urls[$row['id_topic']] = $pretty_text;
 			}
@@ -268,7 +268,7 @@ function pretty_urls_topic_filter($urls)
 				$pretty_text = $new_urls[$row['id_topic']];
 				//	Check if the new URL is already in use
 				if (in_array($pretty_text, $existing_urls))
-					$pretty_text = substr($pretty_text, 0, 70) . '-t' . $row['id_topic'];
+					$pretty_text = substr($pretty_text, 0, 70) . '-' . $row['id_topic'];
 				$add_new[] = array($row['id_topic'], $pretty_text);
 				//	Add to the original array of topic URLs
 				$topicData[$row['id_topic']] = array(

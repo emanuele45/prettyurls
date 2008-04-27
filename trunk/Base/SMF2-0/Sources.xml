@@ -203,7 +203,7 @@ function redirectexit($setLocation = '', $refresh = false, $permanent = false)
 		}
 		if (isset($pretty_url[0]['replacement']))
 			$setLocation = $pretty_url[0]['replacement'];
-		$setLocation = str_replace(chr(18), '\'', $setLocation);
+		$setLocation = str_replace("\x12", '\'', $setLocation);
 		$setLocation = preg_replace(array('~;+|=;~', '~\?;~', '~\?#|;#|=#~', '~\?$|;$|#$|=$~'), array(';', '?', '#', ''), $setLocation);
 	}
 

@@ -12,7 +12,7 @@
 ]]></search>
 			<add><![CDATA[
 	//	301 redirects
-	if ((isset($context['pretty']['oldschoolquery']) || $_REQUEST['board'] != $context['pretty']['board_urls'][$board]) && $modSettings['pretty_enable_filters'])
+	if ((isset($context['pretty']['oldschoolquery']) || $context['pretty']['query_string']['board'] != $context['pretty']['board_urls'][$board]) && $modSettings['pretty_enable_filters'])
 	{
 		$filterData = unserialize($modSettings['pretty_filters']);
 		if ($filterData['topics']['enabled'])
@@ -34,7 +34,7 @@
 ]]></search>
 			<add><![CDATA[
 	//	301 redirects
-	if ((isset($context['pretty']['oldschoolquery']) || $_REQUEST['board'] != $context['pretty']['board_urls'][$board]) && $modSettings['pretty_enable_filters'])
+	if ((isset($context['pretty']['oldschoolquery']) || $context['pretty']['query_string']['board'] != $context['pretty']['board_urls'][$board]) && $modSettings['pretty_enable_filters'])
 	{
 		$filterData = unserialize($modSettings['pretty_filters']);
 		if ($filterData['boards']['enabled'])
@@ -83,6 +83,11 @@ function cleanRequest()
 			$_REQUEST['board'] = str_replace(array('&#039;', '\\'), array(chr(18), ''), $_REQUEST['board']);
 			$pretty_board_lookup = unserialize($modSettings['pretty_board_lookup']);
 			$board = (int) isset($pretty_board_lookup[$_REQUEST['board']]) ? $pretty_board_lookup[$_REQUEST['board']] : 0;
+
+			//	Fix $_REQUEST for silly mods that don't check $board
+			$context['pretty']['query_string']['board'] = $_REQUEST['board'];
+			$_GET['board'] = $board;
+			$_REQUEST['board'] = $board;
 		}
 ]]></add>
 		</operation>
@@ -118,6 +123,11 @@ function cleanRequest()
 					$topic = (int) $row['ID_TOPIC'];
 			}
 			mysql_free_result($query);
+
+			//	Fix $_REQUEST for silly mods that don't check $topic
+			$context['pretty']['query_string']['topic'] = $_REQUEST['topic'];
+			$_GET['topic'] = $topic;
+			$_REQUEST['topic'] = $topic;
 
 			//	That query should be counted separately
 			$context['pretty']['db_count']++;
