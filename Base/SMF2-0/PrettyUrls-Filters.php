@@ -1,146 +1,9 @@
 <?php
-//	Version: 0.9; PrettyUrls-Filters
+//	Version: 0.8.2; PrettyUrls-Filters
 //	A file for filter extensions to be placed in
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
-
-//	Rewrite the buffer with Pretty URLs!
-function pretty_rewrite_buffer($buffer)
-{
-	global $context, $modSettings, $smcFunc, $scripturl;
-
-	//	Remove the script tags now
-	$context['pretty']['scriptID'] = 0;
-	$context['pretty']['scripts'] = array();
-	$buffer = preg_replace_callback('~<script.+?</script>~s', 'pretty_scripts_remove', $buffer);
-
-	//	Find all URLs in the buffer
-	$context['pretty']['search_patterns'][] = '~(<a[^>]+href=|<link[^>]+href=|<form[^>]+?action=)(\"[^\"#]+|\'[^\'#]+)~';
-	$urls_query = array();
-	$uncached_urls = array();
-	foreach ($context['pretty']['search_patterns'] as $pattern)
-	{
-		preg_match_all($pattern, $buffer, $matches, PREG_PATTERN_ORDER);
-		foreach ($matches[2] as $match)
-		{
-			//	Rip out everything that shouldn't be cached
-			$match = preg_replace(array('~^[\"\']|PHPSESSID=[^;]+|sesc=[^;]+~', '~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('', '%22', ';', '?', ''), $match);
-			$url_id = str_replace(array($scripturl . '?board=', $scripturl . '?topic=', $scripturl . '?action=', $scripturl), array('`B', '`T', '`A', '`S'), $match);
-			$urls_query[] = $url_id;
-			$uncached_urls[$url_id] = array(
-				'url' => $match,
-				'url_id' => $url_id
-			);
-		}
-	}
-
-	//	Procede only if there are actually URLs in the page
-	if (count($urls_query) != 0)
-	{
-		$urls_query = array_keys(array_flip($urls_query));
-		//	Retrieve cached URLs
-		$context['pretty']['cached_urls'] = array();
-		$query = $smcFunc['db_query']('', '
-			SELECT url_id, replacement
-			FROM {db_prefix}pretty_urls_cache
-			WHERE url_id IN ({array_string:urls})',
-			array('urls' => $urls_query));
-		while ($row = $smcFunc['db_fetch_assoc']($query))
-		{
-			$context['pretty']['cached_urls'][$row['url_id']] = $row['replacement'];
-			unset($uncached_urls[$row['url_id']]);
-		}
-		$smcFunc['db_free_result']($query);
-
-		//	If there are any uncached URLs, process them
-		if (count($uncached_urls) != 0)
-		{
-			//	Run each filter callback function on each URL
-			$filter_callbacks = unserialize($modSettings['pretty_filter_callbacks']);
-			foreach ($filter_callbacks as $callback)
-				$uncached_urls = call_user_func($callback, $uncached_urls);
-
-			//	Fill the cached URLs array
-			$cache_data = array();
-			foreach ($uncached_urls as $url_id => $url)
-			{
-				if (!isset($url['replacement']))
-					$url['replacement'] = $url['url'];
-				$url['replacement'] = str_replace("\x12", '\'', $url['replacement']);
-				$url['replacement'] = preg_replace(array('~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('%22', ';', '?', ''), $url['replacement']);
-				$context['pretty']['cached_urls'][$url_id] = $url['replacement'];
-				if (strlen($url_id) < 256 && strlen($url['replacement']) < 256)
-					$cache_data[] = array($url_id, $url['replacement']);
-			}
-
-			//	Cache these URLs in the database
-			if (count($cache_data) != 0)
-				$smcFunc['db_insert']('',
-					'{db_prefix}pretty_urls_cache',
-					array('url_id' => 'string', 'replacement' => 'string'),
-					$cache_data,
-					array());
-		}
-
-		//	Put the URLs back into the buffer
-		$context['pretty']['replace_patterns'][] = '~(<a[^>]+href=|<link[^>]+href=|<form[^>]+?action=)(\"[^\"]+\"|\'[^\']+\')~';
-		foreach ($context['pretty']['replace_patterns'] as $pattern)
-			$buffer = preg_replace_callback($pattern, 'pretty_buffer_callback', $buffer);
-	}
-
-	//	Restore the script tags
-	if ($context['pretty']['scriptID'] > 0)
-		$buffer = preg_replace_callback("~\x14([0-9]+)\x14~", 'pretty_scripts_restore', $buffer);
-
-	// Return the changed buffer.
-	return $buffer;
-}
-
-//	Remove and save script tags
-function pretty_scripts_remove($match)
-{
-	global $context;
-
-	$context['pretty']['scriptID']++;
-	$context['pretty']['scripts'][$context['pretty']['scriptID']] = $match[0];
-	return "\x14" . $context['pretty']['scriptID'] . "\x14";
-}
-
-//	A callback function to replace the buffer's URLs with their cached URLs
-function pretty_buffer_callback($matches)
-{
-	global $context, $scripturl;
-
-	//	Is this URL part of a feed?
-	$isFeed = strpos($matches[1], '>');
-
-	//	Remove those annoying quotes
-	$matches[2] = preg_replace('~^[\"\']|[\"\']$~', '', $matches[2]);
-
-	//	Store the parts of the URL that won't be cached so they can be inserted later
-	preg_match('~PHPSESSID=[^;#&]+~', $matches[2], $PHPSESSID);
-	preg_match('~sesc=[^;#]+~', $matches[2], $sesc);
-	preg_match('~#.*~', $matches[2], $fragment);
-
-	//	Rip out everything that won't have been cached
-	$cacheableurl = preg_replace(array('~PHPSESSID=[^;#]+|sesc=[^;#]+|#.*$~', '~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('', '%22', ';', '?', ''), $matches[2]);
-	$url_id = str_replace(array($scripturl . '?board=', $scripturl . '?topic=', $scripturl . '?action=', $scripturl), array('`B', '`T', '`A', '`S'), $cacheableurl);
-
-	//	Stitch everything back together, clean it up and return
-	$replacement = isset($context['pretty']['cached_urls'][$url_id]) ? $context['pretty']['cached_urls'][$url_id] : $cacheableurl;
-	$replacement .= (strpos($replacement, '?') === false ? '?' : ';') . (isset($PHPSESSID[0]) ? $PHPSESSID[0] : '') . ';' . (isset($sesc[0]) ? $sesc[0] : '') . (isset($fragment[0]) ? $fragment[0] : '');
-	$replacement = preg_replace(array('~;+|=;~', '~\?;~', '~\?#|;#|=#~', '~\?$|;$|#$|=$~'), array(';', '?', '#', ''), $replacement);
-	return $matches[1] . ($isFeed === false ? '"' : '') . $replacement . ($isFeed === false ? '"' : '');
-}
-
-//	Put the script tags back
-function pretty_scripts_restore($match)
-{
-	global $context;
-
-	return $context['pretty']['scripts'][(int) $match[1]];
-}
 
 //	Filter miscellaneous action urls
 function pretty_urls_actions_filter($urls)
@@ -246,8 +109,8 @@ function pretty_urls_topic_filter($urls)
 					$pretty_text = 't' . $row['id_topic'];
 				//	No duplicates and no numerical URLs - that would just confuse everyone!
 				if (in_array($pretty_text, $new_urls) || is_numeric($pretty_text))
-					//	Add suffix '-ID_TOPIC' to the pretty url
-					$pretty_text = substr($pretty_text, 0, 70) . '-' . $row['id_topic'];
+					//	Add suffix '-tID_TOPIC' to the pretty url
+					$pretty_text = substr($pretty_text, 0, 70) . '-t' . $row['id_topic'];
 				$query_check[] = $pretty_text;
 				$new_urls[$row['id_topic']] = $pretty_text;
 			}
@@ -268,7 +131,7 @@ function pretty_urls_topic_filter($urls)
 				$pretty_text = $new_urls[$row['id_topic']];
 				//	Check if the new URL is already in use
 				if (in_array($pretty_text, $existing_urls))
-					$pretty_text = substr($pretty_text, 0, 70) . '-' . $row['id_topic'];
+					$pretty_text = substr($pretty_text, 0, 70) . '-t' . $row['id_topic'];
 				$add_new[] = array($row['id_topic'], $pretty_text);
 				//	Add to the original array of topic URLs
 				$topicData[$row['id_topic']] = array(

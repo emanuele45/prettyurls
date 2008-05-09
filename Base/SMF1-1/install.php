@@ -7,7 +7,7 @@
 	forum's SSI.php file.
 *******************************************************************************/
 
-//	Pretty URLs - Base v0.9
+//	Pretty URLs - Base v0.8.2
 
 //	If SSI.php is in the same place as this file, and SMF isn't defined, this is being run standalone.
 if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
@@ -33,6 +33,12 @@ db_query("
 	PRIMARY KEY (`ID_TOPIC`),
 	UNIQUE (`pretty_url`))", __FILE__, __LINE__);
 $tasks['dbchanges'][] = 'Creating the pretty_topic_urls table';
+
+//	Fix old topics by replacing ' with chr(18)
+db_query("
+	UPDATE {$db_prefix}pretty_topic_urls
+	SET pretty_url = REPLACE(pretty_url, '\\'', '" . chr(18) . "')", __FILE__, __LINE__);
+$tasks['dbchanges'][] = 'Fixing any old topics with broken quotes';
 
 //	Create the pretty_urls_cache table
 db_query("DROP TABLE IF EXISTS {$db_prefix}pretty_urls_cache", __FILE__, __LINE__);
@@ -144,8 +150,8 @@ $task_list .= '</li></ul>';
 //	Output the list of database changes
 if (isset($standalone))
 {
-	echo '<title>Installing Pretty URLs - Base 0.9</title>
-<h1>Installing Pretty URLs - Base 0.9</h1>
+	echo '<title>Installing Pretty URLs - Base 0.8.2</title>
+<h1>Installing Pretty URLs - Base 0.8.2</h1>
 <h2>Database changes</h2>
 ', $task_list ;
 }

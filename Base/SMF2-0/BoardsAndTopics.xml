@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls</id>
-	<version>0.9</version>
+	<version>0.8.3</version>
 
 	<file name="$sourcedir/Display.php">
 		<operation>
@@ -80,7 +80,7 @@ function cleanRequest()
 				unset($_GET['pretty']);
 			}
 		} else {
-			$_REQUEST['board'] = str_replace(array('&#039;', '\\'), array("\x12", ''), $_REQUEST['board']);
+			$_REQUEST['board'] = str_replace(array('&#039;', '\\'), array(chr(18), ''), $_REQUEST['board']);
 			$pretty_board_lookup = unserialize($modSettings['pretty_board_lookup']);
 			$board = (int) isset($pretty_board_lookup[$_REQUEST['board']]) ? $pretty_board_lookup[$_REQUEST['board']] : 0;
 
@@ -107,7 +107,7 @@ function cleanRequest()
 				unset($_GET['pretty']);
 			}
 		} else {
-			$_REQUEST['topic'] = str_replace(array('&#039;', '\\'), array("\x12", ''), $_REQUEST['topic']);
+			$_REQUEST['topic'] = str_replace(array('&#039;', '\\'), array(chr(18), ''), $_REQUEST['topic']);
 			//	Are we feeling lucky?
 			$query = $smcFunc['db_query']('', "
 				SELECT id_topic
@@ -171,8 +171,8 @@ function modifyBoard($board_id, &$boardOptions)
 
 		//	Can't be empty, can't be a number and can't be the same as another
 		if ($pretty_url == '' || is_numeric($pretty_url) || (isset($pretty_board_lookup[$pretty_url]) && $pretty_board_lookup[$pretty_url] != $board_id))
-			//	Add suffix '-board_id' to the pretty url
-			$pretty_url .= ($pretty_url != '' ? '-' : 'b') . $board_id;
+			//	Add suffix '-bboard_id' to the pretty url
+			$pretty_url .= ($pretty_url != '' ? '-b' : 'b') . $board_id;
 
 		//	Save to the database
 		$context['pretty']['board_urls'][$board_id] = $pretty_url;
