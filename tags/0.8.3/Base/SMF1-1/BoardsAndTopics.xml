@@ -1,0 +1,204 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>el:prettyurls</id>
+	<version>0.8.3</version>
+
+	<file name="$sourcedir/Display.php">
+		<operation>
+			<search position="replace"><![CDATA[
+	// Load the proper template and/or sub template.
+]]></search>
+			<add><![CDATA[
+	//	301 redirects
+	if ((isset($context['pretty']['oldschoolquery']) || $context['pretty']['query_string']['board'] != $context['pretty']['board_urls'][$board]) && $modSettings['pretty_enable_filters'])
+	{
+		$filterData = unserialize($modSettings['pretty_filters']);
+		if ($filterData['topics']['enabled'])
+		{
+			$url = 'topic=' . $topic . '.' . (isset($_REQUEST['start']) ? $_REQUEST['start'] : '0') . (isset($_REQUEST['prev_next']) ? ';prev_next=' . $_REQUEST['prev_next'] : '') . (isset($_REQUEST['topicseen']) ? ';topicseen' : '') . (isset($_REQUEST['all']) ? ';all' : '') . (isset($_REQUEST['viewResults']) ? ';viewResults' : '');
+			redirectexit($url, false, true);
+		}
+	}
+
+	// Load the proper template and/or sub template.
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/MessageIndex.php">
+		<operation>
+			<search position="replace"><![CDATA[
+	if (WIRELESS)
+]]></search>
+			<add><![CDATA[
+	//	301 redirects
+	if ((isset($context['pretty']['oldschoolquery']) || $context['pretty']['query_string']['board'] != $context['pretty']['board_urls'][$board]) && $modSettings['pretty_enable_filters'])
+	{
+		$filterData = unserialize($modSettings['pretty_filters']);
+		if ($filterData['boards']['enabled'])
+		{
+			$url = 'board=' . $board . '.' . (isset($_REQUEST['start']) ? $_REQUEST['start'] : '0') . (isset($_REQUEST['sort']) ? ';sort=' . $_REQUEST['sort'] : '');
+			redirectexit($url, false, true);
+		}
+	}
+
+	if (WIRELESS)
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/QueryString.php">
+		<operation>
+			<search position="replace"><![CDATA[
+function cleanRequest()
+{
+	global $board, $topic, $boardurl, $scripturl, $modSettings;
+]]></search>
+			<add><![CDATA[
+function cleanRequest()
+{
+	global $board, $topic, $boardurl, $scripturl, $modSettings, $context, $db_prefix;
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		// Now make absolutely sure it's a number.
+		$board = (int) $_REQUEST['board'];
+]]></search>
+			<add><![CDATA[
+		// Now make absolutely sure it's a number.
+		// Check for pretty board URLs too, and possibly redirect if oldschool queries were used.
+		if (is_numeric($_REQUEST['board']))
+		{
+			$board = (int) $_REQUEST['board'];
+			if (!isset($_GET['pretty']))
+			{
+				$context['pretty']['oldschoolquery'] = true;
+				unset($_GET['pretty']);
+			}
+		} else {
+			$_REQUEST['board'] = str_replace(array('&#039;', '\\'), array(chr(18), ''), $_REQUEST['board']);
+			$pretty_board_lookup = unserialize($modSettings['pretty_board_lookup']);
+			$board = (int) isset($pretty_board_lookup[$_REQUEST['board']]) ? $pretty_board_lookup[$_REQUEST['board']] : 0;
+
+			//	Fix $_REQUEST for silly mods that don't check $board
+			$context['pretty']['query_string']['board'] = $_REQUEST['board'];
+			$_GET['board'] = $board;
+			$_REQUEST['board'] = $board;
+		}
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		$topic = (int) $_REQUEST['topic'];
+]]></search>
+			<add><![CDATA[
+		// Check for pretty topic URLs, and possibly redirect if oldschool queries were used.
+		if (is_numeric($_REQUEST['topic']))
+		{
+			$topic = (int) $_REQUEST['topic'];
+			if (!isset($_GET['pretty']))
+			{
+				$context['pretty']['oldschoolquery'] = true;
+				unset($_GET['pretty']);
+			}
+		} else {
+			$_REQUEST['topic'] = str_replace(array('&#039;', '\\'), array(chr(18), ''), $_REQUEST['topic']);
+			//	Are we feeling lucky?
+			$query = db_query("
+				SELECT ID_TOPIC
+				FROM {$db_prefix}pretty_topic_urls
+				WHERE pretty_url = '$_REQUEST[topic]'
+				LIMIT 1", __FILE__, __LINE__);
+			//	No? No topic?!
+			if (mysql_num_rows($query) == 0)
+			{
+				$topic = 0;
+			} else {
+				while ($row = mysql_fetch_assoc($query))
+					$topic = (int) $row['ID_TOPIC'];
+			}
+			mysql_free_result($query);
+
+			//	Fix $_REQUEST for silly mods that don't check $topic
+			$context['pretty']['query_string']['topic'] = $_REQUEST['topic'];
+			$_GET['topic'] = $topic;
+			$_REQUEST['topic'] = $topic;
+
+			//	That query should be counted separately
+			$context['pretty']['db_count']++;
+		}
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Subs-Boards.php">
+		<operation>
+			<search position="replace"><![CDATA[
+function modifyBoard($board_id, &$boardOptions)
+{
+	global $sourcedir, $cat_tree, $boards, $boardList, $modSettings, $db_prefix;
+]]></search>
+			<add><![CDATA[
+function modifyBoard($board_id, &$boardOptions)
+{
+	global $sourcedir, $cat_tree, $boards, $boardList, $modSettings, $db_prefix, $context;
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+	if (isset($boardOptions['move_to']))
+		reorderBoards();
+]]></search>
+			<add><![CDATA[
+	if (isset($boardOptions['move_to']))
+		reorderBoards();
+
+//	Update the pretty board URLs
+	if (isset($boardOptions['pretty_url']))
+	{
+		require_once($sourcedir . '/Subs-PrettyUrls.php');
+
+		//	Get the current board URLs
+		$pretty_board_lookup = unserialize($modSettings['pretty_board_lookup']);
+		//	Generate a new one
+		$pretty_url = pretty_generate_url($boardOptions['pretty_url']);
+
+		//	Can't be empty, can't be a number and can't be the same as another
+		if ($pretty_url == '' || is_numeric($pretty_url) || (isset($pretty_board_lookup[$pretty_url]) && $pretty_board_lookup[$pretty_url] != $board_id))
+			//	Add suffix '-bboard_id' to the pretty url
+			$pretty_url .= ($pretty_url != '' ? '-b' : 'b') . $board_id;
+
+		//	Save to the database
+		$context['pretty']['board_urls'][$board_id] = $pretty_url;
+		$pretty_board_lookup[$pretty_url] = $board_id;
+		updateSettings(array(
+			'pretty_board_lookup' => addslashes(serialize($pretty_board_lookup)),
+			'pretty_board_urls' => addslashes(serialize($context['pretty']['board_urls'])),
+		));
+
+		//	Count that query!
+		$context['pretty']['db_count']++;
+	}
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+	// Change the board according to the given specifications.
+]]></search>
+			<add><![CDATA[
+	if (!isset($boardOptions['pretty_url']))
+		$boardOptions['pretty_url'] = $boardOptions['board_name'];
+
+	// Change the board according to the given specifications.
+]]></add>
+		</operation>
+	</file>
+
+</modification>
