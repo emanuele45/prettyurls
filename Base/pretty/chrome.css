@@ -1,5 +1,5 @@
 /*	Pretty URLs Chrome (Admin Interface)
-	Version: 0.8.2	*/
+	Version: 0.8.3	*/
 
 div#chrome
 {
@@ -87,7 +87,7 @@ ul#chrome_menu a
 
 ul#chrome_menu span
 {
-	letter-spacing: -9999em;
+	text-indent: -9999em;
 }
 
 ul#chrome_menu a.settings
