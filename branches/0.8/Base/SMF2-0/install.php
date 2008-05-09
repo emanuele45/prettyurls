@@ -7,12 +7,13 @@
 	forum's SSI.php file.
 *******************************************************************************/
 
-//	Pretty URLs - Base v0.8.2
+//	Pretty URLs - Base v0.8.3
 
 //	If SSI.php is in the same place as this file, and SMF isn't defined, this is being run standalone.
 if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 {
 	require_once(dirname(__FILE__) . '/SSI.php');
+	db_extend('packages');
 	$standalone = true;
 }
 //	Hmm... no SSI.php and no SMF?
@@ -157,8 +158,8 @@ $task_list .= '</li></ul>';
 //	Output the list of database changes
 if (isset($standalone))
 {
-	echo '<title>Installing Pretty URLs - Base 0.8.2</title>
-<h1>Installing Pretty URLs - Base 0.8.2</h1>
+	echo '<title>Installing Pretty URLs - Base 0.8.3</title>
+<h1>Installing Pretty URLs - Base 0.8.3</h1>
 <h2>Database changes</h2>
 ', $task_list ;
 }

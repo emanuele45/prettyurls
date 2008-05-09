@@ -22,7 +22,8 @@ Pretty URLs 0.9                                                 ??
  ! Boards/Topics: Don't add a 'b' or 't' before IDs unless it's really needed. (PrettyUrls-Filters.php, QueryString.php, Subs-PrettyUrls.php)
  ! Topics: Fix broken quotes during maintenance rather than installation. (Subs-PrettyUrls.php)
  + Base: Turkish ISO-8859-9 encoding is hopefully supported now. (Subs-PrettyUrls.php)
- ! Boards/Topics: Fix $_REQUEST for silly mods that don't check $board/$topic. (Display.php, MessageIndex.php, QueryString.php
+ ! Boards/Topics: Fix $_REQUEST for silly mods that don't check $board/$topic. (Display.php, MessageIndex.php, QueryString.php)
+ % Base: Updated for SMF 2.0 Beta 3.1 Public.
 
 Pretty URLs 0.8.1                                                 22 March, 2008
 ================================================================================

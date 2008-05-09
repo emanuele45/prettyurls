@@ -10,10 +10,11 @@ Legend:
  % Development flag or note, such as branching.
 
 
-Pretty URLs 0.8.3                                                 ??
+Pretty URLs 0.8.3                                                    9 May, 2008
 ================================================================================
  ! Boards/Topics: $_GET['pretty'] needs to be unset with the new SEO changes in SMF 2. (QueryString.php)
- ! Boards/Topics: Fix $_REQUEST for silly mods that don't check $board/$topic. (Display.php, MessageIndex.php, QueryString.php
+ ! Boards/Topics: Fix $_REQUEST for silly mods that don't check $board/$topic. (Display.php, MessageIndex.php, QueryString.php)
+ % Base: Updated for SMF 2.0 Beta 3.1 Public.
 
 Pretty URLs 0.8.2                                                  9 April, 2008
 ================================================================================
