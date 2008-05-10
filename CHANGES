@@ -24,6 +24,7 @@ Pretty URLs 0.9                                                 ??
  + Base: Turkish ISO-8859-9 encoding is hopefully supported now. (Subs-PrettyUrls.php)
  ! Boards/Topics: Fix $_REQUEST for silly mods that don't check $board/$topic. (Display.php, MessageIndex.php, QueryString.php)
  % Base: Updated for SMF 2.0 Beta 3.1 Public.
+ % reverter: Added a package to help people uninstall the mod.
 
 Pretty URLs 0.8.1                                                 22 March, 2008
 ================================================================================
