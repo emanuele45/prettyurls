@@ -48,3 +48,22 @@ Here is the above array in JSON format:
 	}
 }
 }}}
+
+= Filter callbacks =
+
+Filter callback functions do the work of rewriting a page's URLs. The list of URLs is passed to the function which can then change them however it likes. Usually various regexs will be used to search for query string fragments to replace. Here is an example function which would produce the URL used in the above filter:
+
+{{{
+function pretty_example_filter($urls)
+{
+	global $boardurl, $scripturl;
+
+	$pattern = '~' . $scripturl . 'action=example$~S';	// The pattern to search for, in this case action=example
+	$replacement = $boardurl . '/example.html';	// The replacement URL
+	foreach ($urls as $url_id => $url)
+		if (!isset($url['replacement']))	// This is very important: unless you are very certain of what you're doing, do not rewrite URLs that have already been rewritten!
+			if (preg_match($pattern, $url['url']))
+				$urls[$url_id]['replacement'] = preg_replace($pattern, $replacement, $url['url']);
+	return $urls;
+}
+}}}

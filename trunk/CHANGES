@@ -25,10 +25,12 @@ Pretty URLs 0.9                                                 ??
  ! Boards/Topics: Fix $_REQUEST for silly mods that don't check $board/$topic. (Display.php, MessageIndex.php, QueryString.php)
  % Base: Updated for SMF 2.0 Beta 3.1 Public.
  % reverter: Added a package to help people uninstall the mod.
+ ! Base: Replace cached URLs in 2.0. (PrettyUrls-Filters.php)
+ + Boards: Added a simple interface to edit URLs. (ManageBoards.php, ManageBoards.template.php)
 
 Pretty URLs 0.8.1                                                 22 March, 2008
 ================================================================================
- + Base: Added a hidden tool to edit the filters array at sa=filters. (PrettyUrls.php, Subs-PrettyUrls.php, PrettyURls.template.php)
+ + Base: Added a hidden tool to edit the filters array at sa=filters. (PrettyUrls.php, Subs-PrettyUrls.php, PrettyUrls.template.php)
  ! Base: Added a place for notices to be displayed in the admin interface. (PrettyUrls.php, PrettyUrls.template.php)
  ! Base: Started polishing it up a little.
  % Base: Updated for SMF 2.0 Beta 3! (Though it's not all right for SQLite yet. And I haven't tested PostgreSQL yet at all!)

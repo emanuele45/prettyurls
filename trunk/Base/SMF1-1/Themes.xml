@@ -1,31 +1,87 @@
 <?xml version="1.0"?>
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 
-<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+<modification xmlns="http://www.simplemachines.org/xml/modification">
 	<id>el:prettyurls</id>
-	<version>0.8</version>
+	<version>0.9</version>
 
 	<file name="$themedir/ManageBoards.template.php">
 		<operation>
-			<search position="after"><![CDATA[
-								<td>
-									<b>', $txt[44], ':</b><br />
-									', $txt[672], '<br /><br />
-								</td>
-								<td valign="top" align="right">
-									<input type="text" name="board_name" value="', $context['board']['name'], '" size="30" />
-								</td>
-							</tr><tr>
+			<search position="replace"><![CDATA[<td style="padding-left: 1ex;" colspan="4">]]></search>
+			<add><![CDATA[<td style="padding-left: 1ex;" colspan="5">]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[<td colspan="4" style="padding-left: 5px;">]]></search>
+			<add><![CDATA[<td colspan="5" style="padding-left: 5px;">]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+								<td width="10%" style="padding-right: 1ex;" align="right"><a href="', $scripturl, '?action=manageboards;sa=board;boardid=', $board['id'], '">', $txt['mboards_modify'], '</a></td>
 ]]></search>
 			<add><![CDATA[
-								<td>
-									<b>', $txt['pretty']['url'], ':</b><br />
-									', $txt['pretty']['url_desc'], '<br /><br />
-								</td>
-								<td valign="top" align="right">
-									<input type="text" name="pretty_url" value="', $context['board']['pretty_url'], '" size="30" />
-								</td>
-							</tr><tr>
+								<td width="10%" align="right"><a href="', $scripturl, '?action=manageboards;sa=board;boardid=', $board['id'], '">', $txt['mboards_modify'], '</a></td>
+								<td width="10%" style="padding-right: 1ex;" align="right">', allowedTo('admin_forum') ? '<a href="' . $scripturl . '?action=manageboards;sa=pretty;boardid=' . $board['id'] . '">' . $txt['pretty_modify_board_url'] . '</a>' : '', '</td>
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[<td style="padding-left: ', 5 + 30 * $board['move_links'][0]['child_level'], 'px;" colspan="4">]]></search>
+			<add><![CDATA[<td style="padding-left: ', 5 + 30 * $board['move_links'][0]['child_level'], 'px;" colspan="5">]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[<td colspan="4" align="right">]]></search>
+			<add><![CDATA[<td colspan="5" align="right">]]></add>
+		</operation>
+
+		<operation>
+			<search position="end">]]></search>
+			<add><![CDATA[
+//	Interface to manage a board's Pretty URLs
+function template_pretty_board_url()
+{
+	global $context, $scripturl, $txt;
+
+	//	Core really, really sucks.
+	echo '
+<table align="center" cellspacing="1" cellpadding="4" class="bordercolor" style="border: 0; min-width: 650px; width: 50%;">
+	<tr class="titlebg"><th>', $context['pretty']['board_title'], '</th></tr>
+	<tr class="windowbg2"><td>';
+
+	//	Is something wrong?
+	if (isset($context['pretty']['warning']))
+		echo '
+		<p><strong>', $context['pretty']['warning'], '</strong></p>';
+
+	echo '
+		<ul>';
+
+	//	List out the URLs
+	foreach ($context['pretty']['this_board'] as $url)
+	{
+		echo '
+			<li>', $url['url'], ' ';
+
+		if ($url['primary'])
+			echo '<b>', $txt['pretty_primary_url'], '</b>';
+		else
+			echo '<a href="', $scripturl, '?action=manageboards;sa=pretty;boardid=', $_REQUEST['boardid'], ';do=primary;url=', $url['url'], '">', $txt['pretty_make_primary'], '</a>';
+
+		echo ' <a href="', $scripturl, '?action=manageboards;sa=pretty;boardid=', $_REQUEST['boardid'], ';do=delete;url=', $url['url'], '">', $txt['smf138'], '</a></li>';
+	}
+
+	echo '
+		</ul>
+		<form action="', $scripturl, '?action=manageboards;sa=pretty;boardid=', $_REQUEST['boardid'], '" method="post" accept-charset="', $context['character_set'], '">
+			<p><label for="pretty_add_url">', $txt['pretty_add_url_description'], '</label>
+			<input type="text" style="width: 150px;" value="" name="add" id="pretty_add_url" /></p>
+			<p><input type="submit" value="', $txt['pretty_add_url'], '" name="submit" /></p>
+		</form>
+	</td></tr>
+</table>';
+}
 ]]></add>
 		</operation>
 	</file>
