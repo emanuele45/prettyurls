@@ -76,11 +76,11 @@ function pretty_rewrite_buffer($buffer)
 
 			//	Cache these URLs in the database
 			if (count($cache_data) != 0)
-				$smcFunc['db_insert']('',
+				$smcFunc['db_insert']('replace',
 					'{db_prefix}pretty_urls_cache',
 					array('url_id' => 'string', 'replacement' => 'string'),
 					$cache_data,
-					array());
+					array('url_id'));
 		}
 
 		//	Put the URLs back into the buffer

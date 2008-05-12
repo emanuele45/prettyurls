@@ -82,12 +82,8 @@ ul#chrome_menu a
 {
 	display: block;
 	height: 30px;
-	width: 30px;
-}
-
-ul#chrome_menu span
-{
 	text-indent: -9999em;
+	width: 30px;
 }
 
 ul#chrome_menu a.settings
