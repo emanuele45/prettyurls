@@ -56,9 +56,11 @@ $prettyFilters = array(
 			'callback' => 'pretty_urls_board_filter',
 		),
 		'rewrite' => array(
-			'priority' => 40,
-			'rule' => 'RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1.0 [L,QSA]
-RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*)/?$ ./index.php?pretty;board=$1.$2 [L,QSA]',
+			'priority' => 50,
+			'rule' => array(
+				'RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1.0 [L,QSA]',
+				'RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*)/?$ ./index.php?pretty;board=$1.$2 [L,QSA]',
+			),
 		),
 		'title' => 'Boards',
 	),
@@ -70,9 +72,11 @@ RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*)/?$ ./index.php?pretty;boar
 			'callback' => 'pretty_urls_topic_filter',
 		),
 		'rewrite' => array(
-			'priority' => 45,
-			'rule' => 'RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1;topic=$2.0 [L,QSA]
-RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*|msg[0-9]*|new)/?$ ./index.php?pretty;board=$1;topic=$2.$3 [L,QSA]',
+			'priority' => 55,
+			'rule' => array(
+				'RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1;topic=$2.0 [L,QSA]',
+				'RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*|msg[0-9]*|new)/?$ ./index.php?pretty;board=$1;topic=$2.$3 [L,QSA]',
+			),
 		),
 		'title' => 'Topics',
 	),
@@ -80,11 +84,11 @@ RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*|ms
 		'description' => 'Rewrite Action URLs (ie, index.php?action=something)',
 		'enabled' => 1,
 		'filter' => array(
-			'priority' => 90,
+			'priority' => 55,
 			'callback' => 'pretty_urls_actions_filter',
 		),
 		'rewrite' => array(
-			'priority' => 20,
+			'priority' => 45,
 			'rule' => '#ACTIONS',	//	To be replaced in pretty_update_filters()
 		),
 		'title' => 'Actions',
@@ -93,11 +97,11 @@ RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*|ms
 		'description' => 'Rewrite Profile URLs. As this uses the Username of an account rather than it\'s Display Name, it may not be desirable to your users.',
 		'enabled' => 0,
 		'filter' => array(
-			'priority' => 80,
+			'priority' => 50,
 			'callback' => 'pretty_profiles_filter',
 		),
 		'rewrite' => array(
-			'priority' => 15,
+			'priority' => 40,
 			'rule' => 'RewriteRule ^profile/([^/]+)/?$ ./index.php?pretty;action=profile;user=$1 [L,QSA]',
 		),
 		'title' => 'Profiles',

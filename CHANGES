@@ -27,6 +27,10 @@ Pretty URLs 0.9                                                 ??
  % reverter: Added a package to help people uninstall the mod.
  ! Base: Replace cached URLs in 2.0. (PrettyUrls-Filters.php)
  + Boards: Added a simple interface to edit URLs. (ManageBoards.php, ManageBoards.template.php)
+ ! Base: Rewrite rules can now be arrays. (install.php, Subs-PrettyUrls.php)
+ ! Profiles: Profile names with a / will now work. (PrettyUrls-Filters.php)
+ ! Base/extras: Reorganised filter priorities. (install.php)
+ % Base/reverter: Now compatible with TinyPortal 1.0.5.
 
 Pretty URLs 0.8.1                                                 22 March, 2008
 ================================================================================
