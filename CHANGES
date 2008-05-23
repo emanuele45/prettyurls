@@ -13,6 +13,7 @@ Legend:
 Pretty URLs 0.8.4                                                    ??
 ================================================================================
  ! Base: Replace cached URLs in 2.0. (QueryString.php)
+ % Base: Now compatible with TinyPortal 1.0.5.
 
 Pretty URLs 0.8.3                                                    9 May, 2008
 ================================================================================

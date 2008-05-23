@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls</id>
-	<version>0.8</version>
+	<version>0.8.4</version>
 
 	<file name="$boarddir/index.php">
 		<operation>
@@ -117,22 +117,23 @@ function ob_sessrewrite($buffer)
 		</operation>
 
 		<operation>
-			<search position="replace"><![CDATA[
+			<search position="after"><![CDATA[
 	// This should work even in 4.2.x, just not CGI without cgi.fix_pathinfo.
-	if (!empty($modSettings['queryless_urls']) && (!$context['server']['is_cgi'] || @ini_get('cgi.fix_pathinfo') == 1) && $context['server']['is_apache'])
-	{
-		// Let's do something special for session ids!
-		if (defined('SID') && SID != '')
-			$buffer = preg_replace('/"' . preg_quote($scripturl, '/') . '\?(?:' . SID . ';)((?:board|topic)=[^#"]+?)(#[^"]*?)?"/e', "'\"' . \$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html?' . SID . '\$2\"'", $buffer);
-		else
-			$buffer = preg_replace('/"' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+?)(#[^"]*?)?"/e', "'\"' . \$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html\$2\"'", $buffer);
-	}
+]]></search>
+			<add><![CDATA[
+/*	Pretty URLs says no!
+]]></add>
+		</operation>
 
+		<operation>
+			<search position="replace"><![CDATA[
 	// Return the changed buffer.
 	return $buffer;
 }
 ]]></search>
 			<add><![CDATA[
+*/
+
 	//	Rewrite the buffer with Pretty URLs!
 	if ($modSettings['pretty_enable_filters'])
 	{
@@ -286,13 +287,9 @@ function pretty_scripts_restore($match)
 	<file name="$sourcedir/Subs.php">
 		<operation>
 			<search position="replace"><![CDATA[
-function redirectexit($setLocation = '', $refresh = false)
-{
 	global $scripturl, $context, $modSettings, $db_show_debug;
 ]]></search>
 			<add><![CDATA[
-function redirectexit($setLocation = '', $refresh = false, $permanent = false)
-{
 	global $scripturl, $context, $modSettings, $db_show_debug, $sourcedir;
 ]]></add>
 		</operation>
@@ -306,9 +303,6 @@ function redirectexit($setLocation = '', $refresh = false, $permanent = false)
 		else
 			$setLocation = preg_replace('/^' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+?)(#[^"]*?)?$/e', "\$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html\$2'", $setLocation);
 	}
-
-	if (isset($modSettings['integrate_redirect']) && function_exists($modSettings['integrate_redirect']))
-		$modSettings['integrate_redirect']($setLocation, $refresh);
 ]]></search>
 			<add><![CDATA[
 	//	Redirections should be pretty too
@@ -328,12 +322,6 @@ function redirectexit($setLocation = '', $refresh = false, $permanent = false)
 		$setLocation = str_replace(chr(18), '\'', $setLocation);
 		$setLocation = preg_replace(array('~;+|=;~', '~\?;~', '~\?#|;#|=#~', '~\?$|;$|#$|=$~'), array(';', '?', '#', ''), $setLocation);
 	}
-
-	if (isset($modSettings['integrate_redirect']) && function_exists($modSettings['integrate_redirect']))
-		$modSettings['integrate_redirect']($setLocation, $refresh);
-
-	if ($permanent)
-		header('HTTP/1.1 301 Moved Permanently');
 ]]></add>
 		</operation>
 
