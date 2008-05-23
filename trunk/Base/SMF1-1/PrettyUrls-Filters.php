@@ -344,10 +344,11 @@ function pretty_profiles_filter($urls)
 
 		//	Build the replacement URLs
 		foreach ($urls as $url_id => $url)
-		{
 			if (isset($url['profile_id']))
+				if (strpos($memberNames[$url['profile_id']], '%2F') !== false)
+					$urls[$url_id]['replacement'] = $boardurl . '/profile/' . $url['match1'] . 'user=' . $memberNames[$url['profile_id']] . $url['match3'];
+				else
 				$urls[$url_id]['replacement'] = $boardurl . '/profile/' . $memberNames[$url['profile_id']] . '/' . $url['match1'] . $url['match3'];
-		}
 	}
 	return $urls;
 }

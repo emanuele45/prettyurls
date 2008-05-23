@@ -46,7 +46,8 @@ $context = array('pretty' => array());
 		if ($filterData['topics']['enabled'])
 		{
 			$url = 'topic=' . $topic . '.' . (isset($_REQUEST['start']) ? $_REQUEST['start'] : '0') . (isset($_REQUEST['prev_next']) ? ';prev_next=' . $_REQUEST['prev_next'] : '') . (isset($_REQUEST['topicseen']) ? ';topicseen' : '') . (isset($_REQUEST['all']) ? ';all' : '') . (isset($_REQUEST['viewResults']) ? ';viewResults' : '');
-			redirectexit($url, false, true);
+			header('HTTP/1.1 301 Moved Permanently');
+			redirectexit($url, false);
 		}
 	}
 ]]></add>
@@ -66,7 +67,8 @@ $context = array('pretty' => array());
 		if ($filterData['boards']['enabled'])
 		{
 			$url = 'board=' . $board . '.' . (isset($_REQUEST['start']) ? $_REQUEST['start'] : '0') . (isset($_REQUEST['sort']) ? ';sort=' . $_REQUEST['sort'] : '');
-			redirectexit($url, false, true);
+			header('HTTP/1.1 301 Moved Permanently');
+			redirectexit($url, false);
 		}
 	}
 ]]></add>
@@ -137,28 +139,6 @@ function cleanRequest()
 			}
 			$smcFunc['db_free_result']($query);
 		}
-]]></add>
-		</operation>
-	</file>
-
-	<file name="$sourcedir/Subs.php">
-		<operation>
-			<search position="replace"><![CDATA[
-function redirectexit($setLocation = '', $refresh = false)
-]]></search>
-			<add><![CDATA[
-function redirectexit($setLocation = '', $refresh = false, $permanent = false)
-]]></add>
-		</operation>
-
-		<operation>
-			<search position="before"><![CDATA[
-	if (isset($modSettings['integrate_redirect']) && function_exists($modSettings['integrate_redirect']))
-		$modSettings['integrate_redirect']($setLocation, $refresh);
-]]></search>
-			<add><![CDATA[
-	if ($permanent)
-		header('HTTP/1.1 301 Moved Permanently');
 ]]></add>
 		</operation>
 	</file>

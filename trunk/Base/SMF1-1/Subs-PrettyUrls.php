@@ -221,12 +221,16 @@ function pretty_update_filters()
 
 RewriteEngine on';
 
+	//	Output the rules
 	ksort($rewrites);
 	foreach ($rewrites as $rule)
-		$htaccess .= '
-
-#	Rules for: ' . $rule['id'] . '
-' . $rule['rule'];
+	{
+		$htaccess .= "\n\n#	Rules for: " . $rule['id'] . "\n";
+		if (is_array($rule['rule']))
+			$htaccess .= implode("\n", $rule['rule']);
+		else
+			$htaccess .= $rule['rule'];
+	}
 
 	//	Fix the Root URL
 	if (preg_match('~' . $boardurl . '/(.*)~', $modSettings['pretty_root_url'], $match))

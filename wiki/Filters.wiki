@@ -20,14 +20,14 @@ $prettyFilters = array(
 		),
 		'rewrite' => array(	// Most filters will add rewrite rules which will change a pretty URL into a less pretty, but more useable, internal URL
 			'priority' => 5,
-			'rule' => 'RewriteRule ^example\.html index.php?action=example [L]',	// The RewriteRule to add to the .htaccess file
+			'rule' => 'RewriteRule ^example\.html index.php?action=example [L]',	// The RewriteRule to add to the .htaccess file, if there are multiple rules for a filter this can be an array of strings
 		),
 		'title' => 'Example',	// This title will be displayed in the admin panel
 	),
 );
 }}}
 
-Each filter may have filter or rewrite sections. If it does, then each must have unique priority numbers, though a mod may use the same number for both it's filter callback and rewrite rules. These priority numbers are sorted in ascending order. Custom filters should use numbers less than 10 if they want to catch URLs before any of the standard filters do, or numbers more than 90 if they want to catch URLs only if the other filters have ignored them.
+Each filter may have filter or rewrite sections. If it does, then each must have unique priority numbers, though a mod may use the same number for both it's filter callback and rewrite rules. These priority numbers are sorted in ascending order. Custom filters should use numbers less than 20 if they want to catch URLs before any of the standard filters do, or numbers more than 80 if they want to catch URLs only if the other filters have ignored them.
 
 Here is the above array in JSON format:
 

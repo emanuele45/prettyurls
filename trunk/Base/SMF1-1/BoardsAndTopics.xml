@@ -18,7 +18,8 @@
 		if ($filterData['topics']['enabled'])
 		{
 			$url = 'topic=' . $topic . '.' . (isset($_REQUEST['start']) ? $_REQUEST['start'] : '0') . (isset($_REQUEST['prev_next']) ? ';prev_next=' . $_REQUEST['prev_next'] : '') . (isset($_REQUEST['topicseen']) ? ';topicseen' : '') . (isset($_REQUEST['all']) ? ';all' : '') . (isset($_REQUEST['viewResults']) ? ';viewResults' : '');
-			redirectexit($url, false, true);
+			header('HTTP/1.1 301 Moved Permanently');
+			redirectexit($url, false);
 		}
 	}
 
@@ -152,7 +153,8 @@ function PrettyBoardUrls()
 		if ($filterData['boards']['enabled'])
 		{
 			$url = 'board=' . $board . '.' . (isset($_REQUEST['start']) ? $_REQUEST['start'] : '0') . (isset($_REQUEST['sort']) ? ';sort=' . $_REQUEST['sort'] : '');
-			redirectexit($url, false, true);
+			header('HTTP/1.1 301 Moved Permanently');
+			redirectexit($url, false);
 		}
 	}
 
