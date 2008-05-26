@@ -24,8 +24,12 @@ function PrettyInterface()
 	<link rel="stylesheet" type="text/css" href="' . $settings['default_theme_url'] . '/pretty/chrome.css" media="screen,projection" />';
 	$context['pretty']['chrome'] = array(
 		'menu' => array(
-			'settings' => array(
+			'news' => array(
 				'href' => $scripturl . '?action=admin;area=pretty',
+				'title' => $txt['pretty_chrome_menu_news'],
+			),
+			'settings' => array(
+				'href' => $scripturl . '?action=admin;area=pretty;sa=settings',
 				'title' => $txt['pretty_chrome_menu_settings'],
 			),
 			'maintenance' => array(
@@ -39,12 +43,33 @@ function PrettyInterface()
 	$subActions = array(
 		'filters' => 'pretty_edit_filters',
 		'maintenance' => 'pretty_maintenance',
+		'news' => 'pretty_news',
 		'settings' => 'pretty_manage_settings',
 	);
 	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]))
 		call_user_func($subActions[$_REQUEST['sa']]);
 	else
-		pretty_manage_settings();
+		pretty_news();
+}
+
+//	News and mod information
+function pretty_news()
+{
+	global $context, $scripturl, $settings, $txt;
+
+	//	This page needs some extra javascript :)
+	$context['html_headers'] .= '
+	<script type="text/javascript">var chrome = {
+		pmUrl: "' . $scripturl . '?action=pgdownload;auto;sesc=' . $context['session_id'] . ';package=",
+		upgradeTxt: "' . $txt['pretty_upgrade'] . '"
+	};</script>
+	<script type="text/javascript" src="' . $settings['default_theme_url'] . '/pretty/chrome.js"></script>
+	<script type="text/javascript" src="http://prettyurls.googlecode.com/svn/trunk/news.js"></script>';
+
+	$context['page_title'] = $txt['pretty_chrome_page_title_news'];
+	$context['sub_template'] = 'pretty_news';
+	$context['pretty']['chrome']['title'] = $txt['pretty_chrome_title_news'];
+	$context['pretty']['chrome']['caption'] = $txt['pretty_chrome_caption_news'];
 }
 
 //	An interface to manage the settings and filters
@@ -84,7 +109,7 @@ function pretty_manage_settings()
 
 		//	All finished now!
 		$_SESSION['pretty']['notice'] = 'Settings saved';
-		redirectexit('action=admin;area=pretty');
+		redirectexit('action=admin;area=pretty;sa=settings');
 	}
 
 	//	Action-specific chrome

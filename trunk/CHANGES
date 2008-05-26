@@ -31,6 +31,7 @@ Pretty URLs 0.9                                                 ??
  ! Profiles: Profile names with a / will now work. (PrettyUrls-Filters.php)
  ! Base/extras: Reorganised filter priorities. (install.php)
  % Base/reverter: Now compatible with TinyPortal 1.0.5.
+ + Base: Live news and information is now displayed in the admin interface! (PrettyUrls.php, PrettyUrls.template.php, chrome.js, news.js etc)
 
 Pretty URLs 0.8.1                                                 22 March, 2008
 ================================================================================
