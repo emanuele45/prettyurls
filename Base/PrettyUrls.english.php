@@ -3,8 +3,18 @@
 
 //	Admin chrome
 $txt['pretty_chrome_title'] = 'Pretty URLs Administration';
+$txt['pretty_chrome_menu_news'] = 'News';
 $txt['pretty_chrome_menu_settings'] = 'Settings';
 $txt['pretty_chrome_menu_maintenance'] = 'Maintenance';
+
+//	News page
+$txt['pretty_chrome_caption_news'] = 'The latest news and information live from the project website';
+$txt['pretty_chrome_page_title_news'] = 'Pretty URLs News &amp; Info';
+$txt['pretty_chrome_title_news'] = 'News &amp; Info';
+$txt['pretty_current_version'] = 'Current version';
+$txt['pretty_latest_version'] = 'Latest version';
+$txt['pretty_upgrade'] = 'Upgrade now!';
+$txt['pretty_version'] = 'Version info';
 
 //	Settings page
 $txt['pretty_chrome_caption_settings'] = 'Settings caption';

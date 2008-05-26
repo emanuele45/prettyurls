@@ -38,13 +38,26 @@ function template_pretty_chrome_below()
 </div>';
 }
 
+//	Lets show some news (and more!)
+function template_pretty_news()
+{
+	global $context, $txt;
+
+	echo '
+		<h3>', $txt['pretty_chrome_menu_news'], '</h3>
+		<div id="chrome_news">', $txt['ajax_in_progress'], '</div>
+		<h3>', $txt['pretty_version'], '</h3>
+		<p>', $txt['pretty_current_version'], ': 0.9</p>
+		<p>', $txt['pretty_latest_version'], ': <span id="chrome_latest">', $txt['ajax_in_progress'], '</span></p>';
+}
+
 //	It should be easy and fun to manage this mod
 function template_pretty_settings()
 {
 	global $context, $scripturl, $txt;
 
 	echo '
-		<form action="', $scripturl, '?action=admin;area=pretty;save" method="post" accept-charset="', $context['character_set'], '">
+		<form action="', $scripturl, '?action=admin;area=pretty;sa=settings;save" method="post" accept-charset="', $context['character_set'], '">
 			<fieldset>
 				<legend>', $txt['pretty_core_settings'], '</legend>
 				<label for="pretty_enable">', $txt['pretty_enable'], '</label>
