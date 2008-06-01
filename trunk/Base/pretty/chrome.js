@@ -26,15 +26,22 @@ chrome.currentVersion = '0.9';
 
 chrome.checkVersion = function()
 {
-	//	Do we have the latest version yet?
+	//	Do we have the latest version data yet?
 	if (chrome.latestVersion)
 	{
 		var chromeLatest = document.getElementById('chrome_latest');
 		var partial = chrome.latestVersion
 
-		//	If we can upgrade, put up a link to do so
-		if (chrome.currentVersion != chrome.latestVersion && chrome.currentVersion == chrome.upgradeFrom)
-			partial += ' <a href="' + chrome.pmUrl + chrome.upgradeUrl + '">' + chrome.upgradeTxt + '</a>';
+		//	Check if we're up to date
+		if (chrome.currentVersion != chrome.latestVersion)
+		{
+			//	If we can upgrade, put up a link to do so
+			if (chrome.currentVersion == chrome.upgradeFrom)
+				partial += ' <a href="' + chrome.pmUrl + chrome.upgradeUrl + '">' + chrome.upgradeTxt + '</a>';
+			//	Or else put up a link to the download page
+			else
+				partial += ' <a href="http://code.google.com/p/prettyurls/downloads/list">' + chrome.downloadTxt + '</a>';
+		}
 
 		chromeLatest.innerHTML = partial;
 	}

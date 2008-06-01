@@ -125,7 +125,7 @@ function pretty_urls_topic_filter($urls)
 				//	Check if the new URL is already in use
 				if (in_array($pretty_text, $existing_urls))
 					$pretty_text = substr($pretty_text, 0, 70) . '-t' . $row['ID_TOPIC'];
-				$add_new[] = '(' . $row['ID_TOPIC'] . ', "' . addslashes($pretty_text) . '")';
+				$add_new[] = '(' . $row['ID_TOPIC'] . ', \'' . addslashes($pretty_text) . '\')';
 				//	Add to the original array of topic URLs
 				$topicData[$row['ID_TOPIC']] = array(
 					'pretty_board' => (isset($context['pretty']['board_urls'][$row['ID_BOARD']]) ? $context['pretty']['board_urls'][$row['ID_BOARD']] : $row['ID_BOARD']),

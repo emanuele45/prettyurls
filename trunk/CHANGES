@@ -32,6 +32,8 @@ Pretty URLs 0.9                                                 ??
  ! Base/extras: Reorganised filter priorities. (install.php)
  % Base/reverter: Now compatible with TinyPortal 1.0.5.
  + Base: Live news and information is now displayed in the admin interface! (PrettyUrls.php, PrettyUrls.template.php, chrome.js, news.js etc)
+ % extras: Renamed the seo4smf package, and added a filter for TP articles.
+ ! Topics: Topics about unions are now fine. (PrettyUrls-Filters.php)
 
 Pretty URLs 0.8.1                                                 22 March, 2008
 ================================================================================

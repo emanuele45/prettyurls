@@ -37,7 +37,7 @@
 		</operation>
 
 		<operation>
-			<search position="end">]]></search>
+			<search position="end"></search>
 			<add><![CDATA[
 //	Interface to manage a board's Pretty URLs
 function template_pretty_board_url()

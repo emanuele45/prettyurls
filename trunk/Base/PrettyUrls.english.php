@@ -12,6 +12,7 @@ $txt['pretty_chrome_caption_news'] = 'The latest news and information live from 
 $txt['pretty_chrome_page_title_news'] = 'Pretty URLs News &amp; Info';
 $txt['pretty_chrome_title_news'] = 'News &amp; Info';
 $txt['pretty_current_version'] = 'Current version';
+$txt['pretty_download'] = 'Download';
 $txt['pretty_latest_version'] = 'Latest version';
 $txt['pretty_upgrade'] = 'Upgrade now!';
 $txt['pretty_version'] = 'Version info';
