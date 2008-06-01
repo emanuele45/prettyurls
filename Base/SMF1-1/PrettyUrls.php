@@ -60,6 +60,7 @@ function pretty_news()
 	//	This page needs some extra javascript :)
 	$context['html_headers'] .= '
 	<script type="text/javascript">var chrome = {
+		downloadTxt: "' . $txt['pretty_download'] . '",
 		pmUrl: "' . $scripturl . '?action=pgdownload;auto;sesc=' . $context['session_id'] . ';package=",
 		upgradeTxt: "' . $txt['pretty_upgrade'] . '"
 	};</script>
