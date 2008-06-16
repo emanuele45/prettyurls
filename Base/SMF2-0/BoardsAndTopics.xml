@@ -76,7 +76,7 @@ function cleanRequest()
 		if (is_numeric($_REQUEST['board']))
 		{
 			$board = (int) $_REQUEST['board'];
-			if (!isset($_GET['pretty']))
+			if (!isset($_REQUEST['pretty']))
 			{
 				$context['pretty']['oldschoolquery'] = true;
 				unset($_GET['pretty']);
@@ -103,7 +103,7 @@ function cleanRequest()
 		if (is_numeric($_REQUEST['topic']))
 		{
 			$topic = (int) $_REQUEST['topic'];
-			if (!isset($_GET['pretty']))
+			if (!isset($_REQUEST['pretty']))
 			{
 				$context['pretty']['oldschoolquery'] = true;
 				unset($_GET['pretty']);
