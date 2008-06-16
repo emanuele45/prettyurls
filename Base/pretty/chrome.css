@@ -3,18 +3,16 @@
 
 div#chrome
 {
-	background: #eee;
-	border: 2px solid #064279;
+	background: url('./chrome-bottom.png') 0% 100% no-repeat;
 	color: #000;
 	font-size: 12px;
 	line-height: 1.5em;
 	margin: 0 auto;
-	max-width: 796px;
-	min-width: 396px;
-	width: 80%;
+	padding: 0 0 30px;
+	width: 600px;
 }
 
-div#chrome h1, div#chrome h2, ul#chrome_menu, #chrome_caption, p#chrome_notice
+div#chrome h1, div#chrome h2, div#chrome h3, div#chrome h4, div#chrome p, ul#chrome_menu, #chrome_caption, p#chrome_notice
 {
 	margin: 0;
 	padding: 0;
@@ -27,11 +25,12 @@ div#chrome a
 
 div#chrome h1
 {
-	background: #031f39 url('./chrome-h1.png') repeat-x;
+	background: url('./chrome-h1.png') no-repeat;
 	color: #fff;
 	font-size: 2em;
-	line-height: 1.5em;
-	padding: 0 0.25em;
+	line-height: 42px;
+	height: 42px;
+	padding: 48px 30px 20px;
 }
 
 div#chrome h2
@@ -45,6 +44,12 @@ p#chrome_caption
 {
 	background: #CCC;
 	padding: 0.5em;
+}
+
+div#chrome_main
+{
+	background: url('./chrome-back.png') repeat-y;
+	padding: 0 30px;
 }
 
 p#chrome_notice
