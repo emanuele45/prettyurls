@@ -34,6 +34,9 @@ Pretty URLs 0.9                                                 ??
  + Base: Live news and information is now displayed in the admin interface! (PrettyUrls.php, PrettyUrls.template.php, chrome.js, news.js etc)
  % extras: Renamed the seo4smf package, and added a filter for TP articles.
  ! Topics: Topics about unions are now fine. (PrettyUrls-Filters.php)
+ ! Boards/Topics: Make it easier for other mods by checking $_REQUEST['pretty'] rather than $_GET. (QueryString.php)
+ ! Base: Polishing the interface some more...
+ % Base: Updated for SMF 2.0 Beta 4 Public.
 
 Pretty URLs 0.8.1                                                 22 March, 2008
 ================================================================================

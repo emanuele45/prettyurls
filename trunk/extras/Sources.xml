@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 
-<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+<modification xmlns="http://www.simplemachines.org/xml/modification">
 	<id>el:prettyurls-extras</id>
 	<version>0.9</version>
 
@@ -15,7 +15,7 @@ function pretty_tp_articles_filter($urls)
 	global $boardurl, $scripturl;
 
 	$pattern = '~' . $scripturl . '(.*)page=([^;]+)~S';
-	$replacement = $boardurl . '/$2/$1';
+	$replacement = $boardurl . '/page/$2/$1';
 	foreach ($urls as $url_id => $url)
 		if (!isset($url['replacement']))
 			if (preg_match($pattern, $url['url']))
