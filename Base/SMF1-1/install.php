@@ -7,7 +7,7 @@
 	forum's SSI.php file.
 *******************************************************************************/
 
-//	Pretty URLs - Base v0.9
+//	Pretty URLs - Base v0.8.2
 
 //	If SSI.php is in the same place as this file, and SMF isn't defined, this is being run standalone.
 if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
@@ -34,6 +34,12 @@ db_query("
 	UNIQUE (`pretty_url`))", __FILE__, __LINE__);
 $tasks['dbchanges'][] = 'Creating the pretty_topic_urls table';
 
+//	Fix old topics by replacing ' with chr(18)
+db_query("
+	UPDATE {$db_prefix}pretty_topic_urls
+	SET pretty_url = REPLACE(pretty_url, '\\'', '" . chr(18) . "')", __FILE__, __LINE__);
+$tasks['dbchanges'][] = 'Fixing any old topics with broken quotes';
+
 //	Create the pretty_urls_cache table
 db_query("DROP TABLE IF EXISTS {$db_prefix}pretty_urls_cache", __FILE__, __LINE__);
 db_query("
@@ -53,11 +59,9 @@ $prettyFilters = array(
 			'callback' => 'pretty_urls_board_filter',
 		),
 		'rewrite' => array(
-			'priority' => 50,
-			'rule' => array(
-				'RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1.0 [L,QSA]',
-				'RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*)/?$ ./index.php?pretty;board=$1.$2 [L,QSA]',
-			),
+			'priority' => 40,
+			'rule' => 'RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1.0 [L,QSA]
+RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*)/?$ ./index.php?pretty;board=$1.$2 [L,QSA]',
 		),
 		'title' => 'Boards',
 	),
@@ -69,11 +73,9 @@ $prettyFilters = array(
 			'callback' => 'pretty_urls_topic_filter',
 		),
 		'rewrite' => array(
-			'priority' => 55,
-			'rule' => array(
-				'RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1;topic=$2.0 [L,QSA]',
-				'RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*|msg[0-9]*|new)/?$ ./index.php?pretty;board=$1;topic=$2.$3 [L,QSA]',
-			),
+			'priority' => 45,
+			'rule' => 'RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/?$ ./index.php?pretty;board=$1;topic=$2.0 [L,QSA]
+RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*|msg[0-9]*|new)/?$ ./index.php?pretty;board=$1;topic=$2.$3 [L,QSA]',
 		),
 		'title' => 'Topics',
 	),
@@ -81,11 +83,11 @@ $prettyFilters = array(
 		'description' => 'Rewrite Action URLs (ie, index.php?action=something)',
 		'enabled' => 1,
 		'filter' => array(
-			'priority' => 55,
+			'priority' => 90,
 			'callback' => 'pretty_urls_actions_filter',
 		),
 		'rewrite' => array(
-			'priority' => 45,
+			'priority' => 20,
 			'rule' => '#ACTIONS',	//	To be replaced in pretty_update_filters()
 		),
 		'title' => 'Actions',
@@ -94,11 +96,11 @@ $prettyFilters = array(
 		'description' => 'Rewrite Profile URLs. As this uses the Username of an account rather than it\'s Display Name, it may not be desirable to your users.',
 		'enabled' => 0,
 		'filter' => array(
-			'priority' => 50,
+			'priority' => 80,
 			'callback' => 'pretty_profiles_filter',
 		),
 		'rewrite' => array(
-			'priority' => 40,
+			'priority' => 15,
 			'rule' => 'RewriteRule ^profile/([^/]+)/?$ ./index.php?pretty;action=profile;user=$1 [L,QSA]',
 		),
 		'title' => 'Profiles',
@@ -148,8 +150,8 @@ $task_list .= '</li></ul>';
 //	Output the list of database changes
 if (isset($standalone))
 {
-	echo '<title>Installing Pretty URLs - Base 0.9</title>
-<h1>Installing Pretty URLs - Base 0.9</h1>
+	echo '<title>Installing Pretty URLs - Base 0.8.2</title>
+<h1>Installing Pretty URLs - Base 0.8.2</h1>
 <h2>Database changes</h2>
 ', $task_list ;
 }

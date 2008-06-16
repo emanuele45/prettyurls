@@ -1,4 +1,4 @@
-Changelog started November 2006; Currently at version 0.9
+Changelog started November 2006; Currently at version 0.8.4
 
 Legend:
 --------------------------------------------------------------------------------
@@ -10,37 +10,30 @@ Legend:
  % Development flag or note, such as branching.
 
 
-Pretty URLs 0.9                                                 ??
+Pretty URLs 0.8.4                                                  16 June, 2008
+================================================================================
+ ! Base: Replace cached URLs in 2.0. (QueryString.php)
+ % Base: Now compatible with TinyPortal 1.0.5.
+ ! Topics: Topics about unions are now fine. (PrettyUrls-Filters.php)
+ ! Boards/Topics: Make it easier for other mods by checking $_REQUEST['pretty'] rather than $_GET. (QueryString.php)
+ % Base: Updated for SMF 2.0 Beta 4 Public.
+
+Pretty URLs 0.8.3                                                    9 May, 2008
+================================================================================
+ ! Boards/Topics: $_GET['pretty'] needs to be unset with the new SEO changes in SMF 2. (QueryString.php)
+ ! Boards/Topics: Fix $_REQUEST for silly mods that don't check $board/$topic. (Display.php, MessageIndex.php, QueryString.php)
+ % Base: Updated for SMF 2.0 Beta 3.1 Public.
+
+Pretty URLs 0.8.2                                                  9 April, 2008
 ================================================================================
  % Branched off 0.8 so that changes for 2.0 support won't get confused with everything else.
  ! Base: Some colour changes were needed for dark themes. (chrome.css)
  - Base: Removed the cache table's log_time column as it's not used anymore.
  ! Base: Some futher changes for 2.0 Beta 3 support were required.
- % Base: Move the buffer rewriting code out of QueryString.php into it's own function in PrettyUrls-Filters.php.
- + Base: Started reworking the URL generator. (Subs-PrettyUrls.php)
- ! Boards/Topics: $_GET['pretty'] needs to be unset with the new SEO changes in SMF 2. (QueryString.php)
- ! Boards/Topics: Don't add a 'b' or 't' before IDs unless it's really needed. (PrettyUrls-Filters.php, QueryString.php, Subs-PrettyUrls.php)
- ! Topics: Fix broken quotes during maintenance rather than installation. (Subs-PrettyUrls.php)
- + Base: Turkish ISO-8859-9 encoding is hopefully supported now. (Subs-PrettyUrls.php)
- ! Boards/Topics: Fix $_REQUEST for silly mods that don't check $board/$topic. (Display.php, MessageIndex.php, QueryString.php)
- % Base: Updated for SMF 2.0 Beta 3.1 Public.
- % reverter: Added a package to help people uninstall the mod.
- ! Base: Replace cached URLs in 2.0. (PrettyUrls-Filters.php)
- + Boards: Added a simple interface to edit URLs. (ManageBoards.php, ManageBoards.template.php)
- ! Base: Rewrite rules can now be arrays. (install.php, Subs-PrettyUrls.php)
- ! Profiles: Profile names with a / will now work. (PrettyUrls-Filters.php)
- ! Base/extras: Reorganised filter priorities. (install.php)
- % Base/reverter: Now compatible with TinyPortal 1.0.5.
- + Base: Live news and information is now displayed in the admin interface! (PrettyUrls.php, PrettyUrls.template.php, chrome.js, news.js etc)
- % extras: Renamed the seo4smf package, and added a filter for TP articles.
- ! Topics: Topics about unions are now fine. (PrettyUrls-Filters.php)
- ! Boards/Topics: Make it easier for other mods by checking $_REQUEST['pretty'] rather than $_GET. (QueryString.php)
- ! Base: Polishing the interface some more...
- % Base: Updated for SMF 2.0 Beta 4 Public.
 
 Pretty URLs 0.8.1                                                 22 March, 2008
 ================================================================================
- + Base: Added a hidden tool to edit the filters array at sa=filters. (PrettyUrls.php, Subs-PrettyUrls.php, PrettyUrls.template.php)
+ + Base: Added a hidden tool to edit the filters array at sa=filters. (PrettyUrls.php, Subs-PrettyUrls.php, PrettyURls.template.php)
  ! Base: Added a place for notices to be displayed in the admin interface. (PrettyUrls.php, PrettyUrls.template.php)
  ! Base: Started polishing it up a little.
  % Base: Updated for SMF 2.0 Beta 3! (Though it's not all right for SQLite yet. And I haven't tested PostgreSQL yet at all!)
