@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 
-<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+<modification xmlns="http://www.simplemachines.org/xml/modification">
 	<id>el:prettyurls-reverter</id>
 	<version>0.9</version>
 
@@ -123,7 +123,6 @@ function cleanRequest()
 				$context['pretty']['oldschoolquery'] = true;
 		} else {
 			$_REQUEST['topic'] = str_replace(array('&#039;', '\\'), array("\x12", ''), $_REQUEST['topic']);
-			//	Are we feeling lucky?
 			//	Are we feeling lucky?
 			$query = db_query("
 				SELECT ID_TOPIC

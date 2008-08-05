@@ -6,6 +6,6 @@ chrome.news = [
 	{date: 'Never', text: 'A placeholder news item'}	
 ];
 
-chrome.latestVersion = '0.8.3';
+chrome.latestVersion = '0.8.4';
 chrome.upgradeFrom = '';
 chrome.upgradeUrl = '';

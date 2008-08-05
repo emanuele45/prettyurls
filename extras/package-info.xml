@@ -14,24 +14,14 @@
 	<name>Pretty URLs Extras</name>
 	<type>modification</type>
 
-	<install for="1.1, 1.1.0-1.1.99">
+	<install>
 		<readme parsebbc="true">readme-install.bbc</readme>
 		<modification>Sources.xml</modification>
-		<code>install-SMF1-1.php</code>
+		<code>install.php</code>
 	</install>
-	<uninstall for="1.1, 1.1.0-1.1.99">
+	<uninstall>
 		<modification reverse="true">Sources.xml</modification>
-		<code>uninstall-SMF1-1.php</code>
-	</uninstall>
-
-	<install for="2.0 Beta 3, 2.0 Beta 3 Public, 2.0 Beta 3.1 Public">
-		<readme parsebbc="true">readme-install.bbc</readme>
-		<modification>Sources.xml</modification>
-		<code>install-SMF2-0.php</code>
-	</install>
-	<uninstall for="2.0 Beta 3, 2.0 Beta 3 Public, 2.0 Beta 3.1 Public">
-		<modification reverse="true">Sources.xml</modification>
-		<code>uninstall-SMF2-0.php</code>
+		<code>uninstall.php</code>
 	</uninstall>
 
 </package-info>
