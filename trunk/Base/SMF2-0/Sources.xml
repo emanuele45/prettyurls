@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 
-<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+<modification xmlns="http://www.simplemachines.org/xml/modification">
 	<id>el:prettyurls</id>
 	<version>0.9</version>
 
@@ -160,6 +160,17 @@ function ob_sessrewrite($buffer)
 		$newLoadTime = '<span class="smalltext">' . $txt['page_created'] . $newTime . $txt['seconds_with'] . $db_count . $txt['queries'] . ' (<a href="http://code.google.com/p/prettyurls/">Pretty URLs</a> adds ' . $timeDiff . 's, ' . $queriesDiff . 'q)</span>';
 		$buffer = str_replace($matches[0], $newLoadTime, $buffer);
 	}
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Security.php">
+		<operation>
+			<search position="replace"><![CDATA[
+	if (!empty($from_action) && (!isset($_SESSION['old_url']) || preg_match('~[?;&]action=' . $from_action . '([;&]|$)~', $_SESSION['old_url']) == 0))
+]]></search>
+			<add><![CDATA[
+	if (!empty($from_action) && (!isset($_SESSION['old_url']) || preg_match('~[?;&]action=' . $from_action . '([;&]|$)|' . $boardurl . '/' . $from_action . '~', $_SESSION['old_url']) == 0))
 ]]></add>
 		</operation>
 	</file>

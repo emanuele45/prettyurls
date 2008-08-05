@@ -76,7 +76,7 @@ function pretty_news()
 //	An interface to manage the settings and filters
 function pretty_manage_settings()
 {
-	global $context, $modSettings, $settings, $sourcedir, $txt;
+	global $context, $modSettings, $sourcedir, $txt;
 
 	//	Core settings
 	$context['pretty']['settings']['core'] = array(

@@ -3,7 +3,7 @@
 
 The Pretty URLs mod needs to make several changes to the database. This is a reference in case you need to manually edit or fix something.
 
-If you ever want to completely remove the mod, you will need to remove all of these additions too. To be super-cool, use the [http://prettyurls.googlecode.com/svn/trunk/uninstall.php uninstall tool].
+If you ever want to completely remove the mod, you will need to remove all of these additions too. To be super-cool, use the [http://prettyurls.googlecode.com/svn/trunk/tools/uninstall.php uninstall tool].
 
 = New tables =
 

@@ -37,6 +37,8 @@ Pretty URLs 0.9                                                 ??
  ! Boards/Topics: Make it easier for other mods by checking $_REQUEST['pretty'] rather than $_GET. (QueryString.php)
  ! Base: Polishing the interface some more...
  % Base: Updated for SMF 2.0 Beta 4 Public.
+ ! Base: Allow pretty URLs to be verified. (Security.php)
+ + extras: Added a patch to fix relative URLs used by the arcade mod.
 
 Pretty URLs 0.8.1                                                 22 March, 2008
 ================================================================================

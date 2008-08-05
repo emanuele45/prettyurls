@@ -21,9 +21,11 @@ require_once($sourcedir . '/Subs-PrettyUrls.php');
 
 //	Remove these filters
 $prettyFilters = unserialize($modSettings['pretty_filters']);
+unset($prettyFilters['arcade']);
 unset($prettyFilters['seo4smf']);
 unset($prettyFilters['tp-articles']);
-updateSettings(array('pretty_filters' => serialize($prettyFilters)));
+
+updateSettings(array('pretty_filters' => isset($smcFunc) ? serialize($prettyFilters) : addslashes(serialize($prettyFilters))));
 
 //	Update everything now
 pretty_update_filters();

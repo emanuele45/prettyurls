@@ -1,4 +1,4 @@
-Changelog started November 2006; Currently at version 0.8.4
+Changelog started November 2006; Currently at version 0.8.5
 
 Legend:
 --------------------------------------------------------------------------------
@@ -9,6 +9,10 @@ Legend:
  - Feature or option removal.
  % Development flag or note, such as branching.
 
+
+Pretty URLs 0.8.5                                                  ?
+================================================================================
+ ! Base: Allow pretty URLs to be verified. (Security.php)
 
 Pretty URLs 0.8.4                                                  16 June, 2008
 ================================================================================
