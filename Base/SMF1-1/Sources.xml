@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>el:prettyurls</id>
-	<version>0.8.4</version>
+	<version>0.8.5</version>
 
 	<file name="$boarddir/index.php">
 		<operation>
@@ -280,6 +280,17 @@ function pretty_scripts_restore($match)
 
 	return $context['pretty']['scripts'][(int) $match[1]];
 }
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Security.php">
+		<operation>
+			<search position="replace"><![CDATA[
+	if (!empty($from_action) && (!isset($_SESSION['old_url']) || preg_match('~[?;&]action=' . $from_action . '([;&]|$)~', $_SESSION['old_url']) == 0))
+]]></search>
+			<add><![CDATA[
+	if (!empty($from_action) && (!isset($_SESSION['old_url']) || preg_match('~[?;&]action=' . $from_action . '([;&]|$)|' . $boardurl . '/' . $from_action . '~', $_SESSION['old_url']) == 0))
 ]]></add>
 		</operation>
 	</file>
