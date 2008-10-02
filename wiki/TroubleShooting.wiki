@@ -14,3 +14,16 @@ updateSettings(array('pretty_enable_filters' => '0'));
 }}}
 
 Upload the file to the same location as your forum's SSI.php and open it with your web browser. Then don't forget to delete it!
+
+= Links point to old domain after moving forum =
+
+This is very simple to fix, in addition to updating all the other settings with [http://docs.simplemachines.org/index.php?topic=663 repair_settings.php], this mod has one more setting to fix. You can either manually fix the pretty_root_url setting yourself, or else create a new .php with this code:
+
+{{{
+<?php
+require_once(dirname(__FILE__) . '/SSI.php');
+updateSettings(array('pretty_root_url' => $boardurl));
+?>
+}}}
+
+Upload the file to the same location as your forum's SSI.php and open it with your web browser. Then don't forget to delete it!

@@ -128,7 +128,7 @@ function pretty_buffer_callback($matches)
 	//	Stitch everything back together, clean it up and return
 	$replacement = isset($context['pretty']['cached_urls'][$url_id]) ? $context['pretty']['cached_urls'][$url_id] : $cacheableurl;
 	$replacement .= (strpos($replacement, '?') === false ? '?' : ';') . (isset($PHPSESSID[0]) ? $PHPSESSID[0] : '') . ';' . (isset($sesc[0]) ? $sesc[0] : '') . (isset($fragment[0]) ? $fragment[0] : '');
-	$replacement = preg_replace(array('~;+|=;~', '~\?;~', '~\?#|;#|=#~', '~\?$|;$|#$|=$~'), array(';', '?', '#', ''), $replacement);
+	$replacement = preg_replace(array('~;+|=;~', '~\?;~', '~\?#|;#|=#~', '~\?$|&amp;$|;$|#$|=$~'), array(';', '?', '#', ''), $replacement);
 	return $matches[1] . ($isFeed === false ? '"' : '') . $replacement . ($isFeed === false ? '"' : '');
 }
 
