@@ -39,6 +39,7 @@ Pretty URLs 0.9                                                 ??
  % Base: Updated for SMF 2.0 Beta 4 Public.
  ! Base: Allow pretty URLs to be verified. (Security.php)
  + extras: Added a patch to fix relative URLs used by the arcade mod.
+ ! Base: Don't strip final ;s in entities, it breaks validation. (PrettyUrls-Filters.php)
 
 Pretty URLs 0.8.1                                                 22 March, 2008
 ================================================================================
