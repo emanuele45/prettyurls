@@ -43,7 +43,7 @@
 		<code type="file">uninstall.php</code>
 	</uninstall>
 
-	<install for="2.0 Beta 3, 2.0 Beta 3 Public, 2.0 Beta 3.1 Public, 2.0 Beta 4 Public">
+	<install for="2.0 Beta 3, 2.0 Beta 3 Public, 2.0 Beta 3.1 Public, 2.0 Beta 4, 2.0 Beta 4 Public">
 		<modification format="xml" type="file">SMF2-0/Sources.xml</modification>
 		<modification format="xml" type="file">SMF2-0/BoardsAndTopics.xml</modification>
 		<!--<modification format="xml" type="file">SMF2-0/Themes.xml</modification>-->
@@ -57,7 +57,7 @@
 		<require-file name="PrettyUrls.french.php" destination="$languagedir" />
 		<database>SMF2-0/install.php</database>
 	</install>
-	<uninstall for="2.0 Beta 3, 2.0 Beta 3 Public, 2.0 Beta 3.1 Public, 2.0 Beta 4 Public">
+	<uninstall for="2.0 Beta 3, 2.0 Beta 3 Public, 2.0 Beta 3.1 Public, 2.0 Beta 4, 2.0 Beta 4 Public">
 		<modification format="xml" type="file" reverse="true">SMF2-0/Sources.xml</modification>
 		<modification format="xml" type="file" reverse="true">SMF2-0/BoardsAndTopics.xml</modification>
 		<!--<modification format="xml" type="file" reverse="true">SMF2-0/Themes.xml</modification>-->
