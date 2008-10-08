@@ -1,0 +1,106 @@
+/*	Pretty URLs Chrome (Admin Interface)
+	Version: 0.8.4	*/
+
+div#chrome
+{
+	background: #eee;
+	border: 2px solid #064279;
+	color: #000;
+	font-size: 12px;
+	line-height: 1.5em;
+	margin: 0 auto;
+	max-width: 796px;
+	min-width: 396px;
+	width: 80%;
+}
+
+div#chrome h1, div#chrome h2, ul#chrome_menu, #chrome_caption, p#chrome_notice
+{
+	margin: 0;
+	padding: 0;
+}
+
+div#chrome a
+{
+	color: #d00;
+}
+
+div#chrome h1
+{
+	background: #031f39 url('./chrome-h1.png') repeat-x;
+	color: #fff;
+	font-size: 2em;
+	line-height: 1.5em;
+	padding: 0 0.25em;
+}
+
+div#chrome h2
+{
+	background: #ebebeb url('./chrome-h2.png') repeat-x;
+	font-size: 1.5em;
+	line-height: 2em;
+}
+
+p#chrome_caption
+{
+	background: #CCC;
+	padding: 0.5em;
+}
+
+p#chrome_notice
+{
+	color: red;
+	padding: 0.5em;
+}
+
+/*	The menu...	*/
+ul#chrome_menu
+{
+	float: left;
+	list-style: none;
+	min-height: 30px;
+	height: 3em;
+	margin: 0 0.5em 0 0;
+}
+
+ul#chrome_menu li
+{
+	background: url('./chrome-button.png') bottom left no-repeat;
+	display: inline;
+	float: left;
+	height: 30px;
+	margin: 0.25em 0.5em;
+	width: 30px;
+}
+
+ul#chrome_menu li:hover
+{
+	background-position: top left;
+}
+
+ul#chrome_menu a
+{
+	display: block;
+	height: 30px;
+	text-indent: -9999em;
+	width: 30px;
+}
+
+ul#chrome_menu a.settings
+{
+	background: url('./icon-settings.png') 50% 50% no-repeat;
+}
+
+ul#chrome_menu a.maintenance
+{
+	background: url('./icon-maintenance.png') 50% 50% no-repeat;
+}
+
+/*	Filters tool	*/
+textarea#pretty_json_filters
+{
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	font-family: monospace;
+	width: 100%;
+}
