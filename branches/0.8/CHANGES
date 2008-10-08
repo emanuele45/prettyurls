@@ -10,9 +10,10 @@ Legend:
  % Development flag or note, such as branching.
 
 
-Pretty URLs 0.8.5                                                  ?
+Pretty URLs 0.8.5                                                9 October, 2008
 ================================================================================
  ! Base: Allow pretty URLs to be verified. (Security.php)
+ ! Base/reverter: Installs on SMF 2.0 Beta 4. Stupid versioning inconsistencies.
 
 Pretty URLs 0.8.4                                                  16 June, 2008
 ================================================================================
