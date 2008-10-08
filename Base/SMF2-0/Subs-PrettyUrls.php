@@ -7,44 +7,133 @@ if (!defined('SMF'))
 //	Generate a pretty URL from a given text
 function pretty_generate_url($text)
 {
-	global $modSettings, $txt;
+	global $modSettings;
 
 	//	Do you know your ABCs?
 	$characterHash = array (
-		'a'	=>	array ('a', 'A', 'à', 'À', 'á', 'Á', 'â', 'Â', 'ã', 'Ã', 'ä', 'Ä', 'å', 'Å', 'ª', 'ą', 'Ą', 'а', 'А', 'ạ', 'Ạ', 'ả', 'Ả', 'Ầ', 'ầ', 'Ấ', 'ấ', 'Ậ', 'ậ', 'Ẩ', 'ẩ', 'Ẫ', 'ẫ', 'Ă', 'ă', 'Ắ', 'ắ', 'Ẵ', 'ẵ', 'Ặ', 'ặ', 'Ằ', 'ằ', 'Ẳ', 'ẳ'),
-		'ae'	=>	array ('æ', 'Æ'),
-		'b'	=>	array ('b', 'B'),
+		'a'	=>	array ('a', 'A', 'à', 'À', 'á', 'Á', 'â', 'Â', 'ã', 'Ã', 'ä', 'Ä', 'å', 'Å', 'ª', 'ą', 'Ą', 'а', 'А', 'ạ', 'Ạ', 'ả', 'Ả', 'Ầ', 'ầ', 'Ấ', 'ấ', 'Ậ', 'ậ', 'Ẩ', 'ẩ', 'Ẫ', 'ẫ', 'Ă', 'ă', 'Ắ', 'ắ', 'Ẵ', 'ẵ', 'Ặ', 'ặ', 'Ằ', 'ằ', 'Ẳ', 'ẳ', 'あ', 'ア', 'α', 'Α'),
+		'aa'	=>	array ('ا'),
+		'ae'	=>	array ('æ', 'Æ', 'ﻯ'),
+		'and'	=>	array ('&'),
+		'at'	=>	array ('@'),
+		'b'	=>	array ('b', 'B', 'б', 'Б', 'ب'),
+		'ba'	=>	array ('ば', 'バ'),
+		'be'	=>	array ('べ', 'ベ'),
+		'bi'	=>	array ('び', 'ビ'),
+		'bo'	=>	array ('ぼ', 'ボ'),
+		'bu'	=>	array ('ぶ', 'ブ'),
 		'c'	=>	array ('c', 'C', 'ç', 'Ç', 'ć', 'Ć', 'č', 'Č'),
-		'd'	=>	array ('d', 'D', 'Ð', 'đ', 'Đ'),
-		'e'	=>	array ('e', 'E', 'è', 'È', 'é', 'É', 'ê', 'Ê', 'ë', 'Ë', 'ę', 'Ę', 'е', 'Е', 'ё', 'Ё', 'э', 'Э', 'Ẹ', 'ẹ', 'Ẻ', 'ẻ', 'Ẽ', 'ẽ', 'Ề', 'ề', 'Ế', 'ế', 'Ệ', 'ệ', 'Ể', 'ể', 'Ễ', 'ễ', 'ε', 'Ε'),
-		'f'	=>	array ('f', 'F'),
-		'g'	=>	array ('g', 'G', 'ğ', 'Ğ'),
-		'h'	=>	array ('h', 'H'),
-		'i'	=>	array ('i', 'I', 'ì', 'Ì', 'í', 'Í', 'î', 'Î', 'ï', 'Ï', 'ı', 'İ', 'Ị', 'ị', 'Ỉ', 'ỉ', 'Ĩ', 'ĩ', 'Ι', 'ι'),
-		'j'	=>	array ('j', 'J'),
-		'k'	=>	array ('k', 'K', 'к', 'К', 'κ', 'Κ'),
-		'l'	=>	array ('l', 'L', 'ł', 'Ł'),
-		'm'	=>	array ('m', 'M', 'м', 'М', 'Μ'),
-		'n'	=>	array ('n', 'N', 'ñ', 'Ñ', 'ń', 'Ń'),
-		'o'	=>	array ('o', 'O', 'ò', 'Ò', 'ó', 'Ó', 'ô', 'Ô', 'õ', 'Õ', 'ö', 'Ö', 'ø', 'Ø', 'º', 'о', 'О', 'Ọ', 'ọ', 'Ỏ', 'ỏ', 'Ộ', 'ộ', 'Ố', 'ố', 'Ỗ', 'ỗ', 'Ồ', 'ồ', 'Ổ', 'ổ', 'Ơ', 'ơ', 'Ờ', 'ờ', 'Ớ', 'ớ', 'Ợ', 'ợ', 'Ở', 'ở', 'Ỡ', 'ỡ', 'ο', 'Ο'),
-		'p'	=>	array ('p', 'P'),
-		'q'	=>	array ('q', 'Q'),
-		'r'	=>	array ('r', 'R'),
-		's'	=>	array ('s', 'S', 'ş', 'Ş', 'ś', 'Ś', 'š', 'Š'),
+		'cent'	=>	array ('¢'),
+		'ch'	=>	array ('ч', 'Ч', 'χ', 'Χ'),
+		'chi'	=>	array ('ち', 'チ'),
+		'copyright'	=>	array ('©'),
+		'd'	=>	array ('d', 'D', 'Ð', 'д', 'Д', 'د', 'ض', 'đ', 'Đ', 'δ', 'Δ'),
+		'da'	=>	array ('だ', 'ダ'),
+		'de'	=>	array ('で', 'デ'),
+		'degrees'	=>	array ('°'),
+		'dh'	=>	array ('ذ'),
+		'do'	=>	array ('ど', 'ド'),
+		'e'	=>	array ('e', 'E', 'è', 'È', 'é', 'É', 'ê', 'Ê', 'ë', 'Ë', 'ę', 'Ę', 'е', 'Е', 'ё', 'Ё', 'э', 'Э', 'Ẹ', 'ẹ', 'Ẻ', 'ẻ', 'Ẽ', 'ẽ', 'Ề', 'ề', 'Ế', 'ế', 'Ệ', 'ệ', 'Ể', 'ể', 'Ễ', 'ễ', 'え', 'エ', 'ε', 'Ε'),
+		'f'	=>	array ('f', 'F', 'ф', 'Ф', 'ﻑ', 'φ', 'Φ'),
+		'fu'	=>	array ('ふ', 'フ'),
+		'g'	=>	array ('g', 'G', 'ğ', 'Ğ', 'г', 'Г', 'γ', 'Γ'),
+		'ga'	=>	array ('が', 'ガ'),
+		'ge'	=>	array ('げ', 'ゲ'),
+		'gh'	=>	array ('غ'),
+		'gi'	=>	array ('ぎ', 'ギ'),
+		'go'	=>	array ('ご', 'ゴ'),
+		'gu'	=>	array ('ぐ', 'グ'),
+		'h'	=>	array ('h', 'H', 'ح', 'ه'),
+		'ha'	=>	array ('は', 'ハ'),
+		'half'	=>	array ('½'),
+		'he'	=>	array ('へ', 'ヘ'),
+		'hi'	=>	array ('ひ', 'ヒ'),
+		'ho'	=>	array ('ほ', 'ホ'),
+		'i'	=>	array ('i', 'I', 'ì', 'Ì', 'í', 'Í', 'î', 'Î', 'ï', 'Ï', 'ı', 'İ', 'и', 'И', 'Ị', 'ị', 'Ỉ', 'ỉ', 'Ĩ', 'ĩ', 'い', 'イ', 'η', 'Η', 'Ι', 'ι'),
+		'j'	=>	array ('j', 'J', 'ج'),
+		'ji'	=>	array ('じ', 'ぢ', 'ジ', 'ヂ'),
+		'k'	=>	array ('k', 'K', 'к', 'К', 'ك', 'κ', 'Κ'),
+		'ka'	=>	array ('か', 'カ'),
+		'ke'	=>	array ('け', 'ケ'),
+		'kh'	=>	array ('х', 'Х', 'خ'),
+		'ki'	=>	array ('き', 'キ'),
+		'ko'	=>	array ('こ', 'コ'),
+		'ku'	=>	array ('く', 'ク'),
+		'l'	=>	array ('l', 'L', 'ł', 'Ł', 'л', 'Л', 'ل', 'λ', 'Λ'),
+		'la'	=>	array ('ﻻ'),
+		'm'	=>	array ('m', 'M', 'м', 'М', 'م', 'μ', 'Μ'),
+		'ma'	=>	array ('ま', 'マ'),
+		'me'	=>	array ('め', 'メ'),
+		'mi'	=>	array ('み', 'ミ'),
+		'mo'	=>	array ('も', 'モ'),
+		'mu'	=>	array ('む', 'ム'),
+		'n'	=>	array ('n', 'N', 'ñ', 'Ñ', 'ń', 'Ń', 'н', 'Н', 'ن', 'ん', 'ン', 'ν', 'Ν'),
+		'na'	=>	array ('な', 'ナ'),
+		'ne'	=>	array ('ね', 'ネ'),
+		'ni'	=>	array ('に', 'ニ'),
+		'no'	=>	array ('の', 'ノ'),
+		'nu'	=>	array ('ぬ', 'ヌ'),
+		'o'	=>	array ('o', 'O', 'ò', 'Ò', 'ó', 'Ó', 'ô', 'Ô', 'õ', 'Õ', 'ö', 'Ö', 'ø', 'Ø', 'º', 'о', 'О', 'Ọ', 'ọ', 'Ỏ', 'ỏ', 'Ộ', 'ộ', 'Ố', 'ố', 'Ỗ', 'ỗ', 'Ồ', 'ồ', 'Ổ', 'ổ', 'Ơ', 'ơ', 'Ờ', 'ờ', 'Ớ', 'ớ', 'Ợ', 'ợ', 'Ở', 'ở', 'Ỡ', 'ỡ', 'お', 'オ', 'ο', 'Ο', 'ω', 'Ω'),
+		'p'	=>	array ('p', 'P', 'п', 'П', 'π', 'Π'),
+		'pa'	=>	array ('ぱ', 'パ'),
+		'pe'	=>	array ('ぺ', 'ペ'),
+		'percent'	=>	array ('%'),
+		'pi'	=>	array ('ぴ', 'ピ'),
+		'plus'	=>	array ('+'),
+		'plusminus'	=>	array ('±'),
+		'po'	=>	array ('ぽ', 'ポ'),
+		'pound'	=>	array ('£'),
+		'ps'	=>	array ('ψ', 'Ψ'),
+		'pu'	=>	array ('ぷ', 'プ'),
+		'q'	=>	array ('q', 'Q', 'ق'),
+		'quarter'	=>	array ('¼'),
+		'r'	=>	array ('r', 'R', '®', 'р', 'Р', 'ر'),
+		'ra'	=>	array ('ら', 'ラ'),
+		're'	=>	array ('れ', 'レ'),
+		'ri'	=>	array ('り', 'リ'),
+		'ro'	=>	array ('ろ', 'ロ'),
+		'ru'	=>	array ('る', 'ル'),
+		's'	=>	array ('s', 'S', 'ş', 'Ş', 'ś', 'Ś', 'с', 'С', 'س', 'ص', 'š', 'Š', 'σ', 'ς', 'Σ'),
+		'sa'	=>	array ('さ', 'サ'),
+		'se'	=>	array ('せ', 'セ'),
+		'section'	=>	array ('§'),
+		'sh'	=>	array ('ш', 'Ш', 'ش'),
+		'shi'	=>	array ('し', 'シ'),
+		'shch'	=>	array ('щ', 'Щ'),
+		'so'	=>	array ('そ', 'ソ'),
 		'ss'	=>	array ('ß'),
-		't'	=>	array ('t', 'T', 'т', 'Т', 'τ', 'Τ', 'ţ', 'Ţ'),
-		'u'	=>	array ('u', 'U', 'ù', 'Ù', 'ú', 'Ú', 'û', 'Û', 'ü', 'Ü', 'Ụ', 'ụ', 'Ủ', 'ủ', 'Ũ', 'ũ', 'Ư', 'ư', 'Ừ', 'ừ', 'Ứ', 'ứ', 'Ự', 'ự', 'Ử', 'ử', 'Ữ', 'ữ'),
-		'v'	=>	array ('v', 'V'),
-		'w'	=>	array ('w', 'W'),
-		'x'	=>	array ('x', 'X', '×'),
-		'y'	=>	array ('y', 'Y', 'ý', 'Ý', 'ÿ', 'Ỳ', 'ỳ', 'Ỵ', 'ỵ', 'Ỷ', 'ỷ', 'Ỹ', 'ỹ'),
-		'z'	=>	array ('z', 'Z', 'ż', 'Ż', 'ź', 'Ź', 'ž', 'Ž', 'Ζ'),
+		'su'	=>	array ('す', 'ス'),
+		't'	=>	array ('t', 'T', 'т', 'Т', 'ت', 'ط', 'τ', 'Τ', 'ţ', 'Ţ'),
+		'ta'	=>	array ('た', 'タ'),
+		'te'	=>	array ('て', 'テ'),
+		'th'	=>	array ('ث', 'θ', 'Θ'),
+		'three-quarters'	=>	array ('¾'),
+		'to'	=>	array ('と', 'ト'),
+		'ts'	=>	array ('ц', 'Ц'),
+		'tsu'	=>	array ('つ', 'ツ'),
+		'u'	=>	array ('u', 'U', 'ù', 'Ù', 'ú', 'Ú', 'û', 'Û', 'ü', 'Ü', 'у', 'У', 'Ụ', 'ụ', 'Ủ', 'ủ', 'Ũ', 'ũ', 'Ư', 'ư', 'Ừ', 'ừ', 'Ứ', 'ứ', 'Ự', 'ự', 'Ử', 'ử', 'Ữ', 'ữ', 'う', 'ウ', 'υ', 'Υ'),
+		'v'	=>	array ('v', 'V', 'в', 'В', 'β', 'Β'),
+		'w'	=>	array ('w', 'W', 'و'),
+		'wa'	=>	array ('わ', 'ワ'),
+		'wo'	=>	array ('を', 'ヲ'),
+		'x'	=>	array ('x', 'X', '×', 'ξ', 'Ξ'),
+		'y'	=>	array ('y', 'Y', 'ý', 'Ý', 'ÿ', 'й', 'Й', 'ы', 'Ы', 'ي', 'Ỳ', 'ỳ', 'Ỵ', 'ỵ', 'Ỷ', 'ỷ', 'Ỹ', 'ỹ'),
+		'ya'	=>	array ('я', 'Я', 'や'),
+		'yen'	=>	array ('¥'),
+		'yo'	=>	array ('よ'),
+		'yu'	=>	array ('ю', 'Ю', 'ゆ'),
+		'z'	=>	array ('z', 'Z', 'ż', 'Ż', 'ź', 'Ź', 'з', 'З', 'ز', 'ظ', 'ž', 'Ž', 'ζ', 'Ζ'),
+		'za'	=>	array ('ざ', 'ザ'),
+		'ze'	=>	array ('ぜ', 'ゼ'),
+		'zh'	=>	array ('ж', 'Ж'),
+		'zo'	=>	array ('ぞ', 'ゾ'),
+		'zu'	=>	array ('ず', 'づ', 'ズ', 'ヅ'),
 		'-'	=>	array ('-', ' ', '.', ','),
 		'_'	=>	array ('_'),
 		'!'	=>	array ('!'),
 		'~'	=>	array ('~'),
 		'*'	=>	array ('*'),
-		"\x12"	=>	array ("'", '"'),
+		chr(18)	=>	array ("'", '"', 'ﺀ', 'ع'),
 		'('	=>	array ('(', '{', '['),
 		')'	=>	array (')', '}', ']'),
 		'$'	=>	array ('$'),
@@ -60,33 +149,9 @@ function pretty_generate_url($text)
 		'9'	=>	array ('9'),
 	);
 
-	//	Get or detect the database encoding, firstly from the settings or language files
-	if (isset($modSettings['global_character_set']))
-		$encoding = strtoupper($modSettings['global_character_set']);
-	else if (isset($txt['lang_character_set']))
-		$encoding = strtoupper($txt['lang_character_set']);
-	//	or try checking UTF-8 conformance
-	else if (preg_match('~.~su', $text))
-		$encoding = 'UTF-8';
-	//	or sadly... we may have to assume Latin-1
-	else
-		$encoding = 'ISO-8859-1';
-
 	//	If the database encoding isn't UTF-8 and multibyte string functions are available, try converting the text to UTF-8
-	if ($encoding != 'UTF-8' && function_exists('mb_convert_encoding'))
-		$text = mb_convert_encoding($text, 'UTF-8', $encoding);
-	//	Or maybe we can convert with iconv
-	else if ($encoding != 'UTF-8' && function_exists('iconv'))
-		$text = iconv($encoding, 'UTF-8', $text);
-	//	Fix Turkish
-	else if ($encoding == 'ISO-8859-9')
-	{
-		$text = str_replace(array("\xD0", "\xDD", "\xDE", "\xF0", "\xFD", "\xFE"), array('g', 'i', 's', 'g', 'i', 's'), $text);
-		$text = utf8_encode($text);
-	}
-	//	Latin-1 can be converted easily
-	else if ($encoding == 'ISO-8859-1')
-		$text = utf8_encode($text);
+	if ((empty($modSettings['global_character_set']) || $modSettings['global_character_set'] !== 'UTF-8') && function_exists('mb_convert_encoding'))
+		$text = mb_convert_encoding($text, 'UTF-8', 'auto');
 
 	//	Change the entities back to normal characters
 	$text = str_replace(array('&amp;', '&quot;'), array('&', '"'), $text);
@@ -130,22 +195,12 @@ function pretty_run_maintenance()
 	$pretty_board_urls = isset($modSettings['pretty_board_urls']) ? unserialize($modSettings['pretty_board_urls']) : array();
 	$pretty_board_lookup_old = isset($modSettings['pretty_board_lookup']) ? unserialize($modSettings['pretty_board_lookup']) : array();
 
-	//	Fix old boards by replacing ' with \x12
-	$pretty_board_urls = str_replace("'", "\x12", $pretty_board_urls);
+	//	Fix old boards by replacing ' with chr(18)
+	$pretty_board_urls = str_replace("'", chr(18), $pretty_board_urls);
 	$pretty_board_lookup = array();
 	foreach ($pretty_board_lookup_old as $board => $id)
-		$pretty_board_lookup[str_replace("'", "\x12", $board)] = $id;
-
-	//	Fix old topics too
-	$smcFunc['db_query']('', '
-		UPDATE {db_prefix}pretty_topic_urls
-		SET pretty_url = REPLACE(pretty_url, {string:old_quote}, {string:new_quote})',
-	array(
-		'old_quote' => "'",
-		'new_quote' => "\x12",
-		'db_error_skip' => true,
-	));
-	$context['pretty']['maintenance_tasks'][] = 'Fixing any old boards and topics with broken quotes';
+		$pretty_board_lookup[str_replace("'", chr(18), $board)] = $id;
+	$context['pretty']['maintenance_tasks'][] = 'Fix old boards which have broken quotes';
 
 	//	Get the board names
 	$query = $smcFunc['db_query']('', "
@@ -165,8 +220,8 @@ function pretty_run_maintenance()
 				$pretty_text = 'b' . $row['id_board'];
 			//	Numerical or duplicate URLs aren't allowed!
 			if (is_numeric($pretty_text) || isset($pretty_board_lookup[$pretty_text]) || in_array($pretty_text, $context['pretty']['action_array']))
-				//	Add suffix '-ID_BOARD' to the pretty url
-				$pretty_text .= ($pretty_text != '' ? '-' : 'b') . $row['id_board'];
+				//	Add suffix '-bID_BOARD' to the pretty url
+				$pretty_text .= ($pretty_text != '' ? '-b' : 'b') . $row['id_board'];
 			//	Update the arrays
 			$pretty_board_urls[$row['id_board']] = $pretty_text;
 			$pretty_board_lookup[$pretty_text] = $row['id_board'];
@@ -174,13 +229,13 @@ function pretty_run_maintenance()
 		//	Current board URL is the same as an action
 		elseif (in_array($pretty_board_urls[$row['id_board']], $context['pretty']['action_array']))
 		{
-			$pretty_text = $pretty_board_urls[$row['id_board']] . '-' . $row['id_board'];
+			$pretty_text = $pretty_board_urls[$row['id_board']] . '-b' . $row['id_board'];
 			$pretty_board_urls[$row['id_board']] = $pretty_text;
 			$pretty_board_lookup[$pretty_text] = $row['id_board'];
 		}
 	}
 	$smcFunc['db_free_result']($query);
-	$context['pretty']['maintenance_tasks'][] = 'Updating board URLs';
+	$context['pretty']['maintenance_tasks'][] = 'Update board URLs';
 
 	//	Update the database
 	updateSettings(array(
@@ -226,16 +281,12 @@ function pretty_update_filters()
 
 RewriteEngine on';
 
-	//	Output the rules
 	ksort($rewrites);
 	foreach ($rewrites as $rule)
-	{
-		$htaccess .= "\n\n#	Rules for: " . $rule['id'] . "\n";
-		if (is_array($rule['rule']))
-			$htaccess .= implode("\n", $rule['rule']);
-		else
-			$htaccess .= $rule['rule'];
-	}
+		$htaccess .= '
+
+#	Rules for: ' . $rule['id'] . '
+' . $rule['rule'];
 
 	//	Fix the Root URL
 	if (preg_match('~' . $boardurl . '/(.*)~', $modSettings['pretty_root_url'], $match))
