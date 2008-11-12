@@ -3,9 +3,9 @@
 var chrome = chrome || {};
 
 chrome.news = [
-	{date: 'Never', text: 'A placeholder news item'}	
+	{date: '12 Nov 2008', text: 'Pretty URLs 0.9 released'}	
 ];
 
-chrome.latestVersion = '0.8.4';
+chrome.latestVersion = '0.9';
 chrome.upgradeFrom = '';
 chrome.upgradeUrl = '';
