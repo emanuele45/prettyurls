@@ -10,7 +10,7 @@ Legend:
  % Development flag or note, such as branching.
 
 
-Pretty URLs 0.9                                                 ??
+Pretty URLs 0.9                                               12 Novemeber, 2008
 ================================================================================
  % Branched off 0.8 so that changes for 2.0 support won't get confused with everything else.
  ! Base: Some colour changes were needed for dark themes. (chrome.css)
@@ -41,6 +41,7 @@ Pretty URLs 0.9                                                 ??
  + extras: Added a patch to fix relative URLs used by the arcade mod.
  ! Base: Don't strip final ;s in entities, it breaks validation. (PrettyUrls-Filters.php)
  ! Base/reverter: Installs on SMF 2.0 Beta 4. Stupid versioning inconsistencies.
+ ! Base: Added a few characters needed for Czech. (Subs-PrettyUrls.php)
 
 Pretty URLs 0.8.1                                                 22 March, 2008
 ================================================================================
