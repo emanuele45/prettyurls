@@ -1,4 +1,4 @@
-Changelog started November 2006; Currently at version 0.9
+Changelog started November 2006; Currently at version 0.9.1
 
 Legend:
 --------------------------------------------------------------------------------
@@ -10,7 +10,12 @@ Legend:
  % Development flag or note, such as branching.
 
 
-Pretty URLs 0.9                                               12 Novemeber, 2008
+Pretty URLs 0.9.1                                              24 February, 2009
+================================================================================
+ ! Base/reverter: Installs on SMF 2.0 RC1.
+ ! Base: Don't let fix_possible_url() change any URLs. (News.php)
+
+Pretty URLs 0.9                                                12 November, 2008
 ================================================================================
  % Branched off 0.8 so that changes for 2.0 support won't get confused with everything else.
  ! Base: Some colour changes were needed for dark themes. (chrome.css)

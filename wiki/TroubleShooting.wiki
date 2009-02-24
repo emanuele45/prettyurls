@@ -22,7 +22,9 @@ This is very simple to fix, in addition to updating all the other settings with 
 {{{
 <?php
 require_once(dirname(__FILE__) . '/SSI.php');
+require_once($sourcedir . '/Subs-PrettyUrls.php');
 updateSettings(array('pretty_root_url' => $boardurl));
+pretty_update_filters();
 ?>
 }}}
 

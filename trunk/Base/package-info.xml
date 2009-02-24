@@ -10,7 +10,7 @@
 
 <package-info xmlns="http://www.simplemachines.org/xml/package-info">
 	<id>el:prettyurls</id>
-	<version>0.9</version>
+	<version>1.0RC</version>
 	<name>Pretty URLs</name>
 	<type>modification</type>
 
@@ -44,7 +44,7 @@
 		<code>uninstall.php</code>
 	</uninstall>
 
-	<install for="2.0 Beta 3, 2.0 Beta 3 Public, 2.0 Beta 3.1 Public, 2.0 Beta 4, 2.0 Beta 4 Public">
+	<install for="2.0 Beta 3, 2.0 Beta 3 Public, 2.0 Beta 3.1 Public, 2.0 Beta 4, 2.0 Beta 4 Public, 2.0 RC1">
 		<modification>SMF2-0/Sources.xml</modification>
 		<modification>SMF2-0/BoardsAndTopics.xml</modification>
 		<modification>SMF2-0/Themes.xml</modification>
@@ -58,7 +58,7 @@
 		<require-file name="PrettyUrls.french.php" destination="$languagedir" />
 		<database>SMF2-0/install.php</database>
 	</install>
-	<uninstall for="2.0 Beta 3, 2.0 Beta 3 Public, 2.0 Beta 3.1 Public, 2.0 Beta 4, 2.0 Beta 4 Public">
+	<uninstall for="2.0 Beta 3, 2.0 Beta 3 Public, 2.0 Beta 3.1 Public, 2.0 Beta 4, 2.0 Beta 4 Public, 2.0 RC1">
 		<readme parsebbc="true">readme-uninstall.bbc</readme>
 		<modification reverse="true">SMF2-0/Sources.xml</modification>
 		<modification reverse="true">SMF2-0/BoardsAndTopics.xml</modification>

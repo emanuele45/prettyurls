@@ -7,7 +7,7 @@
 	forum's SSI.php file.
 *******************************************************************************/
 
-//	Pretty URLs - Base v0.9
+//	Pretty URLs - Base v0.9.1
 
 //	If SSI.php is in the same place as this file, and SMF isn't defined, this is being run standalone.
 if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
@@ -33,7 +33,7 @@ $smcFunc['db_create_table']('pretty_topic_urls', array(
 ), array(
 	array('type' => 'primary', 'columns' => array('id_topic')),
 	array('type' => 'unique', 'columns' => array('pretty_url')),
-));
+), array(), 'ignore');
 $tasks['dbchanges'][] = 'Creating the pretty_topic_urls table';
 
 //	Create the pretty_urls_cache table
