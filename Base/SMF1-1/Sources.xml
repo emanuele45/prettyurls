@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification">
 	<id>el:prettyurls</id>
-	<version>0.9</version>
+	<version>0.9.1</version>
 
 	<file name="$boarddir/index.php">
 		<operation>
@@ -88,7 +88,7 @@ $context = array('pretty' => array(
 
 	<file name="$sourcedir/News.php">
 		<operation>
-			<search position="replace"><![CDATA[
+			<search position="after"><![CDATA[
 	if ($xml_format == 'smf' || isset($_REQUEST['debug']))
 ]]></search>
 			<add><![CDATA[
@@ -96,8 +96,21 @@ $context = array('pretty' => array(
 	ob_start('ob_sessrewrite');
 	$context['pretty']['search_patterns'][] = '~(<link>|<id>|<comments>|<guid>)([^#<]+)~';
 	$context['pretty']['replace_patterns'][] = '~(<link>|<id>|<comments>|<guid>)([^<]+)~';
+]]></add>
+		</operation>
 
-	if ($xml_format == 'smf' || isset($_REQUEST['debug']))
+		<operation>
+			<search position="replace"><![CDATA[
+	if (empty($modSettings['queryless_urls']) || ($context['server']['is_cgi'] && @ini_get('cgi.fix_pathinfo') == 0) || !$context['server']['is_apache'])
+		return $val;
+
+	$val = preg_replace('/^' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+)(#[^"]*)?$/e', '\'\' . $scripturl . \'/\' . strtr(\'$1\', \'&;=\', \'//,\') . \'.html$2\'', $val);
+]]></search>
+			<add><![CDATA[
+/***	if (empty($modSettings['queryless_urls']) || ($context['server']['is_cgi'] && @ini_get('cgi.fix_pathinfo') == 0) || !$context['server']['is_apache'])
+		return $val;
+
+	$val = preg_replace('/^' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+)(#[^"]*)?$/e', '\'\' . $scripturl . \'/\' . strtr(\'$1\', \'&;=\', \'//,\') . \'.html$2\'', $val); ***/
 ]]></add>
 		</operation>
 	</file>
@@ -121,7 +134,7 @@ function ob_sessrewrite($buffer)
 	// This should work even in 4.2.x, just not CGI without cgi.fix_pathinfo.
 ]]></search>
 			<add><![CDATA[
-/*	Pretty URLs says no!
+/***	Pretty URLs says no!
 ]]></add>
 		</operation>
 
@@ -130,7 +143,7 @@ function ob_sessrewrite($buffer)
 	// Return the changed buffer.
 ]]></search>
 			<add><![CDATA[
-*/
+***/
 
 	//	Rewrite the buffer with Pretty URLs!
 	if ($modSettings['pretty_enable_filters'])

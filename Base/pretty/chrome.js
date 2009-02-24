@@ -22,7 +22,7 @@ chrome.liveNews = function()
 }
 
 //	Check the latest version
-chrome.currentVersion = '0.9';
+chrome.currentVersion = '0.9.1';
 
 chrome.checkVersion = function()
 {
