@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification">
 	<id>el:prettyurls</id>
-	<version>1.0RC</version>
+	<version>0.9.1</version>
 
 	<file name="$boarddir/index.php">
 		<operation>
@@ -226,31 +226,6 @@ function ob_sessrewrite($buffer)
 			<add><![CDATA[
 				'manage_themes' => '<a href="' . $scripturl . '?action=theme;sa=admin;sesc=' . $sc . '">' . $txt['theme_admin'] . '</a>',
 				'pretty_admin' => '<a href="' . $scripturl . '?action=admin;area=pretty">' . $txt['pretty_admin_menu'] . '</a>',
-]]></add>
-		</operation>
-	</file>
-
-	<file name="$sourcedir/Subs-Post.php">
-		<operation>
-			<search position="replace"><![CDATA[
-	global $webmaster_email, $context, $modSettings, $txt, $scripturl;
-]]></search>
-			<add><![CDATA[
-	global $webmaster_email, $context, $modSettings, $txt, $scripturl, $sourcedir;
-]]></add>
-		</operation>
-
-		<operation>
-			<search position="before"><![CDATA[
-	$message = str_replace(array("\r", "\n"), array('', $line_break), stripslashes($message));
-]]></search>
-			<add><![CDATA[
-	// Prettify any URLs
-	if ($modSettings['pretty_enable_filters'])
-	{
-		require_once($sourcedir . '/PrettyUrls-Filters.php');
-		$message = pretty_rewrite_buffer($message);
-	}
 ]]></add>
 		</operation>
 	</file>

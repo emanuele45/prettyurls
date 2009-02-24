@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification">
 	<id>el:prettyurls</id>
-	<version>1.0RC</version>
+	<version>0.9.1</version>
 
 	<file name="$boarddir/index.php">
 		<operation>
@@ -225,31 +225,6 @@ function ob_sessrewrite($buffer)
 			$setLocation = $pretty_url[0]['replacement'];
 		$setLocation = str_replace("\x12", '\'', $setLocation);
 		$setLocation = preg_replace(array('~;+|=;~', '~\?;~', '~\?#|;#|=#~', '~\?$|;$|#$|=$~'), array(';', '?', '#', ''), $setLocation);
-	}
-]]></add>
-		</operation>
-	</file>
-
-	<file name="$sourcedir/Subs-Post.php">
-		<operation>
-			<search position="replace"><![CDATA[
-	global $webmaster_email, $context, $modSettings, $txt, $scripturl;
-]]></search>
-			<add><![CDATA[
-	global $webmaster_email, $context, $modSettings, $txt, $scripturl, $sourcedir;
-]]></add>
-		</operation>
-
-		<operation>
-			<search position="before"><![CDATA[
-	$message = str_replace(array("\r", "\n"), array('', $line_break), $message);
-]]></search>
-			<add><![CDATA[
-	// Prettify any URLs
-	if ($modSettings['pretty_enable_filters'])
-	{
-		require_once($sourcedir . '/PrettyUrls-Filters.php');
-		$message = pretty_rewrite_buffer($message);
 	}
 ]]></add>
 		</operation>
