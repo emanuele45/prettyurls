@@ -1,4 +1,4 @@
-Changelog started November 2006; Currently at version 1.0RC
+Changelog started November 2006; Currently at version 0.9.2
 
 Legend:
 --------------------------------------------------------------------------------
@@ -10,12 +10,15 @@ Legend:
  % Development flag or note, such as branching.
 
 
-Pretty URLs 1.0RC                                              ???
+Pretty URLs 0.9.2                                                 25 March, 2009
 ================================================================================
- % Base/reverter: Installs on SMF 2.0 RC1.
- + Base: Prettify URLs in emails. (Subs-Post.php)
+ ! Base: Minor typos in the previous change to fix_possible_url(). (News.php)
+ + Base: Prettify URLs in emails. (PrettyUrls-Filters.php, Subs-Post.php)
+
+Pretty URLs 0.9.1                                              24 February, 2009
+================================================================================
+ ! Base/reverter: Installs on SMF 2.0 RC1.
  ! Base: Don't let fix_possible_url() change any URLs. (News.php)
- ! Base: The previous changes needed a little more work. (News.php, PrettyUrls-Filters.php, Subs-Post.php)
 
 Pretty URLs 0.9                                                12 November, 2008
 ================================================================================
