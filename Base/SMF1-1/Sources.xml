@@ -104,13 +104,13 @@ $context = array('pretty' => array(
 	if (empty($modSettings['queryless_urls']) || ($context['server']['is_cgi'] && @ini_get('cgi.fix_pathinfo') == 0) || !$context['server']['is_apache'])
 		return $val;
 
-	$val = preg_replace('/^' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+)(#[^"]*)?$/e', '\'\' . $scripturl . \'/\' . strtr(\'$1\', \'&;=\', \'//,\') . \'.html$2\'', $val);
+	$val = preg_replace('/^' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+)(#[^"]*)?$/e', "'' . \$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html\$2'", $val);
 ]]></search>
 			<add><![CDATA[
 /***	if (empty($modSettings['queryless_urls']) || ($context['server']['is_cgi'] && @ini_get('cgi.fix_pathinfo') == 0) || !$context['server']['is_apache'])
 		return $val;
 
-	$val = preg_replace('/^' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+)(#[^"]*)?$/e', '\'\' . $scripturl . \'/\' . strtr(\'$1\', \'&;=\', \'//,\') . \'.html$2\'', $val); ***/
+	$val = preg_replace('/^' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+)(#[^"]*)?$/e', "'' . \$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html\$2'", $val); ***/
 ]]></add>
 		</operation>
 	</file>
@@ -249,6 +249,8 @@ function ob_sessrewrite($buffer)
 	if ($modSettings['pretty_enable_filters'])
 	{
 		require_once($sourcedir . '/PrettyUrls-Filters.php');
+		$context['pretty']['search_patterns'][] = '~(\s)(' . $scripturl . '[^#\s]*)~';
+		$context['pretty']['replace_patterns'][] = '~(\s)(' . $scripturl . '[^\s]*)~';
 		$message = pretty_rewrite_buffer($message);
 	}
 ]]></add>

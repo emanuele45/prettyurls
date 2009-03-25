@@ -10,11 +10,12 @@ Legend:
  % Development flag or note, such as branching.
 
 
-Pretty URLs 1.0RC                                              24 February, 2009
+Pretty URLs 1.0RC                                              ???
 ================================================================================
  % Base/reverter: Installs on SMF 2.0 RC1.
  + Base: Prettify URLs in emails. (Subs-Post.php)
  ! Base: Don't let fix_possible_url() change any URLs. (News.php)
+ ! Base: The previous changes needed a little more work. (News.php, PrettyUrls-Filters.php, Subs-Post.php)
 
 Pretty URLs 0.9                                                12 November, 2008
 ================================================================================

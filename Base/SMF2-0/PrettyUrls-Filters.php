@@ -1,5 +1,5 @@
 <?php
-//	Version: 0.9; PrettyUrls-Filters
+//	Version: 1.0RC; PrettyUrls-Filters
 //	A file for filter extensions to be placed in
 
 if (!defined('SMF'))
@@ -112,8 +112,8 @@ function pretty_buffer_callback($matches)
 {
 	global $context, $scripturl;
 
-	//	Is this URL part of a feed?
-	$isFeed = strpos($matches[1], '>');
+	// Is this URL in an attribute, and so will need new quotes?
+	$addQuotes = preg_match('~[\"\']$~', $matches[1]);
 
 	//	Remove those annoying quotes
 	$matches[2] = preg_replace('~^[\"\']|[\"\']$~', '', $matches[2]);
@@ -131,7 +131,7 @@ function pretty_buffer_callback($matches)
 	$replacement = isset($context['pretty']['cached_urls'][$url_id]) ? $context['pretty']['cached_urls'][$url_id] : $cacheableurl;
 	$replacement .= (strpos($replacement, '?') === false ? '?' : ';') . (isset($PHPSESSID[0]) ? $PHPSESSID[0] : '') . ';' . (isset($sesc[0]) ? $sesc[0] : '') . (isset($fragment[0]) ? $fragment[0] : '');
 	$replacement = preg_replace(array('~;+|=;~', '~\?;~', '~\?#|;#|=#~', '~\?$|&amp;$|;$|#$|=$~'), array(';', '?', '#', ''), $replacement);
-	return $matches[1] . ($isFeed === false ? '"' : '') . $replacement . ($isFeed === false ? '"' : '');
+	return $matches[1] . ($addQuotes ? '"' : '') . $replacement . ($addQuotes ? '"' : '');
 }
 
 //	Put the script tags back
