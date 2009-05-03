@@ -1,4 +1,4 @@
-Changelog started November 2006; Currently at version 0.9.2
+Changelog started November 2006; Currently at version 0.9.3
 
 Legend:
 --------------------------------------------------------------------------------
@@ -9,6 +9,11 @@ Legend:
  - Feature or option removal.
  % Development flag or note, such as branching.
 
+
+Pretty URLs 0.9.3                                                 ?
+================================================================================
+ ! Boards/Topics: Fix SMF bug #3418 (QueryString.php)
+ ! Boards/Topics: Always unset $_GET['pretty'] in SMF2. Never before. (QueryString.php)
 
 Pretty URLs 0.9.2                                                 25 March, 2009
 ================================================================================
