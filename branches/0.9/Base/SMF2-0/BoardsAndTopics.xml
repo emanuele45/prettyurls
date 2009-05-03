@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification">
 	<id>el:prettyurls</id>
-	<version>0.9</version>
+	<version>0.9.3</version>
 
 	<file name="$sourcedir/Display.php">
 		<operation>
@@ -177,6 +177,25 @@ function cleanRequest()
 ]]></add>
 		</operation>
 
+		<!-- Fix for bug #3418 http://dev.simplemachines.org/mantis/view.php?id=3418 -->
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+		parse_str(substr(preg_replace('/&(\w+)(?=&|$)/', '&$1=', strtr(preg_replace('~/([^,/]+),~', '/$1=', substr($request, strpos($request, basename($scripturl)) + strlen(basename($scripturl)))), '/', '&')), 1), $temp);
+		if (function_exists('get_magic_quotes_gpc') && @get_magic_quotes_gpc() != 0 && empty($modSettings['integrate_magic_quotes']))
+			$temp = $removeMagicQuoteFunction($temp);
+		$_GET += $temp;
+]]></search>
+			<add><![CDATA[
+		if (strpos($request, basename($scripturl)) !== false)
+		{
+			parse_str(substr(preg_replace('/&(\w+)(?=&|$)/', '&$1=', strtr(preg_replace('~/([^,/]+),~', '/$1=', substr($request, strpos($request, basename($scripturl)) + strlen(basename($scripturl)))), '/', '&')), 1), $temp);
+			if (function_exists('get_magic_quotes_gpc') && @get_magic_quotes_gpc() != 0 && empty($modSettings['integrate_magic_quotes']))
+				$temp = $removeMagicQuoteFunction($temp);
+			$_GET += $temp;
+		}
+]]></add>
+		</operation>
+
 		<operation>
 			<search position="replace"><![CDATA[
 		// Now make absolutely sure it's a number.
@@ -189,10 +208,7 @@ function cleanRequest()
 		{
 			$board = (int) $_REQUEST['board'];
 			if (!isset($_REQUEST['pretty']))
-			{
 				$context['pretty']['oldschoolquery'] = true;
-				unset($_GET['pretty']);
-			}
 		} else {
 			$_REQUEST['board'] = str_replace(array('&#039;', '\\'), array("\x12", ''), $_REQUEST['board']);
 			$pretty_board_lookup = unserialize($modSettings['pretty_board_lookup']);
@@ -200,7 +216,6 @@ function cleanRequest()
 
 			//	Fix $_REQUEST for silly mods that don't check $board
 			$context['pretty']['query_string']['board'] = $_REQUEST['board'];
-			$_GET['board'] = $board;
 			$_REQUEST['board'] = $board;
 		}
 ]]></add>
@@ -209,6 +224,12 @@ function cleanRequest()
 		<operation>
 			<search position="replace"><![CDATA[
 		$topic = (int) $_REQUEST['topic'];
+
+		// Now make sure the online log gets the right number.
+		$_GET['topic'] = $topic;
+	}
+	else
+		$topic = 0;
 ]]></search>
 			<add><![CDATA[
 		// Check for pretty topic URLs, and possibly redirect if oldschool queries were used.
@@ -216,10 +237,7 @@ function cleanRequest()
 		{
 			$topic = (int) $_REQUEST['topic'];
 			if (!isset($_REQUEST['pretty']))
-			{
 				$context['pretty']['oldschoolquery'] = true;
-				unset($_GET['pretty']);
-			}
 		} else {
 			$_REQUEST['topic'] = str_replace(array('&#039;', '\\'), array("\x12", ''), $_REQUEST['topic']);
 			//	Are we feeling lucky?
@@ -240,12 +258,20 @@ function cleanRequest()
 
 			//	Fix $_REQUEST for silly mods that don't check $topic
 			$context['pretty']['query_string']['topic'] = $_REQUEST['topic'];
-			$_GET['topic'] = $topic;
 			$_REQUEST['topic'] = $topic;
 
 			//	That query should be counted separately
 			$context['pretty']['db_count']++;
 		}
+
+		// Now make sure the online log gets the right number.
+		$_GET['topic'] = $topic;
+	}
+	else
+		$topic = 0;
+
+	// Remove our querystring flag so that the noindex meta logic will work
+	unset($_GET['pretty']);
 ]]></add>
 		</operation>
 	</file>
