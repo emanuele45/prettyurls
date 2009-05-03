@@ -1,5 +1,5 @@
 <?php
-//	Version: 0.9; PrettyUrls
+//	Version: 1.0RC; PrettyUrls
 
 //	Pretty URLs chrome
 function template_pretty_chrome_above()
@@ -47,7 +47,7 @@ function template_pretty_news()
 		<h3>', $txt['pretty_chrome_menu_news'], '</h3>
 		<div id="chrome_news">', $txt['ajax_in_progress'], '</div>
 		<h3>', $txt['pretty_version'], '</h3>
-		<p>', $txt['pretty_current_version'], ': 0.9</p>
+		<p>', $txt['pretty_current_version'], ': 1.0RC</p>
 		<p>', $txt['pretty_latest_version'], ': <span id="chrome_latest">', $txt['ajax_in_progress'], '</span></p>';
 }
 
