@@ -1,5 +1,5 @@
 <?php
-//	Version: 1.0RC; PrettyUrls-Filters
+//	Version: 0.9.3; PrettyUrls-Filters
 //	A file for filter extensions to be placed in
 
 if (!defined('SMF'))

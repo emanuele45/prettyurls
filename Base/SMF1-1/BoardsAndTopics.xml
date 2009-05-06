@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification">
 	<id>el:prettyurls</id>
-	<version>1.0RC</version>
+	<version>0.9.3</version>
 
 	<file name="$sourcedir/Display.php">
 		<operation>
