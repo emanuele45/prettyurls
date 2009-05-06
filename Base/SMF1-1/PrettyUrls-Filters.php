@@ -1,5 +1,5 @@
 <?php
-//	Version: 0.9.2; PrettyUrls-Filters
+//	Version: 0.9.3; PrettyUrls-Filters
 //	A file for filter extensions to be placed in
 
 if (!defined('SMF'))
@@ -111,7 +111,7 @@ function pretty_buffer_callback($matches)
 	global $context, $scripturl;
 
 	// Is this URL in an attribute, and so will need new quotes?
-	$addQuotes = preg_match('~[\"\']$~', $matches[1]);
+	$addQuotes = preg_match('~^[\"\']~', $matches[2]);
 
 	//	Remove those annoying quotes
 	$matches[2] = preg_replace('~^[\"\']|[\"\']$~', '', $matches[2]);
