@@ -18,6 +18,7 @@ Pretty URLs 1.0RC                                              ???
  ! Base: The previous changes needed a little more work. (News.php, PrettyUrls-Filters.php, Subs-Post.php)
  ! Boards/Topics: Fix SMF bug #3418 (QueryString.php)
  ! Boards/Topics: Always unset $_GET['pretty'] in SMF2. Never before. (QueryString.php)
+ ! Base: Quotes are back finally... (PrettyUrls-Filters.php)
 
 Pretty URLs 0.9                                                12 November, 2008
 ================================================================================
