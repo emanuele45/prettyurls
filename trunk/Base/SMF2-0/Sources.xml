@@ -249,8 +249,8 @@ function ob_sessrewrite($buffer)
 	if ($modSettings['pretty_enable_filters'])
 	{
 		require_once($sourcedir . '/PrettyUrls-Filters.php');
-		$context['pretty']['search_patterns'][] = '~(\s)(' . $scripturl . '[^#\s]*)~';
-		$context['pretty']['replace_patterns'][] = '~(\s)(' . $scripturl . '[^\s]*)~';
+		$context['pretty']['search_patterns'][] = '{(\s)(' . $scripturl . '[^#\s]*){';
+		$context['pretty']['replace_patterns'][] = '{(\s)(' . $scripturl . '[^\s]*){';
 		$message = pretty_rewrite_buffer($message);
 	}
 ]]></add>

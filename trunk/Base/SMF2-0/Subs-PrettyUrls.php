@@ -238,7 +238,7 @@ RewriteEngine on';
 	}
 
 	//	Fix the Root URL
-	if (preg_match('~' . $boardurl . '/(.*)~', $modSettings['pretty_root_url'], $match))
+	if (preg_match('{' . $boardurl . '/(.*){', $modSettings['pretty_root_url'], $match))
 		$htaccess = str_replace('ROOTURL', $match[1] . '/', $htaccess);
 	else
 		$htaccess = str_replace('ROOTURL', '', $htaccess);

@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification">
 	<id>el:prettyurls-extras</id>
-	<version>0.9</version>
+	<version>1.0RC</version>
 
 	<file name="$sourcedir/PrettyUrls-Filters.php">
 		<operation>
@@ -14,7 +14,7 @@ function pretty_tp_articles_filter($urls)
 {
 	global $boardurl, $scripturl;
 
-	$pattern = '~' . $scripturl . '(.*)page=([^;]+)~S';
+	$pattern = '{' . $scripturl . '(.*)page=([^;]+){S';
 	$replacement = $boardurl . '/page/$2/$1';
 	foreach ($urls as $url_id => $url)
 		if (!isset($url['replacement']))
