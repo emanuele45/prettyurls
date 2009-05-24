@@ -22,11 +22,11 @@
 		<modification reverse="true">Sources-SMF1-1.xml</modification>
 	</uninstall>
 
-	<install for="2.0 Beta 3, 2.0 Beta 3 Public, 2.0 Beta 3.1 Public, 2.0 Beta 4, 2.0 Beta 4 Public, 2.0 RC1">
+	<install for="2.0 Beta 3, 2.0 Beta 3 Public, 2.0 Beta 3.1 Public, 2.0 Beta 4, 2.0 Beta 4 Public, 2.0 RC1, 2.0 RC1-1">
 		<readme parsebbc="true">readme-install.bbc</readme>
 		<modification>Sources-SMF2-0.xml</modification>
 	</install>
-	<uninstall for="2.0 Beta 3, 2.0 Beta 3 Public, 2.0 Beta 3.1 Public, 2.0 Beta 4, 2.0 Beta 4 Public, 2.0 RC1">
+	<uninstall for="2.0 Beta 3, 2.0 Beta 3 Public, 2.0 Beta 3.1 Public, 2.0 Beta 4, 2.0 Beta 4 Public, 2.0 RC1, 2.0 RC1-1">
 		<modification reverse="true">Sources-SMF2-0.xml</modification>
 	</uninstall>
 
