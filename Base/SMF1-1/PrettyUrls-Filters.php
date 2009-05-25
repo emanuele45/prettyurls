@@ -145,7 +145,7 @@ function pretty_urls_actions_filter($urls)
 {
 	global $boardurl, $context, $scripturl;
 
-	$pattern = '{' . $scripturl . '(.*)action=([^;]+){S';
+	$pattern = '`' . $scripturl . '(.*)action=([^;]+)`S';
 	$replacement = $boardurl . '/$2/$1';
 	foreach ($urls as $url_id => $url)
 		if (!isset($url['replacement']))
@@ -160,7 +160,7 @@ function pretty_urls_topic_filter($urls)
 {
 	global $context, $db_prefix, $modSettings, $scripturl, $sourcedir;
 
-	$pattern = '{' . $scripturl . '(.*[?;&])topic=([.a-zA-Z0-9]+)(.*){S';
+	$pattern = '`' . $scripturl . '(.*[?;&])topic=([.a-zA-Z0-9]+)(.*)`S';
 	$query_data = array();
 	foreach ($urls as $url_id => $url)
 	{
@@ -290,7 +290,7 @@ function pretty_urls_board_filter($urls)
 {
 	global $scripturl, $modSettings, $context;
 
-	$pattern = '{' . $scripturl . '(.*[?;&])board=([.0-9]+)(.*){S';
+	$pattern = '`' . $scripturl . '(.*[?;&])board=([.0-9]+)(.*)`S';
 	foreach ($urls as $url_id => $url)
 		//	Split out the board URLs and replace them
 		if (!isset($url['replacement']))
@@ -315,7 +315,7 @@ function pretty_profiles_filter($urls)
 {
 	global $scripturl, $boardurl, $modSettings, $db_prefix;
 
-	$pattern = '{' . $scripturl . '(.*)action=profile;u=([0-9]+)(.*){S';
+	$pattern = '`' . $scripturl . '(.*)action=profile;u=([0-9]+)(.*)`S';
 	$query_data = array();
 	foreach ($urls as $url_id => $url)
 	{
