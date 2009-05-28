@@ -1,0 +1,127 @@
+# Turkish translation for prettyurls
+# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# This file is distributed under the same license as the prettyurls package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: prettyurls\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2009-04-29 01:04+1000\n"
+"PO-Revision-Date: 2009-05-09 10:13+0000\n"
+"Last-Translator: Yagiz <Unknown>\n"
+"Language-Team: Turkish <tr@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-05-25 09:12+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#: pretty_chrome_title
+msgid "Pretty URLs Administration"
+msgstr "Şeker Linkler Yönetim"
+
+#: pretty_chrome_menu_news
+msgid "News"
+msgstr "Haberler"
+
+#: pretty_chrome_menu_settings
+msgid "Settings"
+msgstr "Ayarlar"
+
+#: pretty_chrome_menu_maintenance
+msgid "Maintenance"
+msgstr "Bakım"
+
+#: pretty_chrome_caption_news
+msgid "The latest news and information live from the project website"
+msgstr "Proje websitesinden bilgiler ve son gelişmeler"
+
+#: pretty_chrome_page_title_news
+msgid "Pretty URLs News & Info"
+msgstr "Şeker Linkler Haber & Bilgi"
+
+#: pretty_chrome_title_news
+msgid "News & Info"
+msgstr "Haber & Bilgi"
+
+#: pretty_current_version
+msgid "Current version"
+msgstr "Kullanılan Sürüm"
+
+#: pretty_download
+msgid "Download"
+msgstr "İndir"
+
+#: pretty_latest_version
+msgid "Latest version"
+msgstr "Güncel Versiyon"
+
+#: pretty_upgrade
+msgid "Upgrade now!"
+msgstr "Şimdi yükselt!"
+
+#: pretty_version
+msgid "Version info"
+msgstr "Sürüm bilgisi"
+
+#: pretty_chrome_page_title_settings
+msgid "Pretty URLs Settings"
+msgstr "Şeker Linkler Ayarlar"
+
+#: pretty_core_settings
+msgid "Core settings"
+msgstr "Ana ayarlar"
+
+#: pretty_enable
+msgid "Enable URL rewriting"
+msgstr "Url değişimi aç"
+
+#: pretty_save
+msgid "Save changes"
+msgstr "Kaydet"
+
+#: pretty_chrome_caption_maintenance
+msgid "Run some maintenance tasks"
+msgstr "Bazı bakım görevlerini çalıştır"
+
+#: pretty_chrome_page_title_maintenance
+msgid "Pretty URLs Maintenance"
+msgstr "Şeker Linkler Bakım"
+
+#: pretty_run_maintenance
+msgid "Run maintenance tasks"
+msgstr "Bakım görevlerini çalıştır"
+
+#: pretty_chrome_caption_filters
+msgid ""
+"A tool to edit the filters array. The array is formatted here in the <a "
+"href=\"http://www.json.org/\">JSON</a> format. Be careful, the JSON parser "
+"is rather strict."
+msgstr ""
+"Filtre dizilerini düzenlemeye yarayan bir araç. Buradaki araç <a "
+"href=\"http://www.json.org/\">JSON</a> formatındadır. Dikkat edin, JSON "
+"çözümleyici çok sıkıdır."
+
+#: pretty_chrome_page_title_filters
+msgid "Pretty URLs Filters Tool"
+msgstr "Şeker Linkler Filtre Aracı"
+
+#: pretty_chrome_title_filters
+msgid "Filters Tool"
+msgstr "Filtre Aracı"
+
+#: pretty_no_json
+msgid ""
+"The PHP JSON extension is required for this tool. Consider upgrading to PHP "
+"5.2."
+msgstr ""
+"PHP'nin JSON eklentisi bu araç için gereklidir. PHP 5.2 sürümüne güncelleyin."
+
+#: pretty_chrome_caption_settings
+msgid "Various settings"
+msgstr "Bazı Ayarlar"
+
+#: pretty_filters
+msgid "URL rewriting filters"
+msgstr "URL Rewrite Filtreleri"

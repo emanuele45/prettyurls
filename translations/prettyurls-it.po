@@ -1,0 +1,128 @@
+# Italian translation for prettyurls
+# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# This file is distributed under the same license as the prettyurls package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: prettyurls\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2009-04-29 01:04+1000\n"
+"PO-Revision-Date: 2009-03-27 07:43+0000\n"
+"Last-Translator: BrainHell <Unknown>\n"
+"Language-Team: Italian <it@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-05-25 09:12+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#: pretty_chrome_title
+msgid "Pretty URLs Administration"
+msgstr "Pretty URLs Amministrazione"
+
+#: pretty_chrome_menu_news
+msgid "News"
+msgstr "News"
+
+#: pretty_chrome_menu_settings
+msgid "Settings"
+msgstr "Opzioni"
+
+#: pretty_chrome_menu_maintenance
+msgid "Maintenance"
+msgstr "Manutenzione"
+
+#: pretty_chrome_caption_news
+msgid "The latest news and information live from the project website"
+msgstr "Le ultime news e informazione in diretta dal sito del progetto"
+
+#: pretty_chrome_page_title_news
+msgid "Pretty URLs News & Info"
+msgstr "Pretty URLs News & Informazioni"
+
+#: pretty_chrome_title_news
+msgid "News & Info"
+msgstr "News & Informazioni"
+
+#: pretty_current_version
+msgid "Current version"
+msgstr "Versione Corrente"
+
+#: pretty_download
+msgid "Download"
+msgstr "Download"
+
+#: pretty_latest_version
+msgid "Latest version"
+msgstr "Ultima Versione"
+
+#: pretty_upgrade
+msgid "Upgrade now!"
+msgstr "Aggiorna ora!"
+
+#: pretty_version
+msgid "Version info"
+msgstr "Info Versione"
+
+#: pretty_chrome_caption_settings
+msgid "Various settings"
+msgstr "Opzioni Varie"
+
+#: pretty_chrome_page_title_settings
+msgid "Pretty URLs Settings"
+msgstr "Pretty URLs Opzioni"
+
+#: pretty_enable
+msgid "Enable URL rewriting"
+msgstr "Abilita riscrittura URL"
+
+#: pretty_filters
+msgid "URL rewriting filters"
+msgstr "Filtri riscrittura URL"
+
+#: pretty_save
+msgid "Save changes"
+msgstr "Salva modifiche"
+
+#: pretty_chrome_caption_maintenance
+msgid "Run some maintenance tasks"
+msgstr "Avvia task di manutenzione"
+
+#: pretty_chrome_page_title_maintenance
+msgid "Pretty URLs Maintenance"
+msgstr "Pretty URLs Manutenzione"
+
+#: pretty_run_maintenance
+msgid "Run maintenance tasks"
+msgstr "Avvia task di manutenzione"
+
+#: pretty_chrome_caption_filters
+msgid ""
+"A tool to edit the filters array. The array is formatted here in the <a "
+"href=\"http://www.json.org/\">JSON</a> format. Be careful, the JSON parser "
+"is rather strict."
+msgstr ""
+"Uno strumento per modificare i le matrici dei filtri. Le matrici sono in "
+"questo formato <a href=\"http://www.json.org/\">JSON</a>. Attenzione, il "
+"JSON parser è abbastanza rigido."
+
+#: pretty_chrome_page_title_filters
+msgid "Pretty URLs Filters Tool"
+msgstr "Pretty URLs Strumenti per Filtri"
+
+#: pretty_chrome_title_filters
+msgid "Filters Tool"
+msgstr "Strumenti per Filtri"
+
+#: pretty_no_json
+msgid ""
+"The PHP JSON extension is required for this tool. Consider upgrading to PHP "
+"5.2."
+msgstr ""
+"L'estensione PHP JSON è richiesta per questo strumento. Considera un "
+"aggiornamento alla versione PHP 5.2"
+
+#: pretty_core_settings
+msgid "Core settings"
+msgstr ""
