@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: prettyurls 1.0RC\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-29 01:04+1000\n"
+"POT-Creation-Date: 2009-06-06 22:59+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Dannii Willis <curiousdannii@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,113 +17,162 @@ msgstr ""
 "X-Launchpad-Export-Date: 2009-05-25 09:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-# FILE:PrettyUrls
-# SECTION:Admin chrome
-#: pretty_chrome_title
+# Section: Admin chrome
+#: Base/PrettyUrls/pretty_chrome_title
 msgid "Pretty URLs Administration"
 msgstr ""
 
-#: pretty_chrome_menu_news
+#: Base/PrettyUrls/pretty_chrome_menu_news
 msgid "News"
 msgstr ""
 
-#: pretty_chrome_menu_settings
+#: Base/PrettyUrls/pretty_chrome_menu_settings
 msgid "Settings"
 msgstr ""
 
-#: pretty_chrome_menu_maintenance
+#: Base/PrettyUrls/pretty_chrome_menu_maintenance
 msgid "Maintenance"
 msgstr ""
 
-# SECTION:News page
-#: pretty_chrome_caption_news
+# Section: News page
+#: Base/PrettyUrls/pretty_chrome_caption_news
 msgid "The latest news and information live from the project website"
 msgstr ""
 
-#: pretty_chrome_page_title_news
+#: Base/PrettyUrls/pretty_chrome_page_title_news
 msgid "Pretty URLs News & Info"
 msgstr ""
 
-#: pretty_chrome_title_news
+#: Base/PrettyUrls/pretty_chrome_title_news
 msgid "News & Info"
 msgstr ""
 
-#: pretty_current_version
+#: Base/PrettyUrls/pretty_current_version
 msgid "Current version"
 msgstr ""
 
-#: pretty_download
+#: Base/PrettyUrls/pretty_download
 msgid "Download"
 msgstr ""
 
-#: pretty_latest_version
+#: Base/PrettyUrls/pretty_latest_version
 msgid "Latest version"
 msgstr ""
 
-#: pretty_upgrade
+#: Base/PrettyUrls/pretty_upgrade
 msgid "Upgrade now!"
 msgstr ""
 
-#: pretty_version
+#: Base/PrettyUrls/pretty_version
 msgid "Version info"
 msgstr ""
 
-# SECTION:Settings page
-#: pretty_chrome_caption_settings
+# Section: Settings page
+#: Base/PrettyUrls/pretty_chrome_caption_settings
 msgid "Various settings"
 msgstr ""
 
-#: pretty_chrome_page_title_settings
+#: Base/PrettyUrls/pretty_chrome_page_title_settings
 msgid "Pretty URLs Settings"
 msgstr ""
 
-#: pretty_core_settings
+#: Base/PrettyUrls/pretty_core_settings
 msgid "Core settings"
 msgstr ""
 
-#: pretty_enable
+#: Base/PrettyUrls/pretty_enable
 msgid "Enable URL rewriting"
 msgstr ""
 
-#: pretty_filters
+#: Base/PrettyUrls/pretty_filters
 msgid "URL rewriting filters"
 msgstr ""
 
-#: pretty_save
+#: Base/PrettyUrls/pretty_save
 msgid "Save changes"
 msgstr ""
 
-# SECTION:Maintenance page
-#: pretty_chrome_caption_maintenance
+# Section: Maintenance page
+#: Base/PrettyUrls/pretty_chrome_caption_maintenance
 msgid "Run some maintenance tasks"
 msgstr ""
 
-#: pretty_chrome_page_title_maintenance
+#: Base/PrettyUrls/pretty_chrome_page_title_maintenance
 msgid "Pretty URLs Maintenance"
 msgstr ""
 
-#: pretty_run_maintenance
+#: Base/PrettyUrls/pretty_run_maintenance
 msgid "Run maintenance tasks"
 msgstr ""
 
-# SECTION:Edit filters page
-#: pretty_chrome_caption_filters
+# Section: Edit filters page
+#: Base/PrettyUrls/pretty_chrome_caption_filters
 msgid ""
 "A tool to edit the filters array. The array is formatted here in the <a "
 "href=\"http://www.json.org/\">JSON</a> format. Be careful, the JSON parser "
 "is rather strict."
 msgstr ""
 
-#: pretty_chrome_page_title_filters
+#: Base/PrettyUrls/pretty_chrome_page_title_filters
 msgid "Pretty URLs Filters Tool"
 msgstr ""
 
-#: pretty_chrome_title_filters
+#: Base/PrettyUrls/pretty_chrome_title_filters
 msgid "Filters Tool"
 msgstr ""
 
-#: pretty_no_json
+#: Base/PrettyUrls/pretty_no_json
 msgid ""
 "The PHP JSON extension is required for this tool. Consider upgrading to PHP "
 "5.2."
+msgstr ""
+
+# Section: Pretty URLs mod
+#: Base/Modifications/pretty_admin_menu
+msgid "Pretty URLs"
+msgstr ""
+
+# Section: Board URLs interface
+#: Base/Modifications/pretty_add_url
+msgid "Add"
+msgstr ""
+
+#: Base/Modifications/pretty_add_url_description
+msgid "Add a URL. Note that what you enter here will be processed as only certain characters are allowed."
+msgstr ""
+
+#: Base/Modifications/pretty_board_url_title
+msgid "Pretty URLs for: "
+msgstr ""
+
+#: Base/Modifications/pretty_deleted_board
+msgid "Deleted board #"
+msgstr ""
+
+#: Base/Modifications/pretty_duplicate_link
+msgid "delete it first."
+msgstr ""
+
+#: Base/Modifications/pretty_duplicate_warning
+msgid "That URL is already in use by another board. It will be available if you "
+msgstr ""
+
+#: Base/Modifications/pretty_make_primary
+msgid "Make primary"
+msgstr ""
+
+#: Base/Modifications/pretty_modify_board_url
+msgid "Pretty URL"
+msgstr ""
+
+#: Base/Modifications/pretty_no_primary_warning
+msgid "Warning, no primary URL!"
+msgstr ""
+
+#: Base/Modifications/pretty_numerical
+msgid "Sorry, but as that URL is either a number or the same as a forum action the board ID had to be added as a suffix."
+msgstr ""
+
+#: Base/Modifications/pretty_primary_url
+msgid "Primary"
 msgstr ""
