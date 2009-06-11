@@ -1,5 +1,5 @@
 <?php
-//	Version: 0.9; Subs-PrettyUrls
+//	Version: 1.0RC; Subs-PrettyUrls
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -211,13 +211,11 @@ function pretty_update_filters()
 				);
 		}
 
-	//	Backup the current .htaccess file
-	@copy($boarddir . '/.htaccess', $boarddir . '/.htaccess.backup-' . date('Y-m-d'));
-
-	//	Build the new .htaccess file
-	$htaccess = '#	Pretty URLs mod
-#	http://code.google.com/p/prettyurls/
-#	.htaccess file generated automatically on: ' . date('F j, Y, G:i') . '
+	// Build the new .htaccess file
+	$htaccess = '# PRETTYURLS MOD BEGINS
+# Pretty URLs mod
+# http://code.google.com/p/prettyurls/
+# .htaccess file generated automatically on: ' . date('F j, Y, G:i') . '
 
 RewriteEngine on';
 
@@ -225,12 +223,13 @@ RewriteEngine on';
 	ksort($rewrites);
 	foreach ($rewrites as $rule)
 	{
-		$htaccess .= "\n\n#	Rules for: " . $rule['id'] . "\n";
+		$htaccess .= "\n\n# Rules for: " . $rule['id'] . "\n";
 		if (is_array($rule['rule']))
 			$htaccess .= implode("\n", $rule['rule']);
 		else
 			$htaccess .= $rule['rule'];
 	}
+	$htaccess .= "\n\n# PRETTYURLS MOD ENDS";
 
 	//	Fix the Root URL
 	if (preg_match('`' . $boardurl . '/(.*)`', $modSettings['pretty_root_url'], $match))
@@ -252,7 +251,27 @@ RewriteEngine on';
 		$htaccess = str_replace('#ACTIONS', $actions_rewrite, $htaccess);
 	}
 
-	//	Output the file
+	// Check if there is already a .htaccess file
+	if (file_exists($boarddir . '/.htaccess'))
+	{
+		// Can we write to the existing .htaccess file?
+		if (!is_writable($boarddir . '/.htaccess'))
+		{
+			unset($context['template_layers']['pretty_chrome']);
+			fatal_lang_error('pretty_cant_write_htaccess', false);
+		}
+
+		// Backup the old .htaccess file
+		@copy($boarddir . '/.htaccess', $boarddir . '/.htaccess.backup');
+
+		// Replace the old with the new, if we can
+		$oldHtaccess = file_get_contents($boarddir . '/.htaccess');
+		$pattern = '~# PRETTYURLS MOD BEGINS.+# PRETTYURLS MOD ENDS~s';
+		if (preg_match($pattern, $oldHtaccess, $match))
+			$htaccess = str_replace($match[0], $htaccess, $oldHtaccess);
+	}
+
+	// Output the new .htaccess file
 	$handle = fopen($boarddir . '/.htaccess', 'w');
 	fwrite($handle, $htaccess);
 	fclose($handle);

@@ -1,5 +1,5 @@
 <?php
-//	Version: 0.9; PrettyUrls
+//	Version: 1.0RC; PrettyUrls
 
 //	Admin chrome
 $txt['pretty_chrome_title'] = 'Pretty URLs Administration';
@@ -18,6 +18,7 @@ $txt['pretty_upgrade'] = 'Upgrade now!';
 $txt['pretty_version'] = 'Version info';
 
 //	Settings page
+$txt['pretty_cant_write_htaccess'] = 'Cannot overwrite existing .htaccess file. Please change its write permissions.';
 $txt['pretty_chrome_caption_settings'] = 'Settings caption';
 $txt['pretty_chrome_page_title_settings'] = 'Pretty URLs Settings';
 $txt['pretty_core_settings'] = 'Core settings';

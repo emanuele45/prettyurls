@@ -20,6 +20,7 @@ Pretty URLs 1.0RC                                              ???
  ! Boards/Topics: Always unset $_GET['pretty'] in SMF2. Never before. (QueryString.php)
  ! Base: Quotes are back finally... (PrettyUrls-Filters.php)
  ! Base/extras: Change pattern delimiters so that ~username URLs will work. (Many files)
+ + Base: Don't overwrite existing .htaccess files. (Subs-PrettyUrls.php)
 
 Pretty URLs 0.9                                                12 November, 2008
 ================================================================================
