@@ -69,7 +69,7 @@ msgstr ""
 
 # Section: Settings page
 #: Base/PrettyUrls/pretty_cant_write_htaccess
-msgid "Cannot overwrite existing .htaccess file. Please change its writepermissions."
+msgid "Cannot overwrite existing .htaccess file. Please change its write permissions."
 msgstr ""
 
 #: Base/PrettyUrls/pretty_chrome_caption_settings
