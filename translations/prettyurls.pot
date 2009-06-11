@@ -1,4 +1,4 @@
-# Base/PrettyUrls
+# PrettyUrls language texts
 # Copyright (c) 2006-2009, Dannii Willis
 # Dannii Willis <curiousdannii@gmail.com>, 2009.
 #
@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: prettyurls 1.0RC\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-06 22:59+1000\n"
+"POT-Creation-Date: 2009-06-11 10:08+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Dannii Willis <curiousdannii@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-05-25 09:12+0000\n"
+"X-Launchpad-Export-Date: 2009-06-06 13:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 # Section: Admin chrome
@@ -68,6 +68,10 @@ msgid "Version info"
 msgstr ""
 
 # Section: Settings page
+#: Base/PrettyUrls/pretty_cant_write_htaccess
+msgid "Cannot overwrite existing .htaccess file. Please change its writepermissions."
+msgstr ""
+
 #: Base/PrettyUrls/pretty_chrome_caption_settings
 msgid "Various settings"
 msgstr ""
@@ -138,7 +142,9 @@ msgid "Add"
 msgstr ""
 
 #: Base/Modifications/pretty_add_url_description
-msgid "Add a URL. Note that what you enter here will be processed as only certain characters are allowed."
+msgid ""
+"Add a URL. Note that what you enter here will be processed as only certain "
+"characters are allowed."
 msgstr ""
 
 #: Base/Modifications/pretty_board_url_title
@@ -154,7 +160,8 @@ msgid "delete it first."
 msgstr ""
 
 #: Base/Modifications/pretty_duplicate_warning
-msgid "That URL is already in use by another board. It will be available if you "
+msgid ""
+"That URL is already in use by another board. It will be available if you "
 msgstr ""
 
 #: Base/Modifications/pretty_make_primary
@@ -170,7 +177,9 @@ msgid "Warning, no primary URL!"
 msgstr ""
 
 #: Base/Modifications/pretty_numerical
-msgid "Sorry, but as that URL is either a number or the same as a forum action the board ID had to be added as a suffix."
+msgid ""
+"Sorry, but as that URL is either a number or the same as a forum action the "
+"board ID had to be added as a suffix."
 msgstr ""
 
 #: Base/Modifications/pretty_primary_url
