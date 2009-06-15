@@ -35,7 +35,7 @@ To install the mod:
 
 *[TroubleShooting Check the trouble shooting page first!]*
 
-If that doesn't answer your questions, ask for help in the [http://www.simplemachines.org/community/index.php?topic=146969 support topic].
+If that doesn't answer your questions, ask for help in the [http://www.simplemachines.org/community/index.php?topic=146969 support topic]. Please post live URLs which we can easily access. It's too difficult to help with forums installed locally or on intranets.
 
 = How to contribute =
 

@@ -21,6 +21,7 @@ Pretty URLs 1.0RC                                              ???
  ! Base: Quotes are back finally... (PrettyUrls-Filters.php)
  ! Base/extras: Change pattern delimiters so that ~username URLs will work. (Many files)
  + Base: Don't overwrite existing .htaccess files. (Subs-PrettyUrls.php)
+ ! Base: Always display something for the admin menu. (Admin.php, Subs.php)
 
 Pretty URLs 0.9                                                12 November, 2008
 ================================================================================
