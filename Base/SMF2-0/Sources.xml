@@ -61,7 +61,7 @@ $context = array('pretty' => array(
 ]]></search>
 			<add><![CDATA[
 				'pretty' => array(
-					'label' => $txt['pretty_admin_menu'],
+					'label' => (isset($txt['pretty_admin_menu']) ? $txt['pretty_admin_menu'] : 'Pretty URLs'),
 					'file' => 'PrettyUrls.php',
 					'function' => 'PrettyInterface',
 					'custom_url' => $scripturl . '?action=admin;area=pretty',
