@@ -15,6 +15,7 @@
 	<type>modification</type>
 
 	<install for="1.1, 1.1.0-1.1.99">
+		<readme parsebbc="true">readme-install.bbc</readme>
 		<modification>SMF1-1/Sources.xml</modification>
 		<modification>SMF1-1/BoardsAndTopics.xml</modification>
 		<modification>SMF1-1/Themes.xml</modification>
@@ -45,6 +46,7 @@
 	</uninstall>
 
 	<install for="2.0 Beta 3, 2.0 Beta 3 Public, 2.0 Beta 3.1 Public, 2.0 Beta 4, 2.0 Beta 4 Public, 2.0 RC1, 2.0 RC1-1">
+		<readme parsebbc="true">readme-install.bbc</readme>
 		<modification>SMF2-0/Sources.xml</modification>
 		<modification>SMF2-0/BoardsAndTopics.xml</modification>
 		<modification>SMF2-0/Themes.xml</modification>

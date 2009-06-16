@@ -14,7 +14,7 @@ It is simple, powerful, extensible and free. Most of all, it is pretty! Its main
 Pretty URLs will work with SMF 1.1 and 2.0. It requires an Apache webserver with support for mod_rewrite and .htaccess files.
 
 Pretty URLs is released under a [http://prettyurls.googlecode.com/svn/trunk/LICENCE new BSD licence]<br>
-Copyright (c) 2006-2009, Dannii Willis, René-Gilles Deberdt
+Copyright (c) 2006-2009 [http://prettyurls.googlecode.com/svn/trunk/CONTRIBUTORS The Pretty URLs Contributors]
 
 = Downloads =
 
