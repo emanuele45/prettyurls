@@ -58,7 +58,7 @@ function pretty_example_filter($urls)
 {
 	global $boardurl, $scripturl;
 
-	$pattern = '~' . $scripturl . 'action=example$~S';	// The pattern to search for, in this case action=example
+	$pattern = '`' . $scripturl . 'action=example$`S';	// The pattern to search for, in this case action=example, use ` so that ~s in URLs will work.
 	$replacement = $boardurl . '/example.html';	// The replacement URL
 	foreach ($urls as $url_id => $url)
 		if (!isset($url['replacement']))	// This is very important: unless you are very certain of what you're doing, do not rewrite URLs that have already been rewritten!
