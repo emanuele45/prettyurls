@@ -8,7 +8,7 @@ if (!defined('SMF'))
 //	Rewrite the buffer with Pretty URLs!
 function pretty_rewrite_buffer($buffer)
 {
-	global $context, $db_prefix, $modSettings, $scripturl;
+	global $boardurl, $context, $db_prefix, $modSettings;
 
 	//	Remove the script tags now
 	$context['pretty']['scriptID'] = 0;
@@ -26,7 +26,14 @@ function pretty_rewrite_buffer($buffer)
 		{
 			//	Rip out everything that shouldn't be cached
 			$match = preg_replace(array('~^[\"\']|PHPSESSID=[^;]+|sesc=[^;]+~', '~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('', '%22', ';', '?', ''), $match);
-			$url_id = str_replace(array($scripturl . '?board=', $scripturl . '?topic=', $scripturl . '?action=', $scripturl), array('`B', '`T', '`A', '`S'), $match);
+
+			// Absolutise relative URLs
+			if (strpos($match, '://') === false)
+				$match = $boardurl . '/' . $match;
+
+			// Replace $boardurl with something a little shorter
+			$url_id = str_replace($boardurl, '`B', $match);
+
 			$urls_query[] = '\'' . addslashes($url_id) . '\'';
 			$uncached_urls[$url_id] = array(
 				'url' => $match,
@@ -47,7 +54,8 @@ function pretty_rewrite_buffer($buffer)
 			WHERE url_id IN (" . implode(', ', $urls_query) . ')', __FILE__, __LINE__);
 		while ($row = mysql_fetch_assoc($query))
 		{
-			$context['pretty']['cached_urls'][$row['url_id']] = $row['replacement'];
+			// Put the full $boardurl back in
+			$context['pretty']['cached_urls'][$row['url_id']] = str_replace('`B', $boardurl, $row['replacement']);
 			unset($uncached_urls[$row['url_id']]);
 		}
 		mysql_free_result($query);
@@ -69,8 +77,10 @@ function pretty_rewrite_buffer($buffer)
 				$url['replacement'] = str_replace("\x12", '\'', $url['replacement']);
 				$url['replacement'] = preg_replace(array('~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('%22', ';', '?', ''), $url['replacement']);
 				$context['pretty']['cached_urls'][$url_id] = $url['replacement'];
+
+				// Cache only the URLs which will fit, but replace $boardurl first, that will help!
 				if (strlen($url_id) < 256 && strlen($url['replacement']) < 256)
-					$cache_data[] = '(\'' . addslashes($url_id) . '\', \'' . addslashes($url['replacement']) . '\')';
+					$cache_data[] = '(\'' . addslashes($url_id) . '\', \'' . addslashes(str_replace($boardurl, '`B', $url['replacement'])) . '\')';
 			}
 
 			//	Cache these URLs in the database
@@ -108,7 +118,7 @@ function pretty_scripts_remove($match)
 //	A callback function to replace the buffer's URLs with their cached URLs
 function pretty_buffer_callback($matches)
 {
-	global $context, $scripturl;
+	global $boardurl, $context;
 
 	// Is this URL in an attribute, and so will need new quotes?
 	$addQuotes = preg_match('~^[\"\']~', $matches[2]);
@@ -123,7 +133,13 @@ function pretty_buffer_callback($matches)
 
 	//	Rip out everything that won't have been cached
 	$cacheableurl = preg_replace(array('~PHPSESSID=[^;#]+|sesc=[^;#]+|#.*$~', '~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('', '%22', ';', '?', ''), $matches[2]);
-	$url_id = str_replace(array($scripturl . '?board=', $scripturl . '?topic=', $scripturl . '?action=', $scripturl), array('`B', '`T', '`A', '`S'), $cacheableurl);
+
+	// Absolutise relative URLs
+	if (strpos($cacheableurl, '://') === false)
+		$cacheableurl = $boardurl . '/' . $cacheableurl;
+
+	// Replace $boardurl with something a little shorter
+	$url_id = str_replace($boardurl, '`B', $cacheableurl);
 
 	//	Stitch everything back together, clean it up and return
 	$replacement = isset($context['pretty']['cached_urls'][$url_id]) ? $context['pretty']['cached_urls'][$url_id] : $cacheableurl;
