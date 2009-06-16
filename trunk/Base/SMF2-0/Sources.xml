@@ -135,7 +135,7 @@ function ob_sessrewrite($buffer)
 			<add><![CDATA[
 function ob_sessrewrite($buffer)
 {
-	global $scripturl, $modSettings, $user_info, $context, $db_count, $sourcedir, $time_start, $txt;
+	global $scripturl, $modSettings, $user_info, $context, $boardurl, $db_count, $sourcedir, $time_start, $txt;
 ]]></add>
 		</operation>
 
@@ -160,6 +160,10 @@ function ob_sessrewrite($buffer)
 	{
 		require_once($sourcedir . '/PrettyUrls-Filters.php');
 		$buffer = pretty_rewrite_buffer($buffer);
+
+		// Add a <base> element to catch any unwanted relatives
+		$buffer = str_replace('<head>', '<head><base href="' . $boardurl . '/" />', $buffer);
+
 	}
 
 	//	Update the load times
