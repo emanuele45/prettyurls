@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: prettyurls\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-06-06 22:59+1000\n"
+"POT-Creation-Date: 2009-06-11 10:08+1000\n"
 "PO-Revision-Date: 2009-05-28 15:36+0000\n"
 "Last-Translator: Dannii Willis <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-06-06 13:56+0000\n"
+"X-Launchpad-Export-Date: 2009-06-17 04:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: Base/PrettyUrls/pretty_chrome_title
@@ -64,6 +64,12 @@ msgstr "Обновить!"
 #: Base/PrettyUrls/pretty_version
 msgid "Version info"
 msgstr "Информация о версии"
+
+#: Base/PrettyUrls/pretty_cant_write_htaccess
+msgid ""
+"Cannot overwrite existing .htaccess file. Please change its write "
+"permissions."
+msgstr ""
 
 #: Base/PrettyUrls/pretty_chrome_caption_settings
 msgid "Various settings"
