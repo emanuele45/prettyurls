@@ -1,4 +1,4 @@
-# Turkish translation for prettyurls
+# Swedish translation for prettyurls
 # Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
 # This file is distributed under the same license as the prettyurls package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: prettyurls\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-06-11 10:08+1000\n"
-"PO-Revision-Date: 2009-06-11 02:48+0000\n"
-"Last-Translator: Dannii Willis <Unknown>\n"
-"Language-Team: Turkish <tr@li.org>\n"
+"PO-Revision-Date: 2009-06-16 14:01+0000\n"
+"Last-Translator: Daniel J Karlsson <daniel.j.karlsson@gmail.com>\n"
+"Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,79 +19,95 @@ msgstr ""
 
 #: Base/PrettyUrls/pretty_chrome_title
 msgid "Pretty URLs Administration"
-msgstr "Şeker Linkler Yönetim"
+msgstr "Administrera Pretty URL:s"
 
 #: Base/PrettyUrls/pretty_chrome_menu_news
 msgid "News"
-msgstr "Haberler"
+msgstr "Nyheter"
 
 #: Base/PrettyUrls/pretty_chrome_menu_settings
 msgid "Settings"
-msgstr "Ayarlar"
+msgstr "Inställningar"
 
 #: Base/PrettyUrls/pretty_chrome_menu_maintenance
 msgid "Maintenance"
-msgstr "Bakım"
+msgstr "Underhåll"
 
 #: Base/PrettyUrls/pretty_chrome_caption_news
 msgid "The latest news and information live from the project website"
-msgstr "Proje websitesinden bilgiler ve son gelişmeler"
+msgstr "De senaste nyheterna direkt från projektets hemsida"
 
 #: Base/PrettyUrls/pretty_chrome_page_title_news
 msgid "Pretty URLs News & Info"
-msgstr "Şeker Linkler Haber & Bilgi"
+msgstr "Pretty URL:s nyheter &amp; information"
 
 #: Base/PrettyUrls/pretty_chrome_title_news
 msgid "News & Info"
-msgstr "Haber & Bilgi"
+msgstr "Nyheter &amp; information"
 
 #: Base/PrettyUrls/pretty_current_version
 msgid "Current version"
-msgstr "Kullanılan Sürüm"
+msgstr "Nuvarande version"
 
 #: Base/PrettyUrls/pretty_download
 msgid "Download"
-msgstr "İndir"
+msgstr "Ladda ned"
 
 #: Base/PrettyUrls/pretty_latest_version
 msgid "Latest version"
-msgstr "Güncel Versiyon"
+msgstr "Senaste version"
 
 #: Base/PrettyUrls/pretty_upgrade
 msgid "Upgrade now!"
-msgstr "Şimdi yükselt!"
+msgstr "Uppgradera"
 
 #: Base/PrettyUrls/pretty_version
 msgid "Version info"
-msgstr "Sürüm bilgisi"
+msgstr "Versionsinformation"
+
+#: Base/PrettyUrls/pretty_cant_write_htaccess
+msgid ""
+"Cannot overwrite existing .htaccess file. Please change its write "
+"permissions."
+msgstr ""
+"Kan inte skriva över befintlig .htaccess-fil. Vänligen ändra "
+"skrivrättigheterna på filen."
+
+#: Base/PrettyUrls/pretty_chrome_caption_settings
+msgid "Various settings"
+msgstr "Diverse inställningar"
 
 #: Base/PrettyUrls/pretty_chrome_page_title_settings
 msgid "Pretty URLs Settings"
-msgstr "Şeker Linkler Ayarlar"
+msgstr "Inställningar Pretty URL"
 
 #: Base/PrettyUrls/pretty_core_settings
 msgid "Core settings"
-msgstr "Ana ayarlar"
+msgstr "Grundinställningar"
 
 #: Base/PrettyUrls/pretty_enable
 msgid "Enable URL rewriting"
-msgstr "Url değişimi aç"
+msgstr "Aktivera URL-omskrivning"
+
+#: Base/PrettyUrls/pretty_filters
+msgid "URL rewriting filters"
+msgstr "Filter för URL-omskrivning"
 
 #: Base/PrettyUrls/pretty_save
 msgid "Save changes"
-msgstr "Kaydet"
+msgstr "Spara ändringar"
 
 #: Base/PrettyUrls/pretty_chrome_caption_maintenance
 msgid "Run some maintenance tasks"
-msgstr "Bazı bakım görevlerini çalıştır"
+msgstr "Verkställ underhållsåtgärder"
 
 #: Base/PrettyUrls/pretty_chrome_page_title_maintenance
 msgid "Pretty URLs Maintenance"
-msgstr "Şeker Linkler Bakım"
+msgstr "Underhåll för Pretty URL"
 
 #: Base/PrettyUrls/pretty_run_maintenance
 msgid "Run maintenance tasks"
-msgstr "Bakım görevlerini çalıştır"
+msgstr "Verkställ underhållsåtgärder"
 
 #: Base/PrettyUrls/pretty_chrome_caption_filters
 msgid ""
@@ -99,88 +115,80 @@ msgid ""
 "href=\"http://www.json.org/\">JSON</a> format. Be careful, the JSON parser "
 "is rather strict."
 msgstr ""
-"Filtre dizilerini düzenlemeye yarayan bir araç. Buradaki araç <a "
-"href=\"http://www.json.org/\">JSON</a> formatındadır. Dikkat edin, JSON "
-"çözümleyici çok sıkıdır."
+"Ett verktyg för att ändra filtertabellen. Tabellen är formaterad i <a "
+"href=\"http://www.json.org/\">JSON</a>-format. Var noggran, för JSON-"
+"analyseraren är ganska strikt."
 
 #: Base/PrettyUrls/pretty_chrome_page_title_filters
 msgid "Pretty URLs Filters Tool"
-msgstr "Şeker Linkler Filtre Aracı"
+msgstr "Filtreringsverktyg Pretty URL"
 
 #: Base/PrettyUrls/pretty_chrome_title_filters
 msgid "Filters Tool"
-msgstr "Filtre Aracı"
+msgstr "Filtreringsverktyg"
 
 #: Base/PrettyUrls/pretty_no_json
 msgid ""
 "The PHP JSON extension is required for this tool. Consider upgrading to PHP "
 "5.2."
 msgstr ""
-"PHP'nin JSON eklentisi bu araç için gereklidir. PHP 5.2 sürümüne güncelleyin."
-
-#: Base/PrettyUrls/pretty_cant_write_htaccess
-msgid ""
-"Cannot overwrite existing .htaccess file. Please change its write "
-"permissions."
-msgstr ""
-
-#: Base/PrettyUrls/pretty_chrome_caption_settings
-msgid "Various settings"
-msgstr "Bazı Ayarlar"
-
-#: Base/PrettyUrls/pretty_filters
-msgid "URL rewriting filters"
-msgstr "URL Rewrite Filtreleri"
+"PHP-utökningen JSON krävs av det här verktyget. Överväg att uppgradera till "
+"PHP 5.2."
 
 #: Base/Modifications/pretty_admin_menu
 msgid "Pretty URLs"
-msgstr ""
+msgstr "Pretty URLs"
 
 #: Base/Modifications/pretty_add_url
 msgid "Add"
-msgstr ""
+msgstr "Lägg till"
 
 #: Base/Modifications/pretty_add_url_description
 msgid ""
 "Add a URL. Note that what you enter here will be processed as only certain "
 "characters are allowed."
 msgstr ""
+"Lägg till en URL. Notera att det du ger in här kommer att processas, då "
+"endast vissa tecken är tillåtna."
 
 #: Base/Modifications/pretty_board_url_title
 msgid "Pretty URLs for: "
-msgstr ""
+msgstr "Pretty URLs för: "
 
 #: Base/Modifications/pretty_deleted_board
 msgid "Deleted board #"
-msgstr ""
+msgstr "Tog bort tavla #"
 
 #: Base/Modifications/pretty_duplicate_link
 msgid "delete it first."
-msgstr ""
+msgstr "radera den först."
 
 #: Base/Modifications/pretty_duplicate_warning
 msgid ""
 "That URL is already in use by another board. It will be available if you "
 msgstr ""
+"Den URL:en används redan till en annan tavla. Den blir tillgänglig om du "
 
 #: Base/Modifications/pretty_make_primary
 msgid "Make primary"
-msgstr ""
+msgstr "Gör primär"
 
 #: Base/Modifications/pretty_modify_board_url
 msgid "Pretty URL"
-msgstr ""
+msgstr "Pretty URL"
 
 #: Base/Modifications/pretty_no_primary_warning
 msgid "Warning, no primary URL!"
-msgstr ""
+msgstr "Varning, ingen primär URL!"
 
 #: Base/Modifications/pretty_numerical
 msgid ""
 "Sorry, but as that URL is either a number or the same as a forum action the "
 "board ID had to be added as a suffix."
 msgstr ""
+"Den URL:en är antingen ett nummer eller en forumshandling som måste läggas "
+"till som suffix."
 
 #: Base/Modifications/pretty_primary_url
 msgid "Primary"
-msgstr ""
+msgstr "Primär"
