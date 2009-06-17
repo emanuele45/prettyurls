@@ -1,6 +1,11 @@
 <?php
 //	Version: 1.0RC; PrettyUrls
 
+// Install chrome
+$txt['pretty_chrome_install_title'] = 'Installing Pretty URLs';
+$txt['pretty_install_success'] = 'Thank you for using <b>Pretty URLs</b>! The installation was a success!';
+$txt['pretty_install_continue'] = 'Please continue to the admin page, where you can enable URL rewriting.';
+
 //	Admin chrome
 $txt['pretty_chrome_title'] = 'Pretty URLs Administration';
 $txt['pretty_chrome_menu_news'] = 'News';

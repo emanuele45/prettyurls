@@ -4,31 +4,33 @@
 //	Pretty URLs chrome
 function template_pretty_chrome_above()
 {
-	global $context, $txt;
+	global $context;
 
 	echo '
 <div id="chrome">
-	<h1>', $txt['pretty_chrome_title'], '</h1>
-	<ul id="chrome_menu">';
-
-	//	The subactions menu
-	foreach ($context['pretty']['chrome']['menu'] as $id => $item)
-		echo '
-		<li><a href="', $item['href'], '" class="', $id, '" title="', $item['title'], '"><span>', $item['title'], '</span></a></li>';
-
-	//	Title and caption
-	echo '
-	</ul>
-	<h2>', $context['pretty']['chrome']['title'], '</h2>
-	<p id="chrome_caption">', $context['pretty']['chrome']['caption'], '</p>';
-
-	//	Any notices?
-	if (isset($context['pretty']['chrome']['notice']))
-		echo '
-	<p id="chrome_notice">', $context['pretty']['chrome']['notice'], '</p>';
-
-	echo '
+	<h1>', $context['pretty']['chrome']['title'], '</h1>
 	<div id="chrome_main">';
+
+	if (isset($context['pretty']['chrome']['admin']))
+	{
+		//	The subactions menu
+		echo '
+		<ul id="chrome_menu">';
+		foreach ($context['pretty']['chrome']['menu'] as $id => $item)
+			echo '
+			<li><a href="', $item['href'], '" class="', $id, '" title="', $item['title'], '"><span>', $item['title'], '</span></a></li>';
+
+		//	Title and caption
+		echo '
+		</ul>
+		<h2>', $context['pretty']['chrome']['page_title'], '</h2>
+		<p id="chrome_caption">', $context['pretty']['chrome']['caption'], '</p>';
+
+		//	Any notices?
+		if (isset($context['pretty']['chrome']['notice']))
+			echo '
+		<p id="chrome_notice">', $context['pretty']['chrome']['notice'], '</p>';
+	}
 }
 
 function template_pretty_chrome_below()
@@ -38,10 +40,20 @@ function template_pretty_chrome_below()
 </div>';
 }
 
+//	Mini template for successful mod installs
+function template_pretty_install()
+{
+	global $scripturl, $txt;
+
+	echo '
+		<p>', $txt['pretty_install_success'], '</p>
+		<p><a href="', $scripturl, '?action=admin;area=pretty">', $txt['pretty_install_continue'], '</a></p>';
+}
+
 //	Lets show some news (and more!)
 function template_pretty_news()
 {
-	global $context, $txt;
+	global $txt;
 
 	echo '
 		<h3>', $txt['pretty_chrome_menu_news'], '</h3>

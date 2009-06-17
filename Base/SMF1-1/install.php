@@ -19,12 +19,6 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 elseif (!defined('SMF'))
 	die('<b>Error:</b> Cannot install - please verify you put this in the same place as SMF\'s SSI.php.');
 
-//	Get the list of tasks ready
-$tasks = array(
-	'db' => 'Database modifications',
-	'dbchanges' => array(),
-);
-
 //	Create the pretty_topic_urls table
 db_query("
 	CREATE TABLE IF NOT EXISTS {$db_prefix}pretty_topic_urls (
@@ -104,7 +98,6 @@ $prettyFilters = array(
 		'title' => 'Profiles',
 	),
 );
-$tasks[] = 'Adding the default filters';
 
 //	Add the pretty_root_url and pretty_enable_filters settings:
 $pretty_root_url = isset($modSettings['pretty_root_url']) ? $modSettings['pretty_root_url'] : $boardurl;
@@ -116,44 +109,49 @@ updateSettings(array(
 	'pretty_filters' => addslashes(serialize($prettyFilters)),
 	'pretty_root_url' => $pretty_root_url,
 ));
-$tasks[] = 'Adding some settings';
 
 //	Run maintenance
 require_once($sourcedir . '/Subs-PrettyUrls.php');
 pretty_run_maintenance(true);
-$tasks[] = 'Running maintenance tasks';
-$tasks[] = $context['pretty']['maintenance_tasks'];
 
-//	Format the tasks list
-$first = true;
-$task_list = '<ul>';
-foreach ($tasks as $task)
-	if (is_array($task))
-	{
-		$task_list .= '<ul>';
-		foreach ($task as $subtask)
-			$task_list .= '<li>' . $subtask . '</li>';
-		$task_list .= '</ul>';
-	}
-	else
-	{
-		if ($first = true)
-			$first = false;
-		else
-			$task_list .= '</li>';
-		$task_list .= '<li>' . $task;
-	}
-$task_list .= '</li></ul>';
+//	Output a success message
+//	Load the PrettyUrls template and language files
+loadTemplate('PrettyUrls');
+if (loadLanguage('PrettyUrls') == false)
+	loadLanguage('PrettyUrls', 'english');
 
-//	Output the list of database changes
+//	Shiny chrome interface
+$context['page_title'] = $txt['pretty_chrome_install_title'];
+$context['template_layers'][] = 'pretty_chrome';
+$context['sub_template'] = 'pretty_install';
+$context['html_headers'] .= '
+	<link rel="stylesheet" type="text/css" href="' . $settings['default_theme_url'] . '/pretty/chrome.css" media="screen,projection" />';
+$context['pretty']['chrome'] = array(
+	'title' => $txt['pretty_chrome_install_title'],
+);
+
+// Add a basic stand alone html frame if its needed
 if (isset($standalone))
 {
-	echo '<title>Installing Pretty URLs - Base 0.9</title>
-<h1>Installing Pretty URLs - Base 0.9</h1>
-<h2>Database changes</h2>
-', $task_list ;
+	function template_standalone_above()
+	{
+		global $context, $txt;
+
+		echo '<!doctype html>
+<html><head>
+	<meta charset="', $context['character_set'], '">
+	<title>', $context['page_title'] , '</title>', $context['html_headers'], '
+</head><body>';
+	}
+
+	function template_standalone_below()
+	{
+		echo '
+</body></html>';
+	}
+
+	$context['template_layers'] = array('standalone', 'pretty_chrome');
+	obExit();
 }
-else
-	$txt['package_installed_done'] = $task_list . $txt['package_installed_done'];
 
 ?>

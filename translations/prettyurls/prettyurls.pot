@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: prettyurls 1.0RC\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-17 14:45+1000\n"
+"POT-Creation-Date: 2009-06-17 17:38+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Dannii Willis <curiousdannii@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,6 +15,21 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2009-06-17 04:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+
+# Section: Install chrome
+#: Base/PrettyUrls/pretty_chrome_install_title
+msgid "Installing Pretty URLs"
+msgstr ""
+
+#: Base/PrettyUrls/pretty_install_success
+msgid "Thank you for using <b>Pretty URLs</b>! The installation was a success!"
+msgstr ""
+
+#: Base/PrettyUrls/pretty_install_continue
+msgid "Please continue to the admin page, where you can enable URL rewriting."
+msgstr ""
+
 
 # Section: Admin chrome
 #: Base/PrettyUrls/pretty_chrome_title
@@ -32,6 +47,7 @@ msgstr ""
 #: Base/PrettyUrls/pretty_chrome_menu_maintenance
 msgid "Maintenance"
 msgstr ""
+
 
 # Section: News page
 #: Base/PrettyUrls/pretty_chrome_caption_news
@@ -66,6 +82,7 @@ msgstr ""
 msgid "Version info"
 msgstr ""
 
+
 # Section: Settings page
 #: Base/PrettyUrls/pretty_cant_write_htaccess
 msgid ""
@@ -97,6 +114,7 @@ msgstr ""
 msgid "Save changes"
 msgstr ""
 
+
 # Section: Maintenance page
 #: Base/PrettyUrls/pretty_chrome_caption_maintenance
 msgid "Run some maintenance tasks"
@@ -109,6 +127,7 @@ msgstr ""
 #: Base/PrettyUrls/pretty_run_maintenance
 msgid "Run maintenance tasks"
 msgstr ""
+
 
 # Section: Edit filters page
 #: Base/PrettyUrls/pretty_chrome_caption_filters
@@ -132,10 +151,12 @@ msgid ""
 "5.2."
 msgstr ""
 
+
 # Section: Pretty URLs mod
 #: Base/Modifications/pretty_admin_menu
 msgid "Pretty URLs"
 msgstr ""
+
 
 # Section: Board URLs interface
 #: Base/Modifications/pretty_add_url
@@ -186,6 +207,7 @@ msgstr ""
 #: Base/Modifications/pretty_primary_url
 msgid "Primary"
 msgstr ""
+
 
 # Section: readmes
 #: Base/readme/install
