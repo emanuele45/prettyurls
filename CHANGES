@@ -25,6 +25,7 @@ Pretty URLs 1.0RC                                              ???
  + Base: Installation readme and CONTRIBUTORS file! :)
  + Base: Absolutise relative URLs. (PrettyUrls-Filters.php, QueryString.php)
  ! Base: Don't cache sc or $context['session_var']. (PrettyUrls-Filters.php)
+ ! Base: If the .htaccess file can't be written to, then don't enable rewriting. (install.php, Subs-PrettyUrls.php)
 
 Pretty URLs 0.9                                                12 November, 2008
 ================================================================================

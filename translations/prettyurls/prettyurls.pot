@@ -1,6 +1,5 @@
-# PrettyUrls language texts
-# Copyright (c) 2006-2009, Dannii Willis
-# Dannii Willis <curiousdannii@gmail.com>, 2009.
+# Pretty URLs language texts
+# Copyright (c) 2006-2009 The Pretty URLs Contributors
 #
 #, fuzzy
 msgid ""
@@ -188,6 +187,7 @@ msgstr ""
 msgid "Primary"
 msgstr ""
 
+# Section: readmes
 #: Base/readme/install
 msgid ""
 "[b][url=http://custom.simplemachines.org/mods/index.php?mod=636]Pretty URLs[/url][/b] is a URL management package for Simple Machine Forums (SMF).<br>"
