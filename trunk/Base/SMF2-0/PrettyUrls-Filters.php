@@ -25,7 +25,7 @@ function pretty_rewrite_buffer($buffer)
 		foreach ($matches[2] as $match)
 		{
 			//	Rip out everything that shouldn't be cached
-			$match = preg_replace(array('~^[\"\']|PHPSESSID=[^;]+|sesc=[^;]+~', '~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('', '%22', ';', '?', ''), $match);
+			$match = preg_replace(array('~^[\"\']|PHPSESSID=[^;]+|(se)?sc=[^;]+|' . $context['session_var'] . '=[^;]+~', '~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('', '%22', ';', '?', ''), $match);
 
 			// Absolutise relative URLs
 			if (strpos($match, '://') === false)
@@ -130,11 +130,12 @@ function pretty_buffer_callback($matches)
 
 	//	Store the parts of the URL that won't be cached so they can be inserted later
 	preg_match('~PHPSESSID=[^;#&]+~', $matches[2], $PHPSESSID);
-	preg_match('~sesc=[^;#]+~', $matches[2], $sesc);
+	preg_match('~(se)?sc=[^;#]+~', $matches[2], $sesc);
+	preg_match('~' . $context['session_var'] . '=[^;#]+~', $matches[2], $session_var);
 	preg_match('~#.*~', $matches[2], $fragment);
 
 	//	Rip out everything that won't have been cached
-	$cacheableurl = preg_replace(array('~PHPSESSID=[^;#]+|sesc=[^;#]+|#.*$~', '~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('', '%22', ';', '?', ''), $matches[2]);
+	$cacheableurl = preg_replace(array('~PHPSESSID=[^;#]+|(se)?sc=[^;#]+|' . $context['session_var'] . '=[^;#]+|#.*$~', '~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('', '%22', ';', '?', ''), $matches[2]);
 
 	// Absolutise relative URLs
 	if (strpos($cacheableurl, '://') === false)
@@ -145,7 +146,7 @@ function pretty_buffer_callback($matches)
 
 	//	Stitch everything back together, clean it up and return
 	$replacement = isset($context['pretty']['cached_urls'][$url_id]) ? $context['pretty']['cached_urls'][$url_id] : $cacheableurl;
-	$replacement .= (strpos($replacement, '?') === false ? '?' : ';') . (isset($PHPSESSID[0]) ? $PHPSESSID[0] : '') . ';' . (isset($sesc[0]) ? $sesc[0] : '') . (isset($fragment[0]) ? $fragment[0] : '');
+	$replacement .= (strpos($replacement, '?') === false ? '?' : ';') . (isset($PHPSESSID[0]) ? $PHPSESSID[0] : '') . ';' . (isset($sesc[0]) ? $sesc[0] : '') . (isset($session_var[0]) ? $session_var[0] : '') . (isset($fragment[0]) ? $fragment[0] : '');
 	$replacement = preg_replace(array('~;+|=;~', '~\?;~', '~\?#|;#|=#~', '~\?$|&amp;$|;$|#$|=$~'), array(';', '?', '#', ''), $replacement);
 	return $matches[1] . ($addQuotes ? '"' : '') . $replacement . ($addQuotes ? '"' : '');
 }
