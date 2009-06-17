@@ -25,7 +25,7 @@ function pretty_rewrite_buffer($buffer)
 		foreach ($matches[2] as $match)
 		{
 			//	Rip out everything that shouldn't be cached
-			$match = preg_replace(array('~^[\"\']|PHPSESSID=[^;]+|sesc=[^;]+~', '~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('', '%22', ';', '?', ''), $match);
+			$match = preg_replace(array('~^[\"\']|PHPSESSID=[^;]+|(se)?sc=[^;]+~', '~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('', '%22', ';', '?', ''), $match);
 
 			// Absolutise relative URLs
 			if (strpos($match, '://') === false)
@@ -128,11 +128,11 @@ function pretty_buffer_callback($matches)
 
 	//	Store the parts of the URL that won't be cached so they can be inserted later
 	preg_match('~PHPSESSID=[^;#&]+~', $matches[2], $PHPSESSID);
-	preg_match('~sesc=[^;#]+~', $matches[2], $sesc);
+	preg_match('~(se)?sc=[^;#]+~', $matches[2], $sesc);
 	preg_match('~#.*~', $matches[2], $fragment);
 
 	//	Rip out everything that won't have been cached
-	$cacheableurl = preg_replace(array('~PHPSESSID=[^;#]+|sesc=[^;#]+|#.*$~', '~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('', '%22', ';', '?', ''), $matches[2]);
+	$cacheableurl = preg_replace(array('~PHPSESSID=[^;#]+|(se)?sc=[^;#]+|#.*$~', '~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('', '%22', ';', '?', ''), $matches[2]);
 
 	// Absolutise relative URLs
 	if (strpos($cacheableurl, '://') === false)
