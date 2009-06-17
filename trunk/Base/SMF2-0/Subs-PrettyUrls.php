@@ -112,7 +112,7 @@ function pretty_generate_url($text)
 }
 
 //	URL maintenance
-function pretty_run_maintenance()
+function pretty_run_maintenance($installing = false)
 {
 	global $boarddir, $context, $modSettings, $smcFunc;
 
@@ -190,12 +190,12 @@ function pretty_run_maintenance()
 	));
 
 	//	Update the filter callbacks
-	pretty_update_filters();
+	pretty_update_filters($installing);
 	$context['pretty']['maintenance_tasks'][] = 'Update the filters';
 }
 
 //	Update the database based on the installed filters and build the .htaccess file
-function pretty_update_filters()
+function pretty_update_filters($installing = false)
 {
 	global $boarddir, $boardurl, $context, $modSettings, $smcFunc;
 
@@ -259,11 +259,16 @@ RewriteEngine on';
 	// Check if there is already a .htaccess file
 	if (file_exists($boarddir . '/.htaccess'))
 	{
-		// Can we write to the existing .htaccess file?
+		// If we can't write to it, disable the filters!
 		if (!is_writable($boarddir . '/.htaccess'))
 		{
 			unset($context['template_layers']['pretty_chrome']);
-			fatal_lang_error('pretty_cant_write_htaccess', false);
+			updateSettings(array('pretty_enable_filters' => '0'));
+
+			if ($installing)
+				return 'pretty_cant_write_htaccess';
+			else
+				fatal_lang_error('pretty_cant_write_htaccess', false);
 		}
 
 		// Backup the old .htaccess file

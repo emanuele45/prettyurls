@@ -123,7 +123,7 @@ $tasks[] = 'Adding some settings';
 
 //	Run maintenance
 require_once($sourcedir . '/Subs-PrettyUrls.php');
-pretty_run_maintenance();
+pretty_run_maintenance(true);
 $tasks[] = 'Running maintenance tasks';
 $tasks[] = $context['pretty']['maintenance_tasks'];
 
