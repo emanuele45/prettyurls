@@ -1,5 +1,5 @@
 <?php
-//	Version: 0.9; PrettyUrls
+//	Version: 1.0RC; PrettyUrls
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -22,6 +22,7 @@ function PrettyInterface()
 	$context['html_headers'] .= '
 	<link rel="stylesheet" type="text/css" href="' . $settings['default_theme_url'] . '/pretty/chrome.css" media="screen,projection" />';
 	$context['pretty']['chrome'] = array(
+		'admin' => true,
 		'menu' => array(
 			'news' => array(
 				'href' => $scripturl . '?action=admin;area=pretty',
@@ -36,6 +37,7 @@ function PrettyInterface()
 				'title' => $txt['pretty_chrome_menu_maintenance'],
 			),
 		),
+		'title' => $txt['pretty_chrome_title'],
 	);
 
 	//	What can we do today?
@@ -68,7 +70,7 @@ function pretty_news()
 
 	$context['page_title'] = $txt['pretty_chrome_page_title_news'];
 	$context['sub_template'] = 'pretty_news';
-	$context['pretty']['chrome']['title'] = $txt['pretty_chrome_title_news'];
+	$context['pretty']['chrome']['page_title'] = $txt['pretty_chrome_title_news'];
 	$context['pretty']['chrome']['caption'] = $txt['pretty_chrome_caption_news'];
 }
 
@@ -115,7 +117,7 @@ function pretty_manage_settings()
 	//	Action-specific chrome
 	$context['page_title'] = $txt['pretty_chrome_page_title_settings'];
 	$context['sub_template'] = 'pretty_settings';
-	$context['pretty']['chrome']['title'] = $txt['pretty_chrome_menu_settings'];
+	$context['pretty']['chrome']['page_title'] = $txt['pretty_chrome_menu_settings'];
 	$context['pretty']['chrome']['caption'] = $txt['pretty_chrome_caption_settings'];
 
 	//	Load the settings up
@@ -144,7 +146,7 @@ function pretty_maintenance()
 	//	Action-specific chrome
 	$context['page_title'] = $txt['pretty_chrome_page_title_maintenance'];
 	$context['sub_template'] = 'pretty_maintenance';
-	$context['pretty']['chrome']['title'] = $txt['pretty_chrome_menu_maintenance'];
+	$context['pretty']['chrome']['page_title'] = $txt['pretty_chrome_menu_maintenance'];
 	$context['pretty']['chrome']['caption'] = $txt['pretty_chrome_caption_maintenance'];
 }
 
@@ -188,7 +190,7 @@ function pretty_edit_filters()
 	//	Action-specific chrome
 	$context['page_title'] = $txt['pretty_chrome_page_title_filters'];
 	$context['sub_template'] = 'pretty_filters';
-	$context['pretty']['chrome']['title'] = $txt['pretty_chrome_title_filters'];
+	$context['pretty']['chrome']['page_title'] = $txt['pretty_chrome_title_filters'];
 	$context['pretty']['chrome']['caption'] = $txt['pretty_chrome_caption_filters'];
 
 	if (isset($_SESSION['pretty']['json_filters']))

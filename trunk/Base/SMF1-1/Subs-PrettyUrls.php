@@ -261,7 +261,7 @@ RewriteEngine on';
 			updateSettings(array('pretty_enable_filters' => '0'));
 
 			if ($installing)
-				return 'pretty_cant_write_htaccess';
+				return;
 			else
 				fatal_lang_error('pretty_cant_write_htaccess', false);
 		}
