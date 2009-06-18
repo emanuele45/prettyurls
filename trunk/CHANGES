@@ -28,6 +28,7 @@ Pretty URLs 1.0RC                                              ???
  ! Base: If the .htaccess file can't be written to, then don't enable rewriting. (install.php, Subs-PrettyUrls.php)
  + Base: Use the chrome templates when installing. (install.php, PrettyUrls.php, PrettyUrls.template.php, etc)
  ! Base: Changed the hotmail fix so that it now autolinks all URLs. (Subs-Post.php)
+ + Base: Automatically detect whether RewriteBase will be needed. (Subs-PrettyUrls.php)
 
 Pretty URLs 0.9                                                12 November, 2008
 ================================================================================

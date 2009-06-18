@@ -219,6 +219,17 @@ function pretty_update_filters($installing = false)
 
 RewriteEngine on';
 
+	// Check if we'll need a RewriteBase rule
+	// Thanks heaps to Silverstripe!
+	// http://open.silverstripe.com/ticket/2903
+	$base = dirname($_SERVER['SCRIPT_NAME']);
+	if (defined('DIRECTORY_SEPARATOR'))
+		$base = str_replace(DIRECTORY_SEPARATOR, '/', $base);
+	else
+		$base = str_replace("\\", '/', $base);
+	if ($base != '.')
+		$htaccess .= "\nRewriteBase " . $base;
+
 	//	Output the rules
 	ksort($rewrites);
 	foreach ($rewrites as $rule)
