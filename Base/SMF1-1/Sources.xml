@@ -146,7 +146,7 @@ function ob_sessrewrite($buffer)
 ***/
 
 	//	Rewrite the buffer with Pretty URLs!
-	if ($modSettings['pretty_enable_filters'])
+	if (!empty($modSettings['pretty_enable_filters']))
 	{
 		require_once($sourcedir . '/PrettyUrls-Filters.php');
 		$buffer = pretty_rewrite_buffer($buffer);
@@ -203,7 +203,7 @@ function ob_sessrewrite($buffer)
 ]]></search>
 			<add><![CDATA[
 	//	Redirections should be pretty too
-	if ($modSettings['pretty_enable_filters'])
+	if (!empty($modSettings['pretty_enable_filters']))
 	{
 		require_once($sourcedir . '/PrettyUrls-Filters.php');
 		$url = array(0 => array('url' => $setLocation, 'url_id' => 'setLocation'));
@@ -239,7 +239,7 @@ function ob_sessrewrite($buffer)
 	global $webmaster_email, $context, $modSettings, $txt, $scripturl;
 ]]></search>
 			<add><![CDATA[
-	global $webmaster_email, $context, $modSettings, $txt, $scripturl, $sourcedir;
+	global $webmaster_email, $context, $modSettings, $txt, $scripturl, $boardurl, $sourcedir;
 ]]></add>
 		</operation>
 
@@ -249,13 +249,24 @@ function ob_sessrewrite($buffer)
 ]]></search>
 			<add><![CDATA[
 	// Prettify any URLs
-	if ($modSettings['pretty_enable_filters'])
+	if (!empty($modSettings['pretty_enable_filters']))
 	{
 		require_once($sourcedir . '/PrettyUrls-Filters.php');
 		$context['pretty']['search_patterns'][] = '`(\s)(' . $scripturl . '[^#\s]*)`';
 		$context['pretty']['replace_patterns'][] = '`(\s)(' . $scripturl . '[^\s]*)`';
 		$message = pretty_rewrite_buffer($message);
 	}
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+		$message = preg_replace('~(' . preg_quote($scripturl, '~') . '([?/][\w\-_%\.,\?&;=#]+)?)~', '<a href="$1">$1</a>', $message);
+]]></search>
+			<add><![CDATA[
+		//$message = preg_replace('~(' . preg_quote($scripturl, '~') . '([?/][\w\-_%\.,\?&;=#]+)?)~', '<a href="$1">$1</a>', $message);
+		// We have to account for rewritten URLs now
+		$message = preg_replace('`\s(' . $boardurl . '[^\s]*)`', '<a href="$1">$1</a>', $message);
 ]]></add>
 		</operation>
 	</file>
