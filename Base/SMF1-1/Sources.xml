@@ -228,7 +228,7 @@ function ob_sessrewrite($buffer)
 ]]></search>
 			<add><![CDATA[
 				'manage_themes' => '<a href="' . $scripturl . '?action=theme;sa=admin;sesc=' . $sc . '">' . $txt['theme_admin'] . '</a>',
-				'pretty_admin' => '<a href="' . $scripturl . '?action=admin;area=pretty">' . (isset($txt['pretty_admin_menu']) ? $txt['pretty_admin_menu'] : 'Pretty URLs') . '</a>',
+				'pretty_admin' => '<a href="' . $scripturl . '?action=admin;area=pretty">' . (isset($txt['pretty_urls']) ? $txt['pretty_urls'] : 'Pretty URLs') . '</a>',
 ]]></add>
 		</operation>
 	</file>

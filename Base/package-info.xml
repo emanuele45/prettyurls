@@ -22,6 +22,7 @@
 		<modification>Languages.xml</modification>
 		<require-file name="SMF1-1/PrettyUrls.php" destination="$sourcedir" />
 		<require-file name="SMF1-1/PrettyUrls-Filters.php" destination="$sourcedir" />
+		<require-file name="PrettyUrls-Tests.php" destination="$sourcedir" />
 		<require-file name="SMF1-1/Subs-PrettyUrls.php" destination="$sourcedir" />
 		<require-file name="PrettyUrls.template.php" destination="$themedir" />
 		<require-dir name="pretty" destination="$themedir" />
@@ -37,6 +38,7 @@
 		<modification reverse="true">Languages.xml</modification>
 		<remove-file name="$sourcedir/PrettyUrls.php" />
 		<remove-file name="$sourcedir/PrettyUrls-Filters.php" />
+		<remove-file name="$sourcedir/PrettyUrls-Tests.php" />
 		<remove-file name="$sourcedir/Subs-PrettyUrls.php" />
 		<remove-file name="$themedir/PrettyUrls.template.php" />
 		<remove-dir name="$themedir/pretty" />
@@ -53,6 +55,7 @@
 		<modification>Languages.xml</modification>
 		<require-file name="SMF2-0/PrettyUrls.php" destination="$sourcedir" />
 		<require-file name="SMF2-0/PrettyUrls-Filters.php" destination="$sourcedir" />
+		<require-file name="PrettyUrls-Tests.php" destination="$sourcedir" />
 		<require-file name="SMF2-0/Subs-PrettyUrls.php" destination="$sourcedir" />
 		<require-file name="PrettyUrls.template.php" destination="$themedir" />
 		<require-dir name="pretty" destination="$themedir" />
@@ -68,6 +71,7 @@
 		<modification reverse="true">Languages.xml</modification>
 		<remove-file name="$sourcedir/PrettyUrls.php" />
 		<remove-file name="$sourcedir/PrettyUrls-Filters.php" />
+		<remove-file name="$sourcedir/PrettyUrls-Tests.php" />
 		<remove-file name="$sourcedir/Subs-PrettyUrls.php" />
 		<remove-file name="$themedir/PrettyUrls.template.php" />
 		<remove-dir name="$themedir/pretty" />

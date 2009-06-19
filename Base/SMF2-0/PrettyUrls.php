@@ -46,6 +46,7 @@ function PrettyInterface()
 		'maintenance' => 'pretty_maintenance',
 		'news' => 'pretty_news',
 		'settings' => 'pretty_manage_settings',
+		'test' => 'pretty_test_rewrites',
 	);
 	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]))
 		call_user_func($subActions[$_REQUEST['sa']]);
@@ -101,15 +102,20 @@ function pretty_manage_settings()
 		foreach ($context['pretty']['filters'] as $id => $filter)
 			$context['pretty']['filters'][$id]['enabled'] = isset($_POST['pretty_filter_' . $id]) ? 1 : 0;
 
-		$pretty_settings = array(
-			'pretty_enable_filters' => $_POST['pretty_enable'],
-			'pretty_filters' => serialize($context['pretty']['filters']),
-		);
-		updateSettings($pretty_settings);
+		updateSettings(array('pretty_filters' => serialize($context['pretty']['filters'])));
 
-		//	Update the filters too
+		//	Update the filters too, but don't force pretty_enable_filters off
 		require_once($sourcedir . '/Subs-PrettyUrls.php');
+		$enabled = !empty($modSettings['pretty_enable_filters']);
 		pretty_update_filters();
+		$modSettings['pretty_enable_filters'] = $enabled;
+
+		// If you want to turn rewriting on you must test that it will work first!
+		if (!$enabled && $_POST['pretty_enable'])
+			redirectexit('action=admin;area=pretty;sa=test');
+
+		// Update the enabled setting
+		updateSettings(array('pretty_enable_filters' => $_POST['pretty_enable']));
 
 		//	All finished now!
 		$_SESSION['pretty']['notice'] = 'Settings saved';
@@ -131,6 +137,41 @@ function pretty_manage_settings()
 		$context['pretty']['chrome']['notice'] = $_SESSION['pretty']['notice'];
 		unset($_SESSION['pretty']['notice']);
 	}
+}
+
+// Test whether the rewrites will work
+function pretty_test_rewrites()
+{
+	global $context, $modSettings, $sourcedir, $txt;
+
+	//	Yes they work, so turn them on!
+	if (isset($_REQUEST['save']))
+	{
+		updateSettings(array('pretty_enable_filters' => '1'));
+
+		//	All finished now!
+		$_SESSION['pretty']['notice'] = 'Settings saved';
+		redirectexit('action=admin;area=pretty;sa=settings');
+	}
+
+	require_once($sourcedir . '/PrettyUrls-Filters.php');
+	require_once($sourcedir . '/PrettyUrls-Tests.php');
+
+	//	Load the filters and get their test links
+	$filters = unserialize($modSettings['pretty_filters']);
+	$linklist = '';
+	foreach ($filters as $id => $filter)
+		if ($filter['enabled'] && isset($filter['test_callback']))
+			$linklist .= '<h3>' . $filter['title'] . '</h3><p>' . implode('</p><p>', call_user_func($filter['test_callback'])) . '</p>';
+
+	// Rewrite just these few test links
+	$context['pretty']['chrome']['linklist'] = pretty_rewrite_buffer($linklist);
+
+	//	Action-specific chrome
+	$context['page_title'] = $txt['pretty_chrome_page_title_settings'];
+	$context['sub_template'] = 'pretty_test_rewrites';
+	$context['pretty']['chrome']['page_title'] = $txt['pretty_chrome_menu_settings'];
+	$context['pretty']['chrome']['caption'] = $txt['pretty_chrome_caption_tests'];
 }
 
 //	Interface for URL maintenance

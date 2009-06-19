@@ -54,6 +54,7 @@ $prettyFilters = array(
 				'RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*)/?$ ./index.php?pretty;board=$1.$2 [L,QSA]',
 			),
 		),
+		'test_callback' => 'pretty_boards_test',
 		'title' => 'Boards',
 	),
 	'topics' => array(
@@ -70,6 +71,7 @@ $prettyFilters = array(
 				'RewriteRule ^ROOTURL([-_!~*\'()$a-zA-Z0-9]+)/([-_!~*\'()$a-zA-Z0-9]+)/([0-9]*|msg[0-9]*|new)/?$ ./index.php?pretty;board=$1;topic=$2.$3 [L,QSA]',
 			),
 		),
+		'test_callback' => 'pretty_topics_test',
 		'title' => 'Topics',
 	),
 	'actions' => array(
@@ -83,6 +85,7 @@ $prettyFilters = array(
 			'priority' => 45,
 			'rule' => '#ACTIONS',	//	To be replaced in pretty_update_filters()
 		),
+		'test_callback' => 'pretty_actions_test',
 		'title' => 'Actions',
 	),
 	'profiles' => array(
@@ -96,6 +99,7 @@ $prettyFilters = array(
 			'priority' => 40,
 			'rule' => 'RewriteRule ^profile/([^/]+)/?$ ./index.php?pretty;action=profile;user=$1 [L,QSA]',
 		),
+		'test_callback' => 'pretty_profiles_test',
 		'title' => 'Profiles',
 	),
 );

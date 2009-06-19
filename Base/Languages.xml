@@ -10,7 +10,7 @@
 			<search position="end"></search>
 			<add><![CDATA[
 //	Pretty URLs mod
-$txt['pretty_admin_menu'] = 'Pretty URLs';
+$txt['pretty_urls'] = 'Pretty URLs';
 
 //	Board URLs interface
 $txt['pretty_add_url'] = 'Add';
@@ -20,7 +20,6 @@ $txt['pretty_deleted_board'] = 'Deleted board #';
 $txt['pretty_duplicate_link'] = 'delete it first.';
 $txt['pretty_duplicate_warning'] = 'That URL is already in use by another board. It will be available if you ';
 $txt['pretty_make_primary'] = 'Make primary';
-$txt['pretty_modify_board_url'] = 'Pretty URL';
 $txt['pretty_no_primary_warning'] = 'Warning, no primary URL!';
 $txt['pretty_numerical'] = 'Sorry, but as that URL is either a number or the same as a forum action the board ID had to be added as a suffix.';
 $txt['pretty_primary_url'] = 'Primary';
@@ -42,7 +41,7 @@ $txt['pretty_root_url'] = 'The base URL used by the board and topic filters, whi
 			<search position="end"></search>
 			<add><![CDATA[
 //	Pretty URLs mod
-$txt['pretty_admin_menu'] = 'Pretty URLs';
+$txt['pretty_urls'] = 'Pretty URLs';
 
 //	Board URLs interface
 $txt['pretty_add_url'] = 'Add';
@@ -52,7 +51,6 @@ $txt['pretty_deleted_board'] = 'Deleted board #';
 $txt['pretty_duplicate_link'] = 'delete it first.';
 $txt['pretty_duplicate_warning'] = 'That URL is already in use by another board. It will be available if you ';
 $txt['pretty_make_primary'] = 'Make primary';
-$txt['pretty_modify_board_url'] = 'Pretty URL';
 $txt['pretty_no_primary_warning'] = 'Warning, no primary URL!';
 $txt['pretty_numerical'] = 'Sorry, but as that URL is either a number or the same as a forum action the board ID had to be added as a suffix.';
 $txt['pretty_primary_url'] = 'Primary';
@@ -74,7 +72,7 @@ $txt['pretty_root_url'] = 'The base URL used by the board and topic filters, whi
 			<search position="end"></search>
 			<add><![CDATA[
 //	Pretty URLs mod
-$txt['pretty_admin_menu'] = 'Pretty URLs';
+$txt['pretty_urls'] = 'Pretty URLs';
 
 //	Board URLs interface
 $txt['pretty_add_url'] = 'Add';
@@ -84,7 +82,6 @@ $txt['pretty_deleted_board'] = 'Deleted board #';
 $txt['pretty_duplicate_link'] = 'delete it first.';
 $txt['pretty_duplicate_warning'] = 'That URL is already in use by another board. It will be available if you ';
 $txt['pretty_make_primary'] = 'Make primary';
-$txt['pretty_modify_board_url'] = 'Pretty URL';
 $txt['pretty_no_primary_warning'] = 'Warning, no primary URL!';
 $txt['pretty_numerical'] = 'Sorry, but as that URL is either a number or the same as a forum action the board ID had to be added as a suffix.';
 $txt['pretty_primary_url'] = 'Primary';

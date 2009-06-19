@@ -96,6 +96,20 @@ function template_pretty_settings()
 		</form>';
 }
 
+// Show a short list of rewritten test URLs
+function template_pretty_test_rewrites()
+{
+	global $context, $scripturl, $txt;
+
+	echo '
+		<form action="', $scripturl, '?action=admin;area=pretty;sa=test;save" method="post">
+			<fieldset>', $context['pretty']['chrome']['linklist'], '</fieldset>
+			<fieldset>
+				<input type="submit" value="', $txt['pretty_enable'], '" />
+			</fieldset>
+		</form>';
+}
+
 //	Forum out of whack?
 function template_pretty_maintenance()
 {

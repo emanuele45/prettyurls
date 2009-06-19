@@ -61,7 +61,7 @@ $context = array('pretty' => array(
 ]]></search>
 			<add><![CDATA[
 				'pretty' => array(
-					'label' => (isset($txt['pretty_admin_menu']) ? $txt['pretty_admin_menu'] : 'Pretty URLs'),
+					'label' => (isset($txt['pretty_urls']) ? $txt['pretty_urls'] : 'Pretty URLs'),
 					'file' => 'PrettyUrls.php',
 					'function' => 'PrettyInterface',
 					'custom_url' => $scripturl . '?action=admin;area=pretty',
@@ -163,7 +163,6 @@ function ob_sessrewrite($buffer)
 
 		// Add a <base> element to catch any unwanted relatives
 		$buffer = str_replace('<head>', '<head><base href="' . $boardurl . '/" />', $buffer);
-
 	}
 
 	//	Update the load times
