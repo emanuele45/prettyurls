@@ -41,4 +41,4 @@ If that doesn't answer your questions, ask for help in the [http://www.simplemac
 
 If you have sufficient PHP skills, try fixing a bug. We're on the look out for more developers.
 
-If you speak a language other than English, please help by translating the mod. We use [https://translations.launchpad.net/prettyurls/trunk/+pots/prettyurls Launchpad.net] for translations.
+If you speak a language other than English, please help by translating the mod. We use [http://translations.launchpad.net/prettyurls Launchpad.net] for translations.
