@@ -80,6 +80,7 @@ function pretty_manage_settings()
 {
 	global $context, $modSettings, $sourcedir, $txt;
 
+/*
 	//	Core settings
 	$context['pretty']['settings']['core'] = array(
 		array(
@@ -89,6 +90,7 @@ function pretty_manage_settings()
 			'value' => $modSettings['pretty_enable_filters'],
 		),
 	);
+*/
 
 	//	Load the filters data
 	$context['pretty']['filters'] = unserialize($modSettings['pretty_filters']);
@@ -122,7 +124,7 @@ function pretty_manage_settings()
 	$context['pretty']['chrome']['caption'] = $txt['pretty_chrome_caption_settings'];
 
 	//	Load the settings up
-	$context['pretty']['settings']['enable'] = $modSettings['pretty_enable_filters'];
+	$context['pretty']['settings']['enable'] = !empty($modSettings['pretty_enable_filters']);
 
 	//	Any notices?
 	if (isset($_SESSION['pretty']['notice']))

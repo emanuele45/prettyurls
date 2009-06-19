@@ -267,7 +267,7 @@ function ob_sessrewrite($buffer)
 			<add><![CDATA[
 		//$message = preg_replace('~(' . preg_quote($scripturl, '~') . '([?/][\w\-_%\.,\?&;=#]+)?)~', '<a href="$1">$1</a>', $message);
 		// We have to account for rewritten URLs now
-		$message = preg_replace('`\s(' . $boardurl . '[^\s]*)`', '<a href="$1">$1</a>', $message);
+		$message = preg_replace('`\s(' . $boardurl . '[^\s<]*)`', '<a href="$1">$1</a>', $message);
 ]]></add>
 		</operation>
 	</file>

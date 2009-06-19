@@ -204,6 +204,7 @@ function cleanRequest()
 			<add><![CDATA[
 		// Now make absolutely sure it's a number.
 		// Check for pretty board URLs too, and possibly redirect if oldschool queries were used.
+		$context['pretty']['query_string']['board'] = $_REQUEST['board'];
 		if (is_numeric($_REQUEST['board']))
 		{
 			$board = (int) $_REQUEST['board'];
@@ -215,7 +216,6 @@ function cleanRequest()
 			$board = (int) isset($pretty_board_lookup[$_REQUEST['board']]) ? $pretty_board_lookup[$_REQUEST['board']] : 0;
 
 			//	Fix $_REQUEST for silly mods that don't check $board
-			$context['pretty']['query_string']['board'] = $_REQUEST['board'];
 			$_REQUEST['board'] = $board;
 		}
 ]]></add>
@@ -233,6 +233,7 @@ function cleanRequest()
 ]]></search>
 			<add><![CDATA[
 		// Check for pretty topic URLs, and possibly redirect if oldschool queries were used.
+		$context['pretty']['query_string']['topic'] = $_REQUEST['topic'];
 		if (is_numeric($_REQUEST['topic']))
 		{
 			$topic = (int) $_REQUEST['topic'];
@@ -257,7 +258,6 @@ function cleanRequest()
 			$smcFunc['db_free_result']($query);
 
 			//	Fix $_REQUEST for silly mods that don't check $topic
-			$context['pretty']['query_string']['topic'] = $_REQUEST['topic'];
 			$_REQUEST['topic'] = $topic;
 
 			//	That query should be counted separately

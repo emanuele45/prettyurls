@@ -100,13 +100,11 @@ $prettyFilters = array(
 	),
 );
 
-//	Add the pretty_root_url and pretty_enable_filters settings:
+//	Add the pretty_root_url setting. pretty_enable_filters can't be set cause updateSettings will ignore it
 $pretty_root_url = isset($modSettings['pretty_root_url']) ? $modSettings['pretty_root_url'] : $boardurl;
-$pretty_enable_filters = isset($modSettings['pretty_enable_filters']) ? $modSettings['pretty_enable_filters'] : 0;
 
 //	Update the settings table
 updateSettings(array(
-	'pretty_enable_filters' => $pretty_enable_filters,
 	'pretty_filters' => serialize($prettyFilters),
 	'pretty_root_url' => $pretty_root_url,
 ));
