@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification">
 	<id>el:prettyurls</id>
-	<version>0.9</version>
+	<version>1.0RC</version>
 
 	<file name="$themedir/ManageBoards.template.php">
 		<operation>
@@ -22,7 +22,7 @@
 ]]></search>
 			<add><![CDATA[
 								<td width="10%" align="right"><a href="', $scripturl, '?action=manageboards;sa=board;boardid=', $board['id'], '">', $txt['mboards_modify'], '</a></td>
-								<td width="10%" style="padding-right: 1ex;" align="right">', allowedTo('admin_forum') ? '<a href="' . $scripturl . '?action=manageboards;sa=pretty;boardid=' . $board['id'] . '">' . $txt['pretty_modify_board_url'] . '</a>' : '', '</td>
+								<td width="10%" style="padding-right: 1ex;" align="right">', allowedTo('admin_forum') ? '<a href="' . $scripturl . '?action=manageboards;sa=pretty;boardid=' . $board['id'] . '">' . $txt['pretty_urls'] . '</a>' : '', '</td>
 ]]></add>
 		</operation>
 

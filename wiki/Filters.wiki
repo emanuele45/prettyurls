@@ -22,6 +22,7 @@ $prettyFilters = array(
 			'priority' => 5,
 			'rule' => 'RewriteRule ^example\.html index.php?action=example [L]',	// The RewriteRule to add to the .htaccess file, if there are multiple rules for a filter this can be an array of strings
 		),
+		'test_callback' = > 'pretty_example_test',	// A function which returns an short array of links which will be rewritten by this filter
 		'title' => 'Example',	// This title will be displayed in the admin panel
 	),
 );
@@ -44,6 +45,7 @@ Here is the above array in JSON format:
 			"priority": 5,
 			"rule": "RewriteRule ^example\.html index.php?action=example [L]"
 		},
+		"test_callback": "pretty_example_test",
 		"title": "Example"
 	}
 }
@@ -58,12 +60,25 @@ function pretty_example_filter($urls)
 {
 	global $boardurl, $scripturl;
 
-	$pattern = '`' . $scripturl . 'action=example$`S';	// The pattern to search for, in this case action=example, use ` so that ~s in URLs will work.
+	$pattern = '`' . $scripturl . '?action=example$`S';	// The pattern to search for, in this case action=example, use ` so that ~s in URLs will work.
 	$replacement = $boardurl . '/example.html';	// The replacement URL
 	foreach ($urls as $url_id => $url)
 		if (!isset($url['replacement']))	// This is very important: unless you are very certain of what you're doing, do not rewrite URLs that have already been rewritten!
 			if (preg_match($pattern, $url['url']))
 				$urls[$url_id]['replacement'] = preg_replace($pattern, $replacement, $url['url']);
 	return $urls;
+}
+}}}
+
+= Test callbacks =
+
+Test callback functions return a short array of links which will be written by the filter.
+
+{{{
+function pretty_example_test()
+{
+	global $scripturl, $txt;
+
+	return array('<a href="' . $scripturl . '?action=example">' . $txt['example_link'] . '</a>');
 }
 }}}

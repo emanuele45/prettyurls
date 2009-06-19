@@ -24,12 +24,15 @@ $txt['pretty_version'] = 'Version info';
 
 //	Settings page
 $txt['pretty_cant_write_htaccess'] = 'Cannot overwrite existing .htaccess file. Please change its write permissions.';
-$txt['pretty_chrome_caption_settings'] = 'Settings caption';
+$txt['pretty_chrome_caption_settings'] = 'Various settings';
 $txt['pretty_chrome_page_title_settings'] = 'Pretty URLs Settings';
 $txt['pretty_core_settings'] = 'Core settings';
 $txt['pretty_enable'] = 'Enable URL rewriting';
 $txt['pretty_filters'] = 'URL rewriting filters';
 $txt['pretty_save'] = 'Save changes';
+
+// Tests page
+$txt['pretty_chrome_caption_tests'] = 'Before enabling URL rewriting, please check that these rewritten links work.';
 
 //	Maintenance page
 $txt['pretty_chrome_caption_maintenance'] = 'Run some maintenance tasks';

@@ -10,7 +10,7 @@ Legend:
  % Development flag or note, such as branching.
 
 
-Pretty URLs 1.0RC                                              ???
+Pretty URLs 1.0RC                                                  19 June, 2009
 ================================================================================
  % Base/reverter: Installs on SMF 2.0 RC1.
  + Base: Prettify URLs in emails. (Subs-Post.php)
@@ -29,6 +29,7 @@ Pretty URLs 1.0RC                                              ???
  + Base: Use the chrome templates when installing. (install.php, PrettyUrls.php, PrettyUrls.template.php, etc)
  ! Base: Changed the hotmail fix so that it now autolinks all URLs. (Subs-Post.php)
  + Base: Automatically detect whether RewriteBase will be needed. (Subs-PrettyUrls.php)
+ + Base: Added an admin page for testing whether rewriting works. (PrettyUrls.php, PrettyUrls.template.php, etc)
 
 Pretty URLs 0.9                                                12 November, 2008
 ================================================================================
