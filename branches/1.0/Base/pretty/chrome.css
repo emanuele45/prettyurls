@@ -1,6 +1,6 @@
 /*
  * Pretty URLs Chrome (Admin Interface)
- * Version: 1.0RC
+ * Version: 1.0
  */
 
 div#chrome
@@ -39,6 +39,7 @@ div#chrome h1
 div#chrome h2
 {
 	background: #ebebeb url('./chrome-h2.png') repeat-x;
+	color: #000;
 	font-size: 1.5em;
 	line-height: 2em;
 }

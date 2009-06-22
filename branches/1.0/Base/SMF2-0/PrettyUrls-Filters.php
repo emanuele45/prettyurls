@@ -1,5 +1,5 @@
 <?php
-//	Version: 1.0RC; PrettyUrls-Filters
+//	Version: 1.0; PrettyUrls-Filters
 //	A file for filter extensions to be placed in
 
 if (!defined('SMF'))
@@ -28,7 +28,7 @@ function pretty_rewrite_buffer($buffer)
 			$match = preg_replace(array('~^[\"\']|PHPSESSID=[^;]+|(se)?sc=[^;]+|' . $context['session_var'] . '=[^;]+~', '~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('', '%22', ';', '?', ''), $match);
 
 			// Absolutise relative URLs
-			if (strpos($match, '://') === false)
+			if (!preg_match('~^[a-zA-Z]+:|^#|@~', $match) && SMF != 'SSI')
 				$match = $boardurl . '/' . $match;
 
 			// Replace $boardurl with something a little shorter
@@ -138,7 +138,7 @@ function pretty_buffer_callback($matches)
 	$cacheableurl = preg_replace(array('~PHPSESSID=[^;#]+|(se)?sc=[^;#]+|' . $context['session_var'] . '=[^;#]+|#.*$~', '~\"~', '~;+|=;~', '~\?;~', '~\?$|;$|=$~'), array('', '%22', ';', '?', ''), $matches[2]);
 
 	// Absolutise relative URLs
-	if (strpos($cacheableurl, '://') === false)
+	if (!preg_match('~^[a-zA-Z]+:|@~', $cacheableurl) && !($cacheableurl == '' && isset($fragment[0])) && SMF != 'SSI')
 		$cacheableurl = $boardurl . '/' . $cacheableurl;
 
 	// Replace $boardurl with something a little shorter
