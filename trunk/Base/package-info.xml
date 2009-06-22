@@ -10,7 +10,7 @@
 
 <package-info xmlns="http://www.simplemachines.org/xml/package-info">
 	<id>el:prettyurls</id>
-	<version>1.0RC</version>
+	<version>1.0</version>
 	<name>Pretty URLs</name>
 	<type>modification</type>
 
@@ -19,7 +19,7 @@
 		<modification>SMF1-1/Sources.xml</modification>
 		<modification>SMF1-1/BoardsAndTopics.xml</modification>
 		<modification>SMF1-1/Themes.xml</modification>
-		<modification>Languages.xml</modification>
+		<!-- <modification>Languages.xml</modification> -->
 		<require-file name="SMF1-1/PrettyUrls.php" destination="$sourcedir" />
 		<require-file name="SMF1-1/PrettyUrls-Filters.php" destination="$sourcedir" />
 		<require-file name="PrettyUrls-Tests.php" destination="$sourcedir" />
@@ -27,7 +27,7 @@
 		<require-file name="PrettyUrls.template.php" destination="$themedir" />
 		<require-dir name="pretty" destination="$themedir" />
 		<require-file name="PrettyUrls.english.php" destination="$languagedir" />
-		<require-file name="PrettyUrls.french.php" destination="$languagedir" />
+		<!-- <require-file name="PrettyUrls.french.php" destination="$languagedir" /> -->
 		<code>SMF1-1/install.php</code>
 	</install>
 	<uninstall for="1.1, 1.1.0-1.1.99">
@@ -35,7 +35,7 @@
 		<modification reverse="true">SMF1-1/Sources.xml</modification>
 		<modification reverse="true">SMF1-1/BoardsAndTopics.xml</modification>
 		<modification reverse="true">SMF1-1/Themes.xml</modification>
-		<modification reverse="true">Languages.xml</modification>
+		<!-- <modification reverse="true">Languages.xml</modification> -->
 		<remove-file name="$sourcedir/PrettyUrls.php" />
 		<remove-file name="$sourcedir/PrettyUrls-Filters.php" />
 		<remove-file name="$sourcedir/PrettyUrls-Tests.php" />
@@ -43,7 +43,7 @@
 		<remove-file name="$themedir/PrettyUrls.template.php" />
 		<remove-dir name="$themedir/pretty" />
 		<remove-file name="$languagedir/PrettyUrls.english.php" />
-		<remove-file name="$languagedir/PrettyUrls.french.php" />
+		<!-- <remove-file name="$languagedir/PrettyUrls.french.php" /> -->
 		<code>uninstall.php</code>
 	</uninstall>
 
@@ -52,7 +52,7 @@
 		<modification>SMF2-0/Sources.xml</modification>
 		<modification>SMF2-0/BoardsAndTopics.xml</modification>
 		<modification>SMF2-0/Themes.xml</modification>
-		<modification>Languages.xml</modification>
+		<!-- <modification>Languages.xml</modification> -->
 		<require-file name="SMF2-0/PrettyUrls.php" destination="$sourcedir" />
 		<require-file name="SMF2-0/PrettyUrls-Filters.php" destination="$sourcedir" />
 		<require-file name="PrettyUrls-Tests.php" destination="$sourcedir" />
@@ -60,7 +60,7 @@
 		<require-file name="PrettyUrls.template.php" destination="$themedir" />
 		<require-dir name="pretty" destination="$themedir" />
 		<require-file name="PrettyUrls.english.php" destination="$languagedir" />
-		<require-file name="PrettyUrls.french.php" destination="$languagedir" />
+		<!-- <require-file name="PrettyUrls.french.php" destination="$languagedir" /> -->
 		<database>SMF2-0/install.php</database>
 	</install>
 	<uninstall for="2.0 Beta 3, 2.0 Beta 3 Public, 2.0 Beta 3.1 Public, 2.0 Beta 4, 2.0 Beta 4 Public, 2.0 RC1, 2.0 RC1-1">
@@ -68,7 +68,7 @@
 		<modification reverse="true">SMF2-0/Sources.xml</modification>
 		<modification reverse="true">SMF2-0/BoardsAndTopics.xml</modification>
 		<modification reverse="true">SMF2-0/Themes.xml</modification>
-		<modification reverse="true">Languages.xml</modification>
+		<!-- <modification reverse="true">Languages.xml</modification> -->
 		<remove-file name="$sourcedir/PrettyUrls.php" />
 		<remove-file name="$sourcedir/PrettyUrls-Filters.php" />
 		<remove-file name="$sourcedir/PrettyUrls-Tests.php" />
@@ -76,7 +76,7 @@
 		<remove-file name="$themedir/PrettyUrls.template.php" />
 		<remove-dir name="$themedir/pretty" />
 		<remove-file name="$languagedir/PrettyUrls.english.php" />
-		<remove-file name="$languagedir/PrettyUrls.french.php" />
+		<!-- <remove-file name="$languagedir/PrettyUrls.french.php" /> -->
 		<code>uninstall.php</code>
 	</uninstall>
 

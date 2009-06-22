@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification">
 	<id>el:prettyurls</id>
-	<version>0.9</version>
+	<version>1.0</version>
 
 	<file name="$languagedir/Modifications.english.php" error="skip">
 		<operation>
@@ -11,89 +11,6 @@
 			<add><![CDATA[
 //	Pretty URLs mod
 $txt['pretty_urls'] = 'Pretty URLs';
-
-//	Board URLs interface
-$txt['pretty_add_url'] = 'Add';
-$txt['pretty_add_url_description'] = 'Add a URL. Note that what you enter here will be processed as only certain characters are allowed.';
-$txt['pretty_board_url_title'] = 'Pretty URLs for: ';
-$txt['pretty_deleted_board'] = 'Deleted board #';
-$txt['pretty_duplicate_link'] = 'delete it first.';
-$txt['pretty_duplicate_warning'] = 'That URL is already in use by another board. It will be available if you ';
-$txt['pretty_make_primary'] = 'Make primary';
-$txt['pretty_no_primary_warning'] = 'Warning, no primary URL!';
-$txt['pretty_numerical'] = 'Sorry, but as that URL is either a number or the same as a forum action the board ID had to be added as a suffix.';
-$txt['pretty_primary_url'] = 'Primary';
-
-//	Settings descriptions
-$txt['pretty_action_array'] = 'An array of forum actions, extracted from index.php.';
-$txt['pretty_board_lookup'] = 'A serialized array of <tt>URL => ID_BOARD</tt> pairs, used for processing <tt>$_GET[\'board\']</tt>. There can be more than one URL for each board.';
-$txt['pretty_board_urls'] = 'A serialized array of <tt>ID_BOARD => URL</tt> pairs, used for generating pretty replacement URLs.';
-$txt['pretty_enable_filters'] = 'Sets whether to prettify anything at all. 0 for no, 1 for yes.';
-$txt['pretty_filters'] = 'A serialized array of filter data.';
-$txt['pretty_filter_callbacks'] = 'A serialized array of callback function names, sorted by priority. Don\'t manually edit this, edit the <tt>pretty_filters</tt> setting instead.';
-$txt['pretty_root_url'] = 'The base URL used by the board and topic filters, which by default is the same as <tt>$boardurl</tt>.';
-]]></add>
-		</operation>
-	</file>
-
-	<file name="$languagedir/Modifications.english-utf8.php" error="skip">
-		<operation>
-			<search position="end"></search>
-			<add><![CDATA[
-//	Pretty URLs mod
-$txt['pretty_urls'] = 'Pretty URLs';
-
-//	Board URLs interface
-$txt['pretty_add_url'] = 'Add';
-$txt['pretty_add_url_description'] = 'Add a URL. Note that what you enter here will be processed as only certain characters are allowed.';
-$txt['pretty_board_url_title'] = 'Pretty URLs for: ';
-$txt['pretty_deleted_board'] = 'Deleted board #';
-$txt['pretty_duplicate_link'] = 'delete it first.';
-$txt['pretty_duplicate_warning'] = 'That URL is already in use by another board. It will be available if you ';
-$txt['pretty_make_primary'] = 'Make primary';
-$txt['pretty_no_primary_warning'] = 'Warning, no primary URL!';
-$txt['pretty_numerical'] = 'Sorry, but as that URL is either a number or the same as a forum action the board ID had to be added as a suffix.';
-$txt['pretty_primary_url'] = 'Primary';
-
-//	Settings descriptions
-$txt['pretty_action_array'] = 'An array of forum actions, extracted from index.php.';
-$txt['pretty_board_lookup'] = 'A serialized array of <tt>URL => ID_BOARD</tt> pairs, used for processing <tt>$_GET[\'board\']</tt>. There can be more than one URL for each board.';
-$txt['pretty_board_urls'] = 'A serialized array of <tt>ID_BOARD => URL</tt> pairs, used for generating pretty replacement URLs.';
-$txt['pretty_enable_filters'] = 'Sets whether to prettify anything at all. 0 for no, 1 for yes.';
-$txt['pretty_filters'] = 'A serialized array of filter data.';
-$txt['pretty_filter_callbacks'] = 'A serialized array of callback function names, sorted by priority. Don\'t manually edit this, edit the <tt>pretty_filters</tt> setting instead.';
-$txt['pretty_root_url'] = 'The base URL used by the board and topic filters, which by default is the same as <tt>$boardurl</tt>.';
-]]></add>
-		</operation>
-	</file>
-
-	<file name="$languagedir/Modifications.french.php" error="skip">
-		<operation>
-			<search position="end"></search>
-			<add><![CDATA[
-//	Pretty URLs mod
-$txt['pretty_urls'] = 'Pretty URLs';
-
-//	Board URLs interface
-$txt['pretty_add_url'] = 'Add';
-$txt['pretty_add_url_description'] = 'Add a URL. Note that what you enter here will be processed as only certain characters are allowed.';
-$txt['pretty_board_url_title'] = 'Pretty URLs for: ';
-$txt['pretty_deleted_board'] = 'Deleted board #';
-$txt['pretty_duplicate_link'] = 'delete it first.';
-$txt['pretty_duplicate_warning'] = 'That URL is already in use by another board. It will be available if you ';
-$txt['pretty_make_primary'] = 'Make primary';
-$txt['pretty_no_primary_warning'] = 'Warning, no primary URL!';
-$txt['pretty_numerical'] = 'Sorry, but as that URL is either a number or the same as a forum action the board ID had to be added as a suffix.';
-$txt['pretty_primary_url'] = 'Primary';
-
-//	Settings descriptions
-$txt['pretty_action_array'] = 'An array of forum actions, extracted from index.php.';
-$txt['pretty_board_lookup'] = 'A serialized array of <tt>URL => ID_BOARD</tt> pairs, used for processing <tt>$_GET[\'board\']</tt>. There can be more than one URL for each board.';
-$txt['pretty_board_urls'] = 'A serialized array of <tt>ID_BOARD => URL</tt> pairs, used for generating pretty replacement URLs.';
-$txt['pretty_enable_filters'] = 'Autorise l\'embellissement d\'URL. 0 pour non, 1 pour oui.';
-$txt['pretty_filters'] = 'A serialized array of filter data.';
-$txt['pretty_filter_callbacks'] = 'A serialized array of callback function names, sorted by priority. Don\'t manually edit this, edit the <tt>pretty_filters</tt> setting instead.';
-$txt['pretty_root_url'] = 'The base URL used by the board and topic filters, which by default is the same as <tt>$boardurl</tt>.';
 ]]></add>
 		</operation>
 	</file>
