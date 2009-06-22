@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: prettyurls\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-06-17 20:04+1000\n"
-"PO-Revision-Date: 2009-06-19 05:27+0000\n"
+"POT-Creation-Date: 2009-06-19 15:28+1000\n"
+"PO-Revision-Date: 2009-06-21 03:14+0000\n"
 "Last-Translator: Özgür <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-06-19 06:28+0000\n"
+"X-Launchpad-Export-Date: 2009-06-22 04:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: Base/PrettyUrls/pretty_chrome_install_title
@@ -111,7 +111,14 @@ msgstr "URL Değişim Filtreleri"
 
 #: Base/PrettyUrls/pretty_save
 msgid "Save changes"
-msgstr "Kaydet"
+msgstr "Değişiklikleri Kaydet"
+
+#: Base/PrettyUrls/pretty_chrome_caption_tests
+msgid ""
+"Before enabling URL rewriting, please check that these rewritten links work."
+msgstr ""
+"URL değişimini açmadan önce, lütfen değişimin çalışıp çalışmadığını kontrol "
+"edin."
 
 #: Base/PrettyUrls/pretty_chrome_caption_maintenance
 msgid "Run some maintenance tasks"

@@ -4,9 +4,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: prettyurls 1.0RC\n"
+"Project-Id-Version: prettyurls 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-19 15:28+1000\n"
+"POT-Creation-Date: 2009-06-22 14:24+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Dannii Willis <curiousdannii@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -119,9 +119,9 @@ msgstr ""
 
 # Section: Tests page
 #: Base/PrettyUrls/pretty_chrome_caption_tests
-msgid "Before enabling URL rewriting, please check that these rewritten links work."
+msgid ""
+"Before enabling URL rewriting, please check that these rewritten links work."
 msgstr ""
-
 
 # Section: Maintenance page
 #: Base/PrettyUrls/pretty_chrome_caption_maintenance
@@ -166,50 +166,51 @@ msgid "Pretty URLs"
 msgstr ""
 
 
-# Section: Board URLs interface
-#: Base/Modifications/pretty_add_url
-msgid "Add"
-msgstr ""
-
-#: Base/Modifications/pretty_add_url_description
+#: Base/PrettyUrls/pretty_add_url_description
 msgid ""
 "Add a URL. Note that what you enter here will be processed as only certain "
 "characters are allowed."
 msgstr ""
 
-#: Base/Modifications/pretty_board_url_title
+#: Base/PrettyUrls/pretty_board_url_title
 msgid "Pretty URLs for: "
 msgstr ""
 
-#: Base/Modifications/pretty_deleted_board
+#: Base/PrettyUrls/pretty_deleted_board
 msgid "Deleted board #"
 msgstr ""
 
-#: Base/Modifications/pretty_duplicate_link
+#: Base/PrettyUrls/pretty_duplicate_link
 msgid "delete it first."
 msgstr ""
 
-#: Base/Modifications/pretty_duplicate_warning
+#: Base/PrettyUrls/pretty_duplicate_warning
 msgid ""
 "That URL is already in use by another board. It will be available if you "
 msgstr ""
 
-#: Base/Modifications/pretty_make_primary
+#: Base/PrettyUrls/pretty_make_primary
 msgid "Make primary"
 msgstr ""
 
-#: Base/Modifications/pretty_no_primary_warning
+#: Base/PrettyUrls/pretty_no_primary_warning
 msgid "Warning, no primary URL!"
 msgstr ""
 
-#: Base/Modifications/pretty_numerical
+#: Base/PrettyUrls/pretty_numerical
 msgid ""
 "Sorry, but as that URL is either a number or the same as a forum action the "
 "board ID had to be added as a suffix."
 msgstr ""
 
-#: Base/Modifications/pretty_primary_url
+#: Base/PrettyUrls/pretty_primary_url
 msgid "Primary"
+msgstr ""
+
+
+# Section: Board URLs interface
+#: Base/Modifications/pretty_add_url
+msgid "Add"
 msgstr ""
 
 
