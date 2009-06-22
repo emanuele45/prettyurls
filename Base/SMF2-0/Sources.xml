@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification">
 	<id>el:prettyurls</id>
-	<version>1.0RC</version>
+	<version>1.0</version>
 
 	<file name="$boarddir/index.php">
 		<operation>
@@ -160,9 +160,6 @@ function ob_sessrewrite($buffer)
 	{
 		require_once($sourcedir . '/PrettyUrls-Filters.php');
 		$buffer = pretty_rewrite_buffer($buffer);
-
-		// Add a <base> element to catch any unwanted relatives
-		$buffer = str_replace('<head>', '<head><base href="' . $boardurl . '/" />', $buffer);
 	}
 
 	//	Update the load times
