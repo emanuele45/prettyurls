@@ -3,7 +3,7 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification">
 	<id>el:prettyurls</id>
-	<version>1.0RC</version>
+	<version>1.0</version>
 
 	<file name="$sourcedir/Display.php">
 		<operation>
@@ -128,6 +128,8 @@ function PrettyBoardUrls()
 
 	//	Load the right template
 	loadTemplate('ManageBoards');
+	if (loadLanguage('PrettyUrls') == false)
+		loadLanguage('PrettyUrls', 'english');
 	$context['sub_template'] = 'pretty_board_url';
 	$context['page_title'] = $context['pretty']['board_title'];
 	if (isset($_SESSION['pretty']['warning']))
