@@ -29,3 +29,11 @@ pretty_update_filters();
 }}}
 
 Upload the file to the same location as your forum's SSI.php and open it with your web browser. Then don't forget to delete it!
+
+= Sub-directories can't be opened =
+
+If you have a sub-directory in your forum directory you will no longer be able to access it as SMF will think you want to open a board with its name (note if you refer to a page in that sub-directory it will work fine.) With one addition to your .htaccess file you can fix this. You may have to change your FTP client's settings in order to see the hidden .htaccess file. This example is for the sub-directory /chat/, which should open /chat/index.html; add it to the top of your .htaccess file (_outside_ the Pretty URLs section!)
+
+{{{
+RewriteRule ^chat/?$ /chat/index.html [L,QSA]
+}}}
