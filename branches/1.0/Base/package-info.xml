@@ -10,7 +10,7 @@
 
 <package-info xmlns="http://www.simplemachines.org/xml/package-info">
 	<id>el:prettyurls</id>
-	<version>1.0</version>
+	<version>1.0RC2</version>
 	<name>Pretty URLs</name>
 	<type>modification</type>
 
@@ -19,7 +19,7 @@
 		<modification>SMF1-1/Sources.xml</modification>
 		<modification>SMF1-1/BoardsAndTopics.xml</modification>
 		<modification>SMF1-1/Themes.xml</modification>
-		<!-- <modification>Languages.xml</modification> -->
+		<modification>Languages.xml</modification>
 		<require-file name="SMF1-1/PrettyUrls.php" destination="$sourcedir" />
 		<require-file name="SMF1-1/PrettyUrls-Filters.php" destination="$sourcedir" />
 		<require-file name="PrettyUrls-Tests.php" destination="$sourcedir" />
@@ -35,7 +35,7 @@
 		<modification reverse="true">SMF1-1/Sources.xml</modification>
 		<modification reverse="true">SMF1-1/BoardsAndTopics.xml</modification>
 		<modification reverse="true">SMF1-1/Themes.xml</modification>
-		<!-- <modification reverse="true">Languages.xml</modification> -->
+		<modification reverse="true">Languages.xml</modification>
 		<remove-file name="$sourcedir/PrettyUrls.php" />
 		<remove-file name="$sourcedir/PrettyUrls-Filters.php" />
 		<remove-file name="$sourcedir/PrettyUrls-Tests.php" />
@@ -47,12 +47,12 @@
 		<code>uninstall.php</code>
 	</uninstall>
 
-	<install for="2.0 Beta 3, 2.0 Beta 3 Public, 2.0 Beta 3.1 Public, 2.0 Beta 4, 2.0 Beta 4 Public, 2.0 RC1, 2.0 RC1-1">
+	<install for="2.0 RC2">
 		<readme parsebbc="true">readme-install.bbc</readme>
 		<modification>SMF2-0/Sources.xml</modification>
 		<modification>SMF2-0/BoardsAndTopics.xml</modification>
 		<modification>SMF2-0/Themes.xml</modification>
-		<!-- <modification>Languages.xml</modification> -->
+		<modification>Languages.xml</modification>
 		<require-file name="SMF2-0/PrettyUrls.php" destination="$sourcedir" />
 		<require-file name="SMF2-0/PrettyUrls-Filters.php" destination="$sourcedir" />
 		<require-file name="PrettyUrls-Tests.php" destination="$sourcedir" />
@@ -63,12 +63,12 @@
 		<!-- <require-file name="PrettyUrls.french.php" destination="$languagedir" /> -->
 		<database>SMF2-0/install.php</database>
 	</install>
-	<uninstall for="2.0 Beta 3, 2.0 Beta 3 Public, 2.0 Beta 3.1 Public, 2.0 Beta 4, 2.0 Beta 4 Public, 2.0 RC1, 2.0 RC1-1">
+	<uninstall for="2.0 RC2">
 		<readme parsebbc="true">readme-uninstall.bbc</readme>
 		<modification reverse="true">SMF2-0/Sources.xml</modification>
 		<modification reverse="true">SMF2-0/BoardsAndTopics.xml</modification>
 		<modification reverse="true">SMF2-0/Themes.xml</modification>
-		<!-- <modification reverse="true">Languages.xml</modification> -->
+		<modification reverse="true">Languages.xml</modification>
 		<remove-file name="$sourcedir/PrettyUrls.php" />
 		<remove-file name="$sourcedir/PrettyUrls-Filters.php" />
 		<remove-file name="$sourcedir/PrettyUrls-Tests.php" />

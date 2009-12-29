@@ -3,37 +3,17 @@
 
 <modification xmlns="http://www.simplemachines.org/xml/modification">
 	<id>el:prettyurls</id>
-	<version>1.0RC</version>
+	<version>1.0</version>
 
 	<file name="$themedir/ManageBoards.template.php">
 		<operation>
-			<search position="replace"><![CDATA[<td style="padding-left: 1ex;" colspan="4">]]></search>
-			<add><![CDATA[<td style="padding-left: 1ex;" colspan="5">]]></add>
-		</operation>
-
-		<operation>
-			<search position="replace"><![CDATA[<td colspan="4" style="padding-left: 5px;">]]></search>
-			<add><![CDATA[<td colspan="5" style="padding-left: 5px;">]]></add>
-		</operation>
-
-		<operation>
 			<search position="replace"><![CDATA[
-								<td width="10%" style="padding-right: 1ex;" align="right"><a href="', $scripturl, '?action=admin;area=manageboards;sa=board;boardid=', $board['id'], '">', $txt['mboards_modify'], '</a></td>
+							<span class="modify_boards"><a href="', $scripturl, '?action=admin;area=manageboards;sa=board;boardid=', $board['id'], '">', $txt['mboards_modify'], '</a></span></span><br style="clear: right;" />
 ]]></search>
 			<add><![CDATA[
-								<td width="10%" style="padding-right: 1ex;" align="right"><a href="', $scripturl, '?action=admin;area=manageboards;sa=board;boardid=', $board['id'], '">', $txt['mboards_modify'], '</a></td>
-								<td width="10%" style="padding-right: 1ex;" align="right">', allowedTo('admin_forum') ? '<a href="' . $scripturl . '?action=admin;area=manageboards;sa=pretty;boardid=' . $board['id'] . '">' . $txt['pretty_urls'] . '</a>' : '', '</td>
+							<span class="modify_boards"><a href="', $scripturl, '?action=admin;area=manageboards;sa=board;boardid=', $board['id'], '">', $txt['mboards_modify'], '</a></span>
+							', allowedTo('admin_forum') ? '<span class="modify_boards"><a href="' . $scripturl . '?action=admin;area=manageboards;sa=pretty;boardid=' . $board['id'] . '">' . $txt['pretty_urls'] . '</a></span>' : '', '</span><br style="clear: right;" />
 ]]></add>
-		</operation>
-
-		<operation>
-			<search position="replace"><![CDATA[<td style="padding-left: ', 5 + 30 * $board['move_links'][0]['child_level'], 'px;" colspan="4">]]></search>
-			<add><![CDATA[<td style="padding-left: ', 5 + 30 * $board['move_links'][0]['child_level'], 'px;" colspan="5">]]></add>
-		</operation>
-
-		<operation>
-			<search position="replace"><![CDATA[<td colspan="4" align="right">]]></search>
-			<add><![CDATA[<td colspan="5" align="right">]]></add>
 		</operation>
 
 		<operation>
