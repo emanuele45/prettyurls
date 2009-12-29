@@ -7,13 +7,13 @@
 	forum's SSI.php file.
 *******************************************************************************/
 
-//	Pretty URLs - Base v1.0RC
+//	Pretty URLs - Base v1.0
 
 //	If SSI.php is in the same place as this file, and SMF isn't defined, this is being run standalone.
 if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 {
 	require_once(dirname(__FILE__) . '/SSI.php');
-	db_extend('packages');
+	db_extend('Packages');
 	$standalone = true;
 }
 //	Hmm... no SSI.php and no SMF?
@@ -21,7 +21,7 @@ elseif (!defined('SMF'))
 	die('<b>Error:</b> Cannot install - please verify you put this in the same place as SMF\'s SSI.php.');
 
 //	Create the pretty_topic_urls table
-$smcFunc['db_create_table']('pretty_topic_urls', array(
+$smcFunc['db_create_table']('{db_prefix}pretty_topic_urls', array(
 	array('name' => 'id_topic', 'type' => 'mediumint'),
 	array('name' => 'pretty_url', 'type' => 'varchar', 'size' => 80),
 ), array(
@@ -30,8 +30,8 @@ $smcFunc['db_create_table']('pretty_topic_urls', array(
 ), array(), 'ignore');
 
 //	Create the pretty_urls_cache table
-$smcFunc['db_drop_table']('pretty_urls_cache');
-$smcFunc['db_create_table']('pretty_urls_cache', array(
+$smcFunc['db_drop_table']('{db_grefix}pretty_urls_cache');
+$smcFunc['db_create_table']('{db_prefix}pretty_urls_cache', array(
 	array('name' => 'url_id', 'type' => 'varchar', 'size' => 255),
 	array('name' => 'replacement', 'type' => 'varchar', 'size' => 255),
 ), array(
