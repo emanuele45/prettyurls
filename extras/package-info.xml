@@ -10,18 +10,29 @@
 
 <package-info xmlns="http://www.simplemachines.org/xml/package-info">
 	<id>el:prettyurls-extras</id>
-	<version>0.9</version>
+	<version>1.0</version>
 	<name>Pretty URLs Extras</name>
 	<type>modification</type>
 
-	<install>
+	<install for="1.1, 1.1.0-1.1.99">
 		<readme parsebbc="true">readme-install.bbc</readme>
-		<modification>Sources.xml</modification>
+		<modification>Sources-SMF1-1.xml</modification>
 		<code>install.php</code>
 	</install>
-	<uninstall>
-		<modification reverse="true">Sources.xml</modification>
+	<uninstall for="1.1, 1.1.0-1.1.99">>
+		<modification reverse="true">Sources-SMF1-1.xml</modification>
 		<code>uninstall.php</code>
 	</uninstall>
+	
+	<install for="2.0 RC2">
+		<readme parsebbc="true">readme-install.bbc</readme>
+		<modification>Sources-SMF2-0.xml</modification>
+		<code>install.php</code>
+	</install>
+	<uninstall for="2.0 RC2">>
+		<modification reverse="true">Sources-SMF2-0.xml</modification>
+		<code>uninstall.php</code>
+	</uninstall>
+
 
 </package-info>

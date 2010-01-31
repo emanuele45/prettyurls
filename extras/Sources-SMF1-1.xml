@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+
+<modification xmlns="http://www.simplemachines.org/xml/modification">
+	<id>el:prettyurls-extras</id>
+	<version>1.0RC</version>
+
+	<file name="$sourcedir/PrettyUrls-Filters.php">
+		<operation>
+			<search position="end"></search>
+			<add><![CDATA[
+//	Filter TP articles
+function pretty_tp_articles_filter($urls)
+{
+	global $boardurl, $scripturl;
+
+	$pattern = '`' . $scripturl . '(.*)page=([^;]+)`S';
+	$replacement = $boardurl . '/page/$2/$1';
+	foreach ($urls as $url_id => $url)
+		if (!isset($url['replacement']))
+			if (preg_match($pattern, $url['url']))
+				$urls[$url_id]['replacement'] = preg_replace($pattern, $replacement, $url['url']);
+	return $urls;
+}
+
+function pretty_tagging_filter($urls)
+{
+	global $scripturl, $boardurl, $db_prefix;
+
+	// Do Tagging System Replacement
+	$pattern = '`' . $scripturl . '(.*)action=tags;tagid=([0-9]+)(.*)`S';
+	$query_data = array();
+	foreach ($urls as $url_id => $url)
+	{
+		//	Get the profile data ready to query the database with
+		if (!isset($url['replacement']))
+			if (preg_match($pattern, $url['url'], $matches))
+			{
+				$urls[$url_id]['ID_TAG'] = (int) $matches[2];
+				$urls[$url_id]['match1'] = $matches[1];
+				$urls[$url_id]['match3'] = $matches[3];
+				$query_data[] = $urls[$url_id]['ID_TAG'];
+			}
+	}
+	
+	if (count($query_data) != 0)
+	{
+	
+		// Get the Tags info
+		$tagids = array();
+		$tagNames = array();
+		$query = db_query("
+			SELECT 
+				ID_TAG, tag
+			FROM {$db_prefix}tags
+			WHERE ID_TAG IN (" . implode(', ', $query_data) . ")", __FILE__, __LINE__);
+	
+		while ($tagdata = mysql_fetch_assoc($query))
+		{
+			$tagids[$tagdata['ID_TAG']] = $tagdata['ID_TAG'];
+			$tagNames[$tagdata['ID_TAG']] = rawurlencode($tagdata['tag']);
+		}
+		mysql_free_result($query);
+	
+		
+
+	foreach ($urls as $url_id => $url)
+				if (isset($url['ID_TAG']))
+						$urls[$url_id]['replacement'] = $boardurl . '/tags/' . $tagNames[$url['ID_TAG']]
+	. '/' . $tagids[$url['ID_TAG']] . '/' . $url['match1'] . $url['match3'];
+		}
+	
+	
+	return $urls;
+}	
+
+
+
+]]></add>
+		</operation>
+	</file>
+
+</modification>
