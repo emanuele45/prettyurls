@@ -14,6 +14,7 @@ Pretty URLs 1.0                                                  ???
 ================================================================================
  ! Base: The relativising code needed some fixes. Sadly <base> can't be used. (PrettyUrls-Filters.php, QueryString.php)
  % Base/reverter: Installs on SMF 2.0 RC2. Thanks Yağız!
+ + extras: Added SMF Tagging System filter.
 
 Pretty URLs 1.0RC                                                  19 June, 2009
 ================================================================================

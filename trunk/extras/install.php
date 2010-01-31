@@ -63,7 +63,25 @@ $prettyFilters['tp-articles'] = array(
 		'rule' => 'RewriteRule ^page/([^/]+)/?$ ./index.php?pretty;page=$1 [L,QSA]',
 	),
 	'title' => 'Tiny Portal articles',
+	
 );
+
+
+$prettyFilters['smftags'] = array(
+        "description" => "Tagging system for topic filter",
+        "enabled"  => 0,
+        "filter"  => array(
+            "priority"  => 20,
+            "callback"  => "pretty_tagging_filter"
+        ),
+        "rewrite"  => array(
+            "priority"  => 20,
+            "rule"  => "RewriteRule ^tags/([^/]+)/([0-9]*)/?$ ./index.php?action=tags;tagid=$2 [L,QSA]"
+        ),
+      "title"  => "Tagging System Pretty Filter"
+);  
+
+
 
 updateSettings(array('pretty_filters' => isset($smcFunc) ? serialize($prettyFilters) : addslashes(serialize($prettyFilters))));
 

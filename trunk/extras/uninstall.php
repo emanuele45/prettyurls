@@ -1,6 +1,7 @@
 <?php
 
-/*******************************************************************************	ATTENTION: If you are trying to install this manually, you should try
+/*******************************************************************************
+	ATTENTION: If you are trying to install this manually, you should try
 	the package manager. If that does not work, you can run this file by
 	accessing it by url. Please ensure it is in the same location as your
 	forum's SSI.php file.
@@ -24,6 +25,7 @@ $prettyFilters = unserialize($modSettings['pretty_filters']);
 unset($prettyFilters['arcade']);
 unset($prettyFilters['seo4smf']);
 unset($prettyFilters['tp-articles']);
+unset($prettyFilters['smftags']);
 
 updateSettings(array('pretty_filters' => isset($smcFunc) ? serialize($prettyFilters) : addslashes(serialize($prettyFilters))));
 
