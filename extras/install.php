@@ -30,7 +30,7 @@ $prettyFilters['arcade'] = array(
 		'priority' => 70,
 		'rule' => 'RewriteRule ^arcade/index\.php$ index.php?action=arcade [L,QSA]',
 	),
-	'title' => 'Arcade',
+	'title' => 'Arcade <a href="http://www.smfarcade.info" target="_blank">Website</a>',
 );
 //	A redirection patch for the SEO4SMF mod
 $prettyFilters['seo4smf'] = array(
@@ -62,26 +62,129 @@ $prettyFilters['tp-articles'] = array(
 		'priority' => 30,
 		'rule' => 'RewriteRule ^page/([^/]+)/?$ ./index.php?pretty;page=$1 [L,QSA]',
 	),
-	'title' => 'Tiny Portal articles',
+	'title' => 'Tiny Portal articles <a href="http://www.tinyportal.net" target="_blank">Website</a>',
 	
 );
 
-
+//	Pretty URLs for Tagging System Tags
 $prettyFilters['smftags'] = array(
-        "description" => "Tagging system for topic filter",
+        "description" => "Tagging system for topics filter",
         "enabled"  => 0,
         "filter"  => array(
-            "priority"  => 20,
+            "priority"  => 31,
             "callback"  => "pretty_tagging_filter"
         ),
         "rewrite"  => array(
-            "priority"  => 20,
+            "priority"  => 31,
             "rule"  => "RewriteRule ^tags/([^/]+)/([0-9]*)/?$ ./index.php?action=tags;tagid=$2 [L,QSA]"
         ),
-      "title"  => "Tagging System Pretty Filter"
+      "title"  => 'Tagging System Pretty Filter <a href="http://custom.simplemachines.org/mods/index.php?mod=579" target="_blank">Website</a>'
 );  
 
 
+//	Pretty URLs for Download System
+$prettyFilters['downloadsystem'] = array(
+        "description" => "Download System filter for downloads",
+        "enabled"  => 0,
+        "filter"  => array(
+            "priority"  => 32,
+            "callback"  => "pretty_downloadssystem_filter"
+        ),
+        "rewrite"  => array(
+            "priority"  => 32,
+            "rule"  => array(
+            		"RewriteRule ^downloads/([^/]+)/([^/]+)/([0-9]*)/?$ ./index.php?action=downloads;sa=view;down=$3 [L,QSA]",
+        			),
+         ),
+      "title"  => 'Download System Pretty Filter <a href="http://www.smfhacks.com/download-system-pro.php" target="_blank">Website</a>'
+);  
+
+
+//	Pretty URLs for SMF Gallery
+$prettyFilters['smfgallery'] = array(
+        "description" => "SMF Gallery filter for pictures",
+        "enabled"  => 0,
+        "filter"  => array(
+            "priority"  => 33,
+            "callback"  => "pretty_smfgallery_filter"
+        ),
+        "rewrite"  => array(
+            "priority"  => 33,
+            "rule"  => array(
+            		"RewriteRule ^gallery/([^/]+)/([^/]+)/([0-9]*)/?$ ./index.php?action=gallery;sa=view;id=$3 [L,QSA]",
+            		"RewriteRule ^gallery/([^/]+)/([^/]+)/([0-9]*)/?$ ./index.php?action=gallery;sa=view&id=$3 [L,QSA]",
+        			),
+         ),
+      "title"  => 'SMF Gallery Pretty Filter <a href="http://www.smfhacks.com/smf-gallery.php" target="_blank">Website</a>'
+);  
+
+//	Pretty URLs for SMF Articles
+$prettyFilters['smfarticles'] = array(
+        "description" => "SMF Articles filter for articles",
+        "enabled"  => 0,
+        "filter"  => array(
+            "priority"  => 34,
+            "callback"  => "pretty_smfarticles_filter"
+        ),
+        "rewrite"  => array(
+            "priority"  => 34,
+            "rule"  => array(
+            		"RewriteRule ^articles/([^/]+)/([^/]+)/([0-9]*)/?$ ./index.php?action=articles;sa=view;article=$3 [L,QSA]",
+        			),
+         ),
+      "title"  => 'SMF Articles Pretty Filter <a href="http://custom.simplemachines.org/mods/index.php?mod=1354" target="_blank">Website</a>'
+);  
+
+//	Pretty URLs for SMF Store
+$prettyFilters['smfstore'] = array(
+        "description" => "SMF Store filter for store products",
+        "enabled"  => 0,
+        "filter"  => array(
+            "priority"  => 35,
+            "callback"  => "pretty_smfstore_filter"
+        ),
+        "rewrite"  => array(
+            "priority"  => 35,
+            "rule"  => array(
+            		"RewriteRule ^store/([^/]+)/([^/]+)/([0-9]*)/?$ ./index.php?action=store;sa=view;id=$3 [L,QSA]",
+        			),
+         ),
+      "title"  => 'SMF Store Pretty Filter <a href="http://www.smfhacks.com/smf-store.php" target="_blank">Website</a>'
+);  
+
+//	Pretty URLs for SMF Classifieds
+$prettyFilters['smfclassifieds'] = array(
+        "description" => "SMF Classifieds filter for auctions and listings",
+        "enabled"  => 0,
+        "filter"  => array(
+            "priority"  => 36,
+            "callback"  => "pretty_smfclassifieds_filter"
+        ),
+        "rewrite"  => array(
+            "priority"  => 36,
+            "rule"  => array(
+            		"RewriteRule ^classifieds/([^/]+)/([^/]+)/([0-9]*)/?$ ./index.php?action=classifieds;sa=view;id=$3 [L,QSA]",
+        			),
+         ),
+      "title"  => 'SMF Classifieds Pretty Filter <a href="http://www.smfhacks.com/smf-classifieds.php" target="_blank">Website</a>'
+);  
+
+//	Pretty URLs for EzPortal Pages
+$prettyFilters['ezportalpages'] = array(
+        "description" => "Pretty Urls for ezPortal pages",
+        "enabled"  => 0,
+        "filter"  => array(
+            "priority"  => 37,
+            "callback"  => "pretty_ezportalpages_filter"
+        ),
+        "rewrite"  => array(
+            "priority"  => 37,
+            "rule"  => array(
+            		"RewriteRule ^ezportal/pages/([^/]+)/([0-9]*)/?$ ./index.php?action=ezportal;sa=page;p=$2 [L,QSA]",
+        			),
+         ),
+      "title"  => 'EzPortal Pages Pretty Filter <a href="http://www.ezportal.com" target="_blank">Website</a>'
+);  
 
 updateSettings(array('pretty_filters' => isset($smcFunc) ? serialize($prettyFilters) : addslashes(serialize($prettyFilters))));
 

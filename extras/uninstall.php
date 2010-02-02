@@ -7,7 +7,7 @@
 	forum's SSI.php file.
 *******************************************************************************/
 
-//	Pretty URLs Extras 0.9
+//	Pretty URLs Extras 1.0
 
 //	If SSI.php is in the same place as this file, and SMF isn't defined, this is being run standalone.
 if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
@@ -26,6 +26,12 @@ unset($prettyFilters['arcade']);
 unset($prettyFilters['seo4smf']);
 unset($prettyFilters['tp-articles']);
 unset($prettyFilters['smftags']);
+unset($prettyFilters['downloadsystem']);
+unset($prettyFilters['smfgallery']);
+unset($prettyFilters['smfarticles']);
+unset($prettyFilters['smfstore']);
+unset($prettyFilters['smfclassifieds']);
+unset($prettyFilters['ezportalpages']);
 
 updateSettings(array('pretty_filters' => isset($smcFunc) ? serialize($prettyFilters) : addslashes(serialize($prettyFilters))));
 
