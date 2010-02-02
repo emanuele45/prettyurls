@@ -8,10 +8,16 @@ Filters installed:
 [li]A redirection patch for the SEO4SMF mod[/li]
 [li]Pretty URLs for Tiny Portal's articles[/li]
 [li]Pretty URLs for SMF Tagging System tags[/li]
+[li]Pretty URLs for SMF Gallery pictures[/li]
+[li]Pretty URLs for Download System files[/li]
+[li]Pretty URLs for SMF Articles articles[/li]
+[li]Pretty URLs for SMF Stores products[/li]
+[li]Pretty URLs for SMF Classifieds listings and auctions[/li]
+[li]Pretty URLs for ezPortal pages[/li]
 [/list]
 
 [hr]
 
-Version 0.9
+Version 1.0 RC
 Copyright (c) 2006-2008, Dannii Willis
 [url=http://code.google.com/p/prettyurls]Pretty URLs project home[/url]
