@@ -32,6 +32,8 @@ unset($prettyFilters['smfarticles']);
 unset($prettyFilters['smfstore']);
 unset($prettyFilters['smfclassifieds']);
 unset($prettyFilters['ezportalpages']);
+unset($prettyFilters['aeva']);
+
 
 updateSettings(array('pretty_filters' => isset($smcFunc) ? serialize($prettyFilters) : addslashes(serialize($prettyFilters))));
 

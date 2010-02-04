@@ -16,7 +16,8 @@ Pretty URLs 1.0                                                  ???
  % Base/reverter: Installs on SMF 2.0 RC2. Thanks Yağız!
  + extras: Added SMF Tagging System filter.
  + extras: Added more filters for Downloads System, ezPortal, SMF Articles, SMF Classifieds, SMF Gallery, and SMF Store
-
+ + extras: Added filter for Aveva Media. Thanks Nao for the code
+ 
 Pretty URLs 1.0RC                                                  19 June, 2009
 ================================================================================
  % Base/reverter: Installs on SMF 2.0 RC1.
