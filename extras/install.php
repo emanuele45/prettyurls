@@ -186,6 +186,24 @@ $prettyFilters['ezportalpages'] = array(
       "title"  => 'EzPortal Pages Pretty Filter <a href="http://www.ezportal.com" target="_blank">Website</a>'
 );  
 
+//   Pretty URLs for Aeva Media
+$prettyFilters['aeva'] = array(
+   'description' => 'Aeva Media filter',
+   'enabled'  => 0,
+   'filter'  => array(
+      'priority'  => 38,
+      'callback'  => 'pretty_aeva_filter'
+   ),
+   'rewrite'  => array(
+      'priority'  => 38,
+      'rule'  => array(
+         'RewriteRule ^media/(thumba?|preview)/([0-9]+)/?(.*)$ index.php?action=media;sa=media;in=$2;$1;$3 [L,QSA]',
+         'RewriteRule ^media/(?:(album|item|media)/([0-9]+)/?)?(.*)$ index.php?action=media;sa=$1;in=$2;$3 [L,QSA]',
+      ),
+   ),
+   'title'  => 'Aeva Media Pretty Filter <a href="http://aeva.noisen.com/" target="_blank">Website</a>'
+);
+
 updateSettings(array('pretty_filters' => isset($smcFunc) ? serialize($prettyFilters) : addslashes(serialize($prettyFilters))));
 
 //	Update everything now
