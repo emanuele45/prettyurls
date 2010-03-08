@@ -12,6 +12,7 @@ Legend:
 
 Pretty URLs 1.0                                                  ???
 ================================================================================
+ % Base/reverter: Installs on SMF 2.0 RC3.
  ! Base: The relativising code needed some fixes. Sadly <base> can't be used. (PrettyUrls-Filters.php, QueryString.php)
  % Base/reverter: Installs on SMF 2.0 RC2. Thanks Yağız!
  + extras: Added SMF Tagging System filter.
