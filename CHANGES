@@ -10,14 +10,15 @@ Legend:
  % Development flag or note, such as branching.
 
 
-Pretty URLs 1.0                                                  ???
+Pretty URLs 1.0 RC2                                                  16 August 2010
 ================================================================================
  % Base/reverter: Installs on SMF 2.0 RC3.
  ! Base: The relativising code needed some fixes. Sadly <base> can't be used. (PrettyUrls-Filters.php, QueryString.php)
  % Base/reverter: Installs on SMF 2.0 RC2. Thanks Yağız!
  + extras: Added SMF Tagging System filter.
  + extras: Added more filters for Downloads System, ezPortal, SMF Articles, SMF Classifieds, SMF Gallery, and SMF Store
- + extras: Added filter for Aveva Media. Thanks Nao for the code
+ + extras: Added filter for Aeva Media. Thanks Nao for the code
+ + Base: Added new setting to allowing skipping of actions for url rewriting.
  
 Pretty URLs 1.0RC                                                  19 June, 2009
 ================================================================================

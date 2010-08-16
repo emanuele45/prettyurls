@@ -59,14 +59,14 @@ function template_pretty_news()
 		<h3>', $txt['pretty_chrome_menu_news'], '</h3>
 		<div id="chrome_news">', $txt['ajax_in_progress'], '</div>
 		<h3>', $txt['pretty_version'], '</h3>
-		<p>', $txt['pretty_current_version'], ': 1.0RC</p>
+		<p>', $txt['pretty_current_version'], ': 1.0RC2</p>
 		<p>', $txt['pretty_latest_version'], ': <span id="chrome_latest">', $txt['ajax_in_progress'], '</span></p>';
 }
 
 //	It should be easy and fun to manage this mod
 function template_pretty_settings()
 {
-	global $context, $scripturl, $txt;
+	global $context, $scripturl, $txt, $modSettings;
 
 	echo '
 		<form action="', $scripturl, '?action=admin;area=pretty;sa=settings;save" method="post" accept-charset="', $context['character_set'], '">
@@ -75,6 +75,11 @@ function template_pretty_settings()
 				<label for="pretty_enable">', $txt['pretty_enable'], '</label>
 				<input type="hidden" name="pretty_enable" value="0" />
 				<input type="checkbox" name="pretty_enable" id="pretty_enable"', ($context['pretty']['settings']['enable'] ? ' checked="checked"' : ''), ' />
+				<br />
+				<label for="pretty_skipactions">', $txt['pretty_skipactions'], '</label>
+				<input type="text" name="pretty_skipactions" id="pretty_skipactions" value="', (isset($modSettings['pretty_skipactions']) ? $modSettings['pretty_skipactions'] : ''), '" />
+				<br />
+				<span class="smalltext">',$txt['pretty_skipactions_note'],'</span>
 			</fieldset>
 			<fieldset>
 				<legend>', $txt['pretty_filters'], '</legend>';
@@ -90,6 +95,7 @@ function template_pretty_settings()
 
 	echo '
 			</fieldset>
+
 			<fieldset>
 				<input type="submit" value="', $txt['pretty_save'], '" />
 			</fieldset>

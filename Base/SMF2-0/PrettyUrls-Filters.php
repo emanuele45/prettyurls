@@ -162,15 +162,25 @@ function pretty_scripts_restore($match)
 //	Filter miscellaneous action urls
 function pretty_urls_actions_filter($urls)
 {
-	global $boardurl, $context, $scripturl;
+	global $boardurl, $context, $modSettings, $scripturl;
+	
+	$skip_actions = array();
+	if (isset($modSettings['pretty_skipactions']))
+		$skip_actions = explode(",",$modSettings['pretty_skipactions']);
 
 	$pattern = '`' . $scripturl . '(.*)action=([^;]+)`S';
 	$replacement = $boardurl . '/$2/$1';
 	foreach ($urls as $url_id => $url)
 		if (!isset($url['replacement']))
 			if (preg_match($pattern, $url['url'], $matches))
+			{
+				// Don't rewrite these actions
+				if (in_array($matches[2],$skip_actions))
+					continue;
+				
 				if (in_array($matches[2], $context['pretty']['action_array']))
 					$urls[$url_id]['replacement'] = preg_replace($pattern, $replacement, $url['url']);
+			}
 	return $urls;
 }
 
@@ -340,7 +350,7 @@ function pretty_urls_board_filter($urls)
 //	Filter profiles
 function pretty_profiles_filter($urls)
 {
-	global $boardurl, $modSettings, $scripturl, $smcFunc;
+	global $boardurl, $scripturl, $smcFunc;
 
 	$pattern = '`' . $scripturl . '(.*)action=profile;u=([0-9]+)(.*)`S';
 	$query_data = array();
