@@ -30,6 +30,8 @@ $txt['pretty_core_settings'] = 'Core settings';
 $txt['pretty_enable'] = 'Enable URL rewriting';
 $txt['pretty_filters'] = 'URL rewriting filters';
 $txt['pretty_save'] = 'Save changes';
+$txt['pretty_skipactions'] = 'Skip Actions List: ';
+$txt['pretty_skipactions_note'] = 'Enter any actions seperated by a comma to skip url rewriting';
 
 // Tests page
 $txt['pretty_chrome_caption_tests'] = 'Before enabling URL rewriting, please check that these rewritten links work.';

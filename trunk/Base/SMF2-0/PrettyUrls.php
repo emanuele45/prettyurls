@@ -109,6 +109,13 @@ function pretty_manage_settings()
 		$enabled = !empty($modSettings['pretty_enable_filters']);
 		pretty_update_filters();
 		$modSettings['pretty_enable_filters'] = $enabled;
+		
+		$_POST['pretty_skipactions'] = strtolower($_POST['pretty_skipactions']);
+		$_POST['pretty_skipactions'] = trim($_POST['pretty_skipactions']);
+		updateSettings(
+		array(
+		'pretty_skipactions' => $_POST['pretty_skipactions'],
+		));
 
 		// If you want to turn rewriting on you must test that it will work first!
 		if (!$enabled && $_POST['pretty_enable'])
