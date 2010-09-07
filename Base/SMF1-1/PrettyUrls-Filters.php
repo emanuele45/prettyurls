@@ -172,8 +172,9 @@ function pretty_urls_actions_filter($urls)
 			if (preg_match($pattern, $url['url'], $matches))
 			{
 				// Don't rewrite these actions
-				if (in_array($matches[2],$skip_actions))
-					continue;
+				if (!empty($skip_actions))
+					if (in_array($matches[2],$skip_actions))
+						continue;
 				
 				if (in_array($matches[2], $context['pretty']['action_array']))
 					$urls[$url_id]['replacement'] = preg_replace($pattern, $replacement, $url['url']);
@@ -295,7 +296,7 @@ function pretty_urls_topic_filter($urls)
 			}
 			//	... and add them to the database!
 			db_query("
-				INSERT INTO {$db_prefix}pretty_topic_urls
+				INSERT IGNORE INTO {$db_prefix}pretty_topic_urls
 					(ID_TOPIC, pretty_url)
 				VALUES " . implode(', ', $add_new), __FILE__, __LINE__);
 		}
