@@ -63,7 +63,7 @@ $prettyFilters['tp-articles'] = array(
 		'rule' => 'RewriteRule ^page/([^/]+)/?$ ./index.php?pretty;page=$1 [L,QSA]',
 	),
 	'title' => 'Tiny Portal articles <a href="http://www.tinyportal.net" target="_blank">Website</a>',
-	
+
 );
 
 //	Pretty URLs for Tagging System Tags
@@ -79,7 +79,7 @@ $prettyFilters['smftags'] = array(
             "rule"  => "RewriteRule ^tags/([^/]+)/([0-9]*)/?$ ./index.php?action=tags;tagid=$2 [L,QSA]"
         ),
       "title"  => 'Tagging System Pretty Filter <a href="http://custom.simplemachines.org/mods/index.php?mod=579" target="_blank">Website</a>'
-);  
+);
 
 
 //	Pretty URLs for Download System
@@ -97,7 +97,7 @@ $prettyFilters['downloadsystem'] = array(
         			),
          ),
       "title"  => 'Download System Pretty Filter <a href="http://www.smfhacks.com/download-system-pro.php" target="_blank">Website</a>'
-);  
+);
 
 
 //	Pretty URLs for SMF Gallery
@@ -116,7 +116,7 @@ $prettyFilters['smfgallery'] = array(
         			),
          ),
       "title"  => 'SMF Gallery Pretty Filter <a href="http://www.smfhacks.com/smf-gallery.php" target="_blank">Website</a>'
-);  
+);
 
 //	Pretty URLs for SMF Articles
 $prettyFilters['smfarticles'] = array(
@@ -133,7 +133,7 @@ $prettyFilters['smfarticles'] = array(
         			),
          ),
       "title"  => 'SMF Articles Pretty Filter <a href="http://custom.simplemachines.org/mods/index.php?mod=1354" target="_blank">Website</a>'
-);  
+);
 
 //	Pretty URLs for SMF Store
 $prettyFilters['smfstore'] = array(
@@ -150,7 +150,7 @@ $prettyFilters['smfstore'] = array(
         			),
          ),
       "title"  => 'SMF Store Pretty Filter <a href="http://www.smfhacks.com/smf-store.php" target="_blank">Website</a>'
-);  
+);
 
 //	Pretty URLs for SMF Classifieds
 $prettyFilters['smfclassifieds'] = array(
@@ -167,7 +167,7 @@ $prettyFilters['smfclassifieds'] = array(
         			),
          ),
       "title"  => 'SMF Classifieds Pretty Filter <a href="http://www.smfhacks.com/smf-classifieds.php" target="_blank">Website</a>'
-);  
+);
 
 //	Pretty URLs for EzPortal Pages
 $prettyFilters['ezportalpages'] = array(
@@ -184,7 +184,7 @@ $prettyFilters['ezportalpages'] = array(
         			),
          ),
       "title"  => 'EzPortal Pages Pretty Filter <a href="http://www.ezportal.com" target="_blank">Website</a>'
-);  
+);
 
 //   Pretty URLs for Aeva Media
 $prettyFilters['aeva'] = array(
@@ -203,6 +203,22 @@ $prettyFilters['aeva'] = array(
    ),
    'title'  => 'Aeva Media Pretty Filter <a href="http://aeva.noisen.com/" target="_blank">Website</a>'
 );
+
+// Pretty URLs for GoogleTagged
+$prettyFilters['googletagged'] = array(
+        "description" => "GoogleTagged",
+        "enabled"  => 0,
+        "filter"  => array(
+            "priority"  => 39,
+            "callback"  => "pretty_googletagged_filter"
+        ),
+        "rewrite"  => array(
+            "priority"  => 39,
+            "rule"  => "RewriteRule ^tagged/([0-9]*)/([^/]+)/?$ ./index.php?action=tagged;id=$1;tag=$2 [L,QSA]"
+        ),
+      "title"  => 'GoogleTagged Pretty URLs Filter'
+);
+
 
 updateSettings(array('pretty_filters' => isset($smcFunc) ? serialize($prettyFilters) : addslashes(serialize($prettyFilters))));
 

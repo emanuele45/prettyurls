@@ -19,6 +19,7 @@ Pretty URLs 1.0 RC2                                                  16 August 2
  + extras: Added more filters for Downloads System, ezPortal, SMF Articles, SMF Classifieds, SMF Gallery, and SMF Store
  + extras: Added filter for Aeva Media. Thanks Nao for the code
  + Base: Added new setting to allowing skipping of actions for url rewriting.
+ + extras: Added Google Tagged filter. Thanks to  Yagiz...
  
 Pretty URLs 1.0RC                                                  19 June, 2009
 ================================================================================
