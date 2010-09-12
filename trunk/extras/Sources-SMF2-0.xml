@@ -436,6 +436,24 @@ function pretty_aeva_filter($urls)
    return $urls;
 }
 
+// Pretty URLs for GoogleTagged
+function pretty_googletagged_filter($urls)
+{
+    global $boardurl, $scripturl;
+
+    $pattern = '`' . $scripturl . '(.*)action=tagged;id=([.0-9]+);tag=([^;]+)`S';
+    $replacement = $boardurl . '/tagged/$2/$3/';
+    foreach ($urls as $url_id => $url)
+    {
+        if (!isset($url['replacement']))
+        {
+            if (preg_match($pattern, $url['url']))
+                $urls[$url_id]['replacement'] = preg_replace($pattern, $replacement, $url['url']);
+        }
+    }
+    return $urls;
+}
+
 
 ]]></add>
 		</operation>
