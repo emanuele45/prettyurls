@@ -10,6 +10,10 @@ Legend:
  % Development flag or note, such as branching.
 
 
+Pretty URLs 1.0 RC3                                                  28 November 2010
+================================================================================
+ ! Base: Fixed bug with handling single quotes in board names.
+ 
 Pretty URLs 1.0 RC2                                                  16 August 2010
 ================================================================================
  % Base/reverter: Installs on SMF 2.0 RC3.
