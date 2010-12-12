@@ -3,7 +3,8 @@
 var chrome = chrome || {};
 
 chrome.news = [
-	{date: '28 November, 2010', text: 'Pretty URLs 1.0RC3 is released!'}
+	{date: '12 Dec, 2010', text: 'Pretty URLs 1.0RC4 is released!'},
+	{date: '28 November, 2010', text: 'Pretty URLs 1.0RC3 is released!'},
 	{date: '16 August, 2010', text: 'Pretty URLs 1.0RC2 is released!'},
 	{date: '19 June, 2009', text: 'Pretty URLs 1.0RC is released!'},
 	{date: '6 May, 2009', text: 'Pretty URLs 0.9.3 is released! This fixes a few significant bugs, so it is recommended that you upgrade now! :)'},
