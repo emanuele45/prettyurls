@@ -116,35 +116,19 @@ $context = array('pretty' => array(
 	</file>
 
 	<file name="$sourcedir/QueryString.php">
-		<operation>
-			<search position="replace"><![CDATA[
-function ob_sessrewrite($buffer)
-{
-	global $scripturl, $modSettings, $user_info, $context;
-]]></search>
-			<add><![CDATA[
-function ob_sessrewrite($buffer)
-{
-	global $scripturl, $modSettings, $user_info, $context, $boardurl, $db_count, $sourcedir, $time_start, $txt;
-]]></add>
-		</operation>
 
 		<operation>
-			<search position="after"><![CDATA[
-	// This should work even in 4.2.x, just not CGI without cgi.fix_pathinfo.
-]]></search>
+			<search position="after"><![CDATA[// This should work even in 4.2.x, just not CGI without cgi.fix_pathinfo.]]></search>
 			<add><![CDATA[
 /***	Pretty URLs says no!
 ]]></add>
 		</operation>
 
 		<operation>
-			<search position="after"><![CDATA[
-	// Return the changed buffer.
-]]></search>
+			<search position="after"><![CDATA[// Return the changed buffer.]]></search>
 			<add><![CDATA[
 ***/
-
+	global $context, $boardurl, $db_count, $sourcedir, $time_start, $txt;
 	//	Rewrite the buffer with Pretty URLs!
 	if (!empty($modSettings['pretty_enable_filters']))
 	{
@@ -179,29 +163,15 @@ function ob_sessrewrite($buffer)
 	</file>
 
 	<file name="$sourcedir/Subs.php">
-		<operation>
-			<search position="replace"><![CDATA[
-	global $scripturl, $context, $modSettings, $db_show_debug;
-]]></search>
-			<add><![CDATA[
-	global $scripturl, $context, $modSettings, $db_show_debug, $sourcedir;
-]]></add>
-		</operation>
+
 
 		<operation>
-			<search position="replace"><![CDATA[
-	if (!empty($modSettings['queryless_urls']) && (empty($context['server']['is_cgi']) || @ini_get('cgi.fix_pathinfo') == 1) && !empty($context['server']['is_apache']))
-	{
-		if (defined('SID') && SID != '')
-			$setLocation = preg_replace('/^' . preg_quote($scripturl, '/') . '\?(?:' . SID . ';)((?:board|topic)=[^#]+?)(#[^"]*?)?$/e', "\$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html\$2?' . SID", $setLocation);
-		else
-			$setLocation = preg_replace('/^' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+?)(#[^"]*?)?$/e', "\$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html\$2'", $setLocation);
-	}
-]]></search>
+			<search position="replace"><![CDATA[if (isset($modSettings['integrate_redirect']) && function_exists($modSettings['integrate_redirect']))]]></search>
 			<add><![CDATA[
 	//	Redirections should be pretty too
 	if (!empty($modSettings['pretty_enable_filters']))
 	{
+		global $sourcedir;
 		require_once($sourcedir . '/PrettyUrls-Filters.php');
 		$url = array(0 => array('url' => $setLocation, 'url_id' => 'setLocation'));
 		$filter_callbacks = unserialize($modSettings['pretty_filter_callbacks']);
@@ -216,6 +186,8 @@ function ob_sessrewrite($buffer)
 		$setLocation = str_replace("\x12", '\'', $setLocation);
 		$setLocation = preg_replace(array('~;+|=;~', '~\?;~', '~\?#|;#|=#~', '~\?$|;$|#$|=$~'), array(';', '?', '#', ''), $setLocation);
 	}
+	
+	if (isset($modSettings['integrate_redirect']) && function_exists($modSettings['integrate_redirect']))
 ]]></add>
 		</operation>
 
