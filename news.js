@@ -13,6 +13,6 @@ chrome.news = [
 	{date: '12 Nov, 2008', text: 'Pretty URLs 0.9 released'}
 ];
 
-chrome.latestVersion = '1.0RC2';
+chrome.latestVersion = '1.0RC4';
 chrome.upgradeFrom = '';
 chrome.upgradeUrl = '';
