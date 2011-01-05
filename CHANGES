@@ -8,6 +8,10 @@ Legend:
  + Feature addition or improvement.
  - Feature or option removal.
  % Development flag or note, such as branching.
+ 
+Pretty URLs 1.0 RC5                                                 5  January 2011
+================================================================================
+ ! Base: Fixed issue if queryless urls are enabled. Pretty urls will now disable them when enabling pretty urls to fix server errors.
 
 Pretty URLs 1.0 RC4                                                 12 December 2010
 ================================================================================
