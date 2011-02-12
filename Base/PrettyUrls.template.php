@@ -59,7 +59,7 @@ function template_pretty_news()
 		<h3>', $txt['pretty_chrome_menu_news'], '</h3>
 		<div id="chrome_news">', $txt['ajax_in_progress'], '</div>
 		<h3>', $txt['pretty_version'], '</h3>
-		<p>', $txt['pretty_current_version'], ': 1.0RC2</p>
+		<p>', $txt['pretty_current_version'], ': 1.0RC5</p>
 		<p>', $txt['pretty_latest_version'], ': <span id="chrome_latest">', $txt['ajax_in_progress'], '</span></p>';
 }
 
