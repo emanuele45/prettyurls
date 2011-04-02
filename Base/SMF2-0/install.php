@@ -111,6 +111,7 @@ $pretty_root_url = isset($modSettings['pretty_root_url']) ? $modSettings['pretty
 updateSettings(array(
 	'pretty_filters' => serialize($prettyFilters),
 	'pretty_root_url' => $pretty_root_url,
+	'queryless_urls' => 0,
 ));
 
 //	Run maintenance
