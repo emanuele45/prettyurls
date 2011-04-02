@@ -121,11 +121,9 @@ function pretty_manage_settings()
 		if (!$enabled && $_POST['pretty_enable'])
 			redirectexit('action=admin;area=pretty;sa=test');
 
-		if ($modSettings['queryless_urls'] == 1)
-			$modSettings['queryless_urls'] = 0;
 			
 		// Update the enabled setting
-		updateSettings(array('pretty_enable_filters' => $_POST['pretty_enable'],"queryless_urls" => $modSettings['queryless_urls']));
+		updateSettings(array('pretty_enable_filters' => $_POST['pretty_enable']));
 
 		//	All finished now!
 		$_SESSION['pretty']['notice'] = 'Settings saved';
