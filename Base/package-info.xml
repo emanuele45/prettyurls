@@ -47,7 +47,7 @@
 		<code>uninstall.php</code>
 	</uninstall>
 
-	<install for="2.0 RC2, 2.0 RC3, 2.0 RC4, 2.0 RC4, 2.0 RC5">
+	<install for="2.0 - 2.0.99,2.0 RC2, 2.0 RC3, 2.0 RC4, 2.0 RC4, 2.0 RC5">
 		<readme parsebbc="true">readme-install.bbc</readme>
 		<modification>SMF2-0/Sources.xml</modification>
 		<modification>SMF2-0/BoardsAndTopics.xml</modification>
@@ -63,7 +63,7 @@
 		<!-- <require-file name="PrettyUrls.french.php" destination="$languagedir" /> -->
 		<database>SMF2-0/install.php</database>
 	</install>
-	<uninstall for="2.0 RC2, 2.0 RC3, 2.0 RC4, 2.0 RC5">
+	<uninstall for="2.0 - 2.0.99,2.0 RC2, 2.0 RC3, 2.0 RC4, 2.0 RC5">
 		<readme parsebbc="true">readme-uninstall.bbc</readme>
 		<modification reverse="true">SMF2-0/Sources.xml</modification>
 		<modification reverse="true">SMF2-0/BoardsAndTopics.xml</modification>
