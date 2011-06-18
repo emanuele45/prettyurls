@@ -9,6 +9,10 @@ Legend:
  - Feature or option removal.
  % Development flag or note, such as branching.
  
+Pretty URLs 1.0                                                 ???
+================================================================================  
+!Do no cache javascript or mailto links saves some room in the database performance improvement.
+ 
 Pretty URLs 1.0 RC5                                                 5  January 2011
 ================================================================================
  ! Base: Fixed issue if queryless urls are enabled. Pretty urls will now disable them when enabling pretty urls to fix server errors.

@@ -33,6 +33,11 @@ function pretty_rewrite_buffer($buffer)
 
 			// Replace $boardurl with something a little shorter
 			$url_id = str_replace($boardurl, '`B', $match);
+			
+			if (substr($url_id,0,7) == 'mailto:')
+				continue;
+			if (substr($url_id,0,10) == 'javascript')
+				continue;
 
 			$urls_query[] = $url_id;
 			$uncached_urls[$url_id] = array(
