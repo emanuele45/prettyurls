@@ -1,4 +1,4 @@
-Changelog started November 2006; Currently at version 1.0RC
+Changelog started November 2006; Currently at version 1.0
 
 Legend:
 --------------------------------------------------------------------------------
@@ -9,9 +9,10 @@ Legend:
  - Feature or option removal.
  % Development flag or note, such as branching.
  
-Pretty URLs 1.0                                                 ???
+Pretty URLs 1.0                                                 19  February 20112
 ================================================================================  
-!Do no cache javascript or mailto links saves some room in the database performance improvement.
+ ! Do no cache javascript or mailto links saves some room in the database performance improvement.
+ + New setting to use caching system instead of database tables thanks to nend.
  
 Pretty URLs 1.0 RC5                                                 5  January 2011
 ================================================================================
