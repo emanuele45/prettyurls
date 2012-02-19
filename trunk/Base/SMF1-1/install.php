@@ -111,6 +111,7 @@ updateSettings(array(
 	'pretty_filters' => addslashes(serialize($prettyFilters)),
 	'pretty_root_url' => $pretty_root_url,
 	'queryless_urls' => 0,
+	'pretty_bufferusecache' => 0,
 ));
 
 //	Run maintenance
