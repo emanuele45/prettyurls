@@ -79,10 +79,11 @@ function template_pretty_settings()
 				<label for="pretty_skipactions">', $txt['pretty_skipactions'], '</label>
 				<input type="text" name="pretty_skipactions" id="pretty_skipactions" value="', (isset($modSettings['pretty_skipactions']) ? $modSettings['pretty_skipactions'] : ''), '" />
 				<br />
+				<span class="smalltext">',$txt['pretty_skipactions_note'],'</span><br />
 				<label for="pretty_bufferusecache">', $txt['pretty_bufferusecache'], '</label>
 				<input type="checkbox" name="pretty_bufferusecache" id="pretty_bufferusecache"', ($modSettings['pretty_bufferusecache'] ? ' checked="checked"' : ''), ' />
-				<br />
-				<span class="smalltext">',$txt['pretty_skipactions_note'],'</span>
+			
+				
 			</fieldset>
 			<fieldset>
 				<legend>', $txt['pretty_filters'], '</legend>';
