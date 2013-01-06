@@ -9,6 +9,7 @@
 		<operation>
 			<search position="end"></search>
 			<add><![CDATA[
+
 //	Filter TP articles
 function pretty_tp_articles_filter($urls)
 {
@@ -178,11 +179,17 @@ function pretty_smfgallery_filter($urls)
 		$query = $smcFunc['db_query']('', "
 			SELECT 
 				c.title as CatTitle, f.title, f.ID_PICTURE, c.ID_CAT 
-			FROM {db_prefix}gallery_cat as c, {db_prefix}gallery_pic as f
-			WHERE c.ID_CAT = f.ID_CAT AND f.ID_PICTURE IN (" . implode(', ', $query_data) . ")");
+			FROM {db_prefix}gallery_pic as f  
+			LEFT JOIN {db_prefix}gallery_cat as c ON (c.ID_CAT = f.ID_CAT)
+			WHERE f.ID_PICTURE IN (" . implode(', ', $query_data) . ")");
 	
 		while ($filedata = $smcFunc['db_fetch_assoc']($query))
 		{
+			
+			if (empty($filedata['ID_CAT']))
+				$filedata['CatTitle'] = 'usergallery';		
+			
+			
 			$fileIDs[$filedata['ID_PICTURE']] = $filedata['ID_PICTURE'];
 			$filesNames[$filedata['ID_PICTURE']] = rawurlencode(pretty_seo_url($filedata['title']));
 			$catNames[$filedata['ID_PICTURE']] = rawurlencode(pretty_seo_url($filedata['CatTitle']));
@@ -286,11 +293,15 @@ function pretty_smfstore_filter($urls)
 		$query = $smcFunc['db_query']('', "
 			SELECT 
 				c.title as CatTitle, f.productname title, f.ID_ITEM, c.ID_CAT 
-			FROM {db_prefix}store_cat as c, {db_prefix}store_item as f
-			WHERE c.ID_CAT = f.ID_CAT AND f.ID_ITEM IN (" . implode(', ', $query_data) . ")");
+			FROM {db_prefix}store_item as f  
+			LEFT JOIN {db_prefix}store_cat as c ON (c.ID_CAT = f.ID_CAT) 
+			WHERE  f.ID_ITEM IN (" . implode(', ', $query_data) . ")");
 	
 		while ($filedata = $smcFunc['db_fetch_assoc']($query))
 		{
+			if (empty($filedata['ID_CAT']))
+				$filedata['CatTitle'] = 'mainstore';
+			
 			$fileIDs[$filedata['ID_ITEM']] = $filedata['ID_ITEM'];
 			$filesNames[$filedata['ID_ITEM']] = rawurlencode(pretty_seo_url($filedata['title']));
 			$catNames[$filedata['ID_ITEM']] = rawurlencode(pretty_seo_url($filedata['CatTitle']));
