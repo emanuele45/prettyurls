@@ -3,6 +3,7 @@
 var chrome = chrome || {};
 
 chrome.news = [
+	{date: '31 Sept, 2013', text: 'Pretty URLs 1.1 is released!'},
 	{date: '19 Feb, 2012', text: 'Pretty URLs 1.0 is released!'},
 	{date: '5 Jan, 2011', text: 'Pretty URLs 1.0RC5 is released!'},
 	{date: '12 Dec, 2010', text: 'Pretty URLs 1.0RC4 is released!'},
@@ -15,6 +16,6 @@ chrome.news = [
 	{date: '12 Nov, 2008', text: 'Pretty URLs 0.9 released'}
 ];
 
-chrome.latestVersion = '1.0';
+chrome.latestVersion = '1.1';
 chrome.upgradeFrom = '';
 chrome.upgradeUrl = '';

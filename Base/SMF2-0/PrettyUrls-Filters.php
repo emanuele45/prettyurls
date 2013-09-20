@@ -400,14 +400,17 @@ function pretty_urls_topic_filter($urls)
 			}
 
 			//	Find any duplicates of existing URLs
-			$query = $smcFunc['db_query']('', '
-				SELECT pretty_url
-				FROM {db_prefix}pretty_topic_urls
-				WHERE pretty_url IN ({array_string:new_urls})',
-				array('new_urls' => $query_check));
-			while ($row = $smcFunc['db_fetch_assoc']($query))
-				$existing_urls[] = $row['pretty_url'];
-			$smcFunc['db_free_result']($query);
+            if (!empty($query_check))
+            {
+    			$query = $smcFunc['db_query']('', '
+    				SELECT pretty_url
+    				FROM {db_prefix}pretty_topic_urls
+    				WHERE pretty_url IN ({array_string:new_urls})',
+    				array('new_urls' => $query_check));
+    			while ($row = $smcFunc['db_fetch_assoc']($query))
+    				$existing_urls[] = $row['pretty_url'];
+    			$smcFunc['db_free_result']($query);
+            }
 
 			//	Finalise the new URLs ...
 			foreach ($new_topics as $row)
