@@ -393,14 +393,16 @@ function pretty_urls_topic_filter($urls)
 			}
 
 			//	Find any duplicates of existing URLs
-			$query = db_query("
-				SELECT pretty_url
-				FROM {$db_prefix}pretty_topic_urls
-				WHERE pretty_url IN (" . implode(', ', $query_check) . ')', __FILE__, __LINE__);
-			while ($row = mysql_fetch_assoc($query))
-				$existing_urls[] = $row['pretty_url'];
-			mysql_free_result($query);
-
+            if (!empty($query_check))
+            {
+    			$query = db_query("
+    				SELECT pretty_url
+    				FROM {$db_prefix}pretty_topic_urls
+    				WHERE pretty_url IN (" . implode(', ', $query_check) . ')', __FILE__, __LINE__);
+    			while ($row = mysql_fetch_assoc($query))
+    				$existing_urls[] = $row['pretty_url'];
+    			mysql_free_result($query);
+            }
 			//	Finalise the new URLs ...
 			foreach ($new_topics as $row)
 			{

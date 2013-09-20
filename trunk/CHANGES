@@ -9,7 +9,11 @@ Legend:
  - Feature or option removal.
  % Development flag or note, such as branching.
  
-Pretty URLs 1.0                                                 19  February 20112
+Pretty URLs 1.1                                                20  September 2013
+================================================================================  
+ ! Fixed possible error in PrettyUrls-Filters.php
+ 
+Pretty URLs 1.0                                                 19  February 2012
 ================================================================================  
  ! Do no cache javascript or mailto links saves some room in the database performance improvement.
  + New setting to use caching system instead of database tables thanks to nend.
