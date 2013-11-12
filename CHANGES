@@ -9,6 +9,11 @@ Legend:
  - Feature or option removal.
  % Development flag or note, such as branching.
  
+Pretty URLs 1.1.1                                                12  November 2013
+================================================================================  
+ + Smarter rewriting subsystem for actions Thanks to Arantor
+ 
+ 
 Pretty URLs 1.1                                                20  September 2013
 ================================================================================  
  ! Fixed possible error in PrettyUrls-Filters.php

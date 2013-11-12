@@ -122,7 +122,14 @@ function pretty_run_maintenance($installing = false)
 	$indexphp = file_get_contents($boarddir . '/index.php');
 	preg_match('~actionArray\\s*=\\s*array[^;]+~', $indexphp, $actionArrayText);
 	preg_match_all('~\'([^\']+)\'\\s*=>~', $actionArrayText[0], $actionArray, PREG_PATTERN_ORDER);
-	$context['pretty']['action_array'] = $actionArray[1];
+    $context['pretty']['action_array'] = $actionArray[1];
+    if (function_exists('call_integration_hook'))
+	{
+		$dummy = array();
+		call_integration_hook('integrate_actions', array(&$dummy));
+		$context['pretty']['action_array'] += array_keys($dummy);
+	}
+	
 	$context['pretty']['maintenance_tasks'][] = 'Updating the array of actions';
 
 	//	Update the list of boards
