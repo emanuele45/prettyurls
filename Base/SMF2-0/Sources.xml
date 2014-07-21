@@ -109,7 +109,7 @@ $context = array('pretty' => array(
 ]]></add>
 		</operation>
 
-		<operation>
+		<operation  error="ignore">
 			<search position="replace"><![CDATA[
 	if (empty($modSettings['queryless_urls']) || ($context['server']['is_cgi'] && @ini_get('cgi.fix_pathinfo') == 0 && @get_cfg_var('cgi.fix_pathinfo') == 0) || (!$context['server']['is_apache'] && !$context['server']['is_lighttpd']))
 		return $val;
@@ -123,6 +123,25 @@ $context = array('pretty' => array(
 	$val = preg_replace('/^' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+)(#[^"]*)?$/e', '\'\' . $scripturl . \'/\' . strtr(\'$1\', \'&;=\', \'//,\') . \'.html$2\'', $val); ***/
 ]]></add>
 		</operation>
+		
+		
+		<operation  error="ignore">
+			<search position="replace"><![CDATA[
+	if (empty($modSettings['queryless_urls']) || ($context['server']['is_cgi'] && @ini_get('cgi.fix_pathinfo') == 0 && @get_cfg_var('cgi.fix_pathinfo') == 0) || (!$context['server']['is_apache'] && !$context['server']['is_lighttpd']))
+		return $val;
+
+	$val = preg_replace_callback('~^' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+)(#[^"]*)?$~', 'feed_fix__preg_callback', $val);
+]]></search>
+			<add><![CDATA[
+/***	if (empty($modSettings['queryless_urls']) || ($context['server']['is_cgi'] && @ini_get('cgi.fix_pathinfo') == 0 && @get_cfg_var('cgi.fix_pathinfo') == 0) || (!$context['server']['is_apache'] && !$context['server']['is_lighttpd']))
+		return $val;
+
+	$val = preg_replace_callback('~^' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+)(#[^"]*)?$~', 'feed_fix__preg_callback', $val); ***/
+]]></add>
+		</operation>
+		
+		
+		
 	</file>
 
 	<file name="$sourcedir/QueryString.php">
